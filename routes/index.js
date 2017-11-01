@@ -17,12 +17,13 @@ router.get('/', function(req, res, next) {
 router.post('/register', function (req, res, next){
 
     var item = {
-        firstName: req.body.firstname,
-        lastName: req.body.lastname
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
     };
 
     mongo.connect(url, function(err, db) {
         assert.equal(null, err);
+        //create double check to make sure database doesnt contain dual entry
         db.collection('data').insertOne(item, function(err, result) {
             assert.equal(null, err);
             console.log('Item inserted');
@@ -32,6 +33,8 @@ router.post('/register', function (req, res, next){
 
     res.redirect('/');
 });
+
+
 //note '/submit' is identicial to in the index.hbs file
 router.post('/login', function(req, res, next) {
     //form validation etc
