@@ -55,8 +55,6 @@ router.post('/login', function(req, res, next) {
     , function() {
         db.close();
     });
-    db.close();
-    });
 
     if(!errors || results.length > 0)
 
