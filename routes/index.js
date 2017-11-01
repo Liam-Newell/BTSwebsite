@@ -12,9 +12,7 @@ router.get('/', function(req, res, next) {
     , success: false, errors: req.session.errors});
     req.session.errors = null;
 });
-router.get('/index', function(req, res, next) {
-    res.sendFile(path.join(__dirname+'/index.html'));
-});
+
 
 router.post('/register', function (req, res, next){
 
