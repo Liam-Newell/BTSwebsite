@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Database</title>
+</head>
+<body>
+<h3>Get Data</h3>
+<a href="/get-data">LOAD DATA</a>
+<div>
+    {{# each items }}
+        <article class="item">
+            <div>Title: {{ this.firstname }}</div>
+            <div>Content: {{ this.lastname }}</div>
+            <div>ID: {{ this._id }}</div>
+        </article>
+    {{/each}}
+</div>
+</body>
+</html>
