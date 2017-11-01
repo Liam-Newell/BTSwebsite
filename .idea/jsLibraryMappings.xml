@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$/routes/index.js" libraries="{BTSwebsite/node_modules, WebGL}" />
+    <includedPredefinedLibrary name="Node.js Core" />
+  </component>
+</project>
