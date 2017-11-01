@@ -12,7 +12,9 @@ router.get('/', function(req, res, next) {
     , success: false, errors: req.session.errors});
     req.session.errors = null;
 });
-
+router.get('/login', function (req, res, next) {
+    res.render('register', {});
+});
 router.get('/register', function (req, res, next) {
     res.render('register', {});
 });

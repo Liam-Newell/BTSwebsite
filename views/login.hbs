@@ -1,0 +1,24 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{cuck}}</p>
+{{# if errors }}
+    <section class="errors">
+        <ul>
+            {{# each errors }}
+                <li>{{ this.msg }}</li>
+            {{/each}}
+        </ul>
+    </section>
+{{/if}}
+<form action="/login" method="post">
+
+    <div class="input">
+        <p1>First Name<input type="text" id="firstName" name="firstName"></p1>
+    </div>
+    <br><br>
+    <div class="input">
+        <p1>Last Name<input type="text" id="lastName" name="lastName"></p1>
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+<a href="register">I don't have an account :(</a>
