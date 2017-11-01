@@ -13,28 +13,26 @@ router.get('/index', function(req, res, next) {
 });
 
 router.post('/submit', function(req, res, next) {
-    req.check('lastName', 'Invalid lastname Name').isLength({min:2});
+    //form validation etc
+    req.check('lastName', 'Invalid last name').isLength({min:2});
     req.check('firstName','Invalid first name').isLength({min:4});
     var lastName = req.body.lastName;
+
     var firstName = req.body.firstName;
 
     var errors = req.validationErrors();
-    if(errors)
-    if(lastName.length > 0 || firstName.length > 1) {
+    if(!errors)
+
         res.render('test', {a: firstName, b: lastName});
-    }
+
     else {
+        req.session.errors = errors;
         res.render('index', {
             title: 'Incorrect Values', cuck: 'Ya messed up'
             , success: false, errors: req.session.errors
         });
     }
-    else{
-        res.render('index', {
-            title: 'Incorrect Values', cuck: 'Ya messed up'
-            , success: false, errors: req.session.errors
-        });
-    }
+
 });
 
 module.exports = router;
