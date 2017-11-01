@@ -8,7 +8,7 @@ var url = 'mongodb://localhost:27017/test';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Bts Church' , cuck:'liam'
+    res.render('index', { title: 'Church Centre' , cuck:'liam'
     , success: false, errors: req.session.errors});
     req.session.errors = null;
 });
@@ -16,7 +16,7 @@ router.get('/login', function (req, res, next) {
     res.render('login', {});
 });
 router.get('/register', function (req, res, next) {
-    res.render('register', {});
+    res.render('register', {title: 'Church Centre'});
 });
 
 router.get('/database', function (req, res, next) {
