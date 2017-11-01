@@ -13,6 +13,9 @@ router.get('/', function(req, res, next) {
     req.session.errors = null;
 });
 
+router.get('/register', function (req, res, next) {
+    res.render('register', {});
+});
 
 router.post('/register', function (req, res, next){
 
@@ -46,20 +49,19 @@ router.post('/login', function(req, res, next) {
     var firstName = req.body.firstName;
     var errors = req.validationErrors();
     var results = [];
-
-    var cursor = db.collection('data').find();
-    cursor.forEach(function(doc, error)
-    {
-        assert.equal(null, error);
-        results.push(doc);
-    }
-    , function() {
-        db.close();
+    mongo.connect(url, function (err, db) {
+        var cursor = db.collection('data').find();
+        cursor.forEach(function (doc, error) {
+                assert.equal(null, error);
+                results.push(doc);
+            }
+            , function () {
+                db.close();
+            });
     });
-
     if(!errors || results.length > 0)
 
-        res.render('test', {a: firstName, b: lastName, resultlist: results});
+        res.render('homepage', {a: firstName, b: lastName, resultlist: results});
 
     else {
         req.session.errors = errors;
