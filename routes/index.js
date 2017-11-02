@@ -18,7 +18,20 @@ router.get('/login', function (req, res, next) {
 router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});
 });
-
+router.get('/get-data', function (req, res, next) {
+    var resultArray = [];
+    mongo.connect(url, function(err, db) {
+        assert.equal(null, err);
+        var cursor = db.collection('data').find();
+        cursor.forEach(function(doc, err) {
+            assert.equal(null, err);
+            resultArray.push(doc);
+        }, function() {
+            db.close();
+            res.render('database', {items: resultArray});
+        });
+    });
+});
 router.get('/database', function (req, res, next) {
     var resultArray = [];
     mongo.connect(url, function(err, db) {
