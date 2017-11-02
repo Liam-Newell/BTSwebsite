@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var path    = require("path");
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
@@ -77,9 +76,6 @@ router.post('/login', function(req, res, next) {
         }
         res.render('homepage', {a: doc.firstname, b: doc.lastname, resultlist: doc._id});
     })
-
-
-
 });
 
 module.exports = router;
