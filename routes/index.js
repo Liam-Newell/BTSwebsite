@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var path    = require("path");
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
