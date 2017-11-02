@@ -76,9 +76,29 @@ button:hover {
   background: #95a5a6;
   border: 1px solid black;
 }
-/*
-.navbar-inverse
+.navbar-dark
 {
-  background-color: green;
-  border-color: green;
-}*/
+  background-color: #2a8921;
+  border-color: #2a8921;
+}
+.navbar-dark .container-fluid .navbar-nav .active a
+{
+  background-color: #4cd83e;
+}
+.navbar-dark .container-fluid .navbar-nav .inactive a
+{
+    color: white;
+}
+.navbar-dark .container-fluid .navbar-header .navbar-brand
+ {
+   color: white;
+ }
+.navbar-dark .container-fluid .navbar-right li a
+{
+  color: white;
+}
+.navbar-dark .container-fluid .navbar-right li a:hover, .navbar-dark .container-fluid .navbar-nav .active a
+{
+  background-color: #4cd83e;
+  border-color: #4cd83e;
+}
