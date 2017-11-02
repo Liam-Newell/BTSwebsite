@@ -1,17 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var path    = require("path");
-var mongo = require('mongodb');
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
-var assert = require('assert');
 
 var userDataSchema = new Schema({
     firstname: {type: String, required: true},
     lastname: {type: String, required: true}
 }, {collection: 'data'});
-var url = 'mongodb://localhost:27017/test';
+
 
 var UserData = mongoose.model('UserData', userDataSchema);
 
@@ -27,6 +25,8 @@ router.get('/login', function (req, res, next) {
 router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});
 });
+
+
 router.get('/get-data', function (req, res, next) {
     UserData.find()
         .then(function(doc) {
@@ -67,7 +67,7 @@ router.post('/login', function(req, res, next) {
         lastname: req.body.lastname
     };
    var id = req.body.id;
-    UserData.findById(id , function(err,doc){
+    UserData.find(id , function(err,doc){
         if(err){
             console.error('no login exists');
             res.render('index', {
