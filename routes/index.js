@@ -30,7 +30,12 @@ router.get('/register', function (req, res, next) {
 router.get('/get-data', function (req, res, next) {
     UserData.find()
         .then(function(doc) {
-            res.render('database', {items: doc});
+            if(doc.length > 0) {
+                res.render('database', {items: doc});
+            }
+            else {
+                res.render('index', {title: "database empty!"});
+            }
         });
 });
 
@@ -45,8 +50,6 @@ router.post('/register', function (req, res, next){
     req.check('firstName','Invalid first name').isLength({min:4});
     var errors = req.validationErrors();
     if(!errors){
-
-
     var data = new UserData(item);
     if(data.on())
         console.log('Entry Inserted');
@@ -66,17 +69,18 @@ router.post('/login', function(req, res, next) {
         firstname: req.body.firstname,
         lastname: req.body.lastname
     };
-   var id = req.body.id;
-    UserData.find(id , function(err,doc){
-        if(err){
+    UserData.find({firstname : item.firstname, lastname : item.lastname}).then(function(doc){
+        if(doc < 1){
             console.error('no login exists');
             res.render('index', {
                 title: 'First last name combo doesnt exist', cuck: 'Ya messed up'
                 , success: false, errors: req.session.errors
             });
         }
-        res.render('homepage', {a: doc.firstname, b: doc.lastname, resultlist: doc._id});
-    })
+        else {
+            res.render('homepage', {a: doc[0]._doc.firstname, b: doc[0]._doc.lastname, resultlist: doc[0]._doc._id});
+        }
+    });
 
 
 
