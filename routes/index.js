@@ -78,7 +78,7 @@ router.post('/login', function(req, res, next) {
             });
         }
         else {
-            res.render('homepage', {a: doc[0]._doc.firstname, b: doc[0]._doc.lastname, resultlist: doc[0]._doc._id});
+            res.render('homepage', {a: doc[0]._doc.firstname, b: doc[0]._doc.lastname, resultlist: doc[0]._doc._id.id});
         }
     });
 
