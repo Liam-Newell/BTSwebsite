@@ -2,9 +2,18 @@ var express = require('express');
 var router = express.Router();
 var path    = require("path");
 var mongo = require('mongodb');
+var mongoose = require('mongoose');
+mongoose.connect('localhost:27017/test');
+var Schema = mongoose.Schema;
 var assert = require('assert');
 
+var userDataSchema = new Schema({
+    firstname: {type: String, required: true},
+    lastname: {type: String, required: true}
+}, {collection: 'data'});
 var url = 'mongodb://localhost:27017/test';
+
+var UserData = mongoose.model('UserData', userDataSchema);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -19,18 +28,10 @@ router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});
 });
 router.get('/get-data', function (req, res, next) {
-    var resultArray = [];
-    mongo.connect(url, function(err, db) {
-        assert.equal(null, err);
-        var cursor = db.collection('data').find();
-        cursor.forEach(function(doc, err) {
-            assert.equal(null, err);
-            resultArray.push(doc);
-        }, function() {
-            db.close();
-            res.render('database', {items: resultArray});
+    UserData.find()
+        .then(function(doc) {
+            res.render('database', {items: doc});
         });
-    });
 });
 
 
@@ -40,53 +41,44 @@ router.post('/register', function (req, res, next){
         firstName: req.body.firstName,
         lastName: req.body.lastName
     };
+    req.check('lastName', 'Invalid last name').isLength({min:2});
+    req.check('firstName','Invalid first name').isLength({min:4});
+    var errors = req.validationErrors();
+    if(!errors){
 
-    mongo.connect(url, function(err, db) {
-        assert.equal(null, err);
-        //create double check to make sure database doesnt contain dual entry
-        db.collection('data').insertOne(item, function(err, result) {
-            assert.equal(null, err);
-            console.log('Item inserted');
-            db.close();
-        });
+
+    var data = new UserData(item);
+    if(data.on())
+        console.log('Entry Inserted');
+    data.save();
+}
+    res.render('register', {
+        title: 'Incorrect Values', cuck: 'Ya messed up'
+        , success: false, errors: req.session.errors
     });
-
-    res.redirect('/');
 });
 
 
 //note '/submit' is identicial to in the index.hbs file
 router.post('/login', function(req, res, next) {
     //form validation etc
-    req.check('lastName', 'Invalid last name').isLength({min:2});
-    req.check('firstName','Invalid first name').isLength({min:4});
-
-    var lastName = req.body.lastName;
-
-    var firstName = req.body.firstName;
-    var errors = req.validationErrors();
-    var results = [];
-    mongo.connect(url, function (err, db) {
-        var cursor = db.collection('data').find();
-        cursor.forEach(function (doc, error) {
-                assert.equal(null, error);
-                results.push(doc);
-            }
-            , function () {
-                db.close();
+    var item = {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname
+    };
+   var id = req.body.id;
+    UserData.findById(id , function(err,doc){
+        if(err){
+            console.error('no login exists');
+            res.render('index', {
+                title: 'First last name combo doesnt exist', cuck: 'Ya messed up'
+                , success: false, errors: req.session.errors
             });
-    });
-    if(!errors || results.length > 0)
+        }
+        res.render('homepage', {a: doc.firstname, b: doc.lastname, resultlist: doc._id});
+    })
 
-        res.render('homepage', {a: firstName, b: lastName, resultlist: results});
 
-    else {
-        req.session.errors = errors;
-        res.render('index', {
-            title: 'Incorrect Values', cuck: 'Ya messed up'
-            , success: false, errors: req.session.errors
-        });
-    }
 
 });
 
