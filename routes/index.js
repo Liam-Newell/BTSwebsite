@@ -56,7 +56,7 @@ router.get('/get-data', function (req, res, next) {
         });
 });
 
-
+/* POST REGISTER PAGE */
 router.post('/register', function (req, res, next){
 
     var item = {
