@@ -5,12 +5,30 @@ mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
 
 var userDataSchema = new Schema({
-    firstname: {type: String, required: true},
-    lastname: {type: String, required: true}
-}, {collection: 'data'});
-
+    username:       {type: String, required: true},
+    password:       {type: String, required: true},
+    firstname:      {type: String, required: true},
+    lastname:       {type: String, required: true},
+    address:        {type: String, required: true},
+    email:          {type: String, required: true},
+    phonenumber:    {type: String, required: true},
+    phonenumber2:   {type: String, required: false},
+    birthday:       {type: Date, required: true},
+    rolecode:       {type: String, required: true},
+    children:       ["child"]
+}, {collection: 'user'});
 
 var UserData = mongoose.model('UserData', userDataSchema);
+
+var childDataSchema = new Schema({
+    firstname:      {type: String, required: true},
+    lastname:       {type: String, required: true},
+    age:            {type: Number, min: 18, max: 99, required: true},
+    birthday:       {type: Date, required: true},
+    grade:          {type: Number, min: 1, max: 8, required: true}
+}, {collection: 'child'});
+
+var ChildData = mongoose.model('ChildData', childDataSchema);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -42,9 +60,16 @@ router.get('/get-data', function (req, res, next) {
 router.post('/register', function (req, res, next){
 
     var item = {
-
+        userName: req.body.userName,
+        passWord: req.body.passWord,
         firstName: req.body.firstName,
-        lastName: req.body.lastName
+        lastName: req.body.lastName,
+        streetAddress: req.body.streetAddress,
+        email: req.body.email,
+        phoneNumber: req.body.phoneNumber,
+        phoneNumber2: req.body.phoneNumber2,
+        dateOfBirth: req.body.dateOfBirth,
+        roleCode: req.body.roleCode
     };
     req.check('lastName', 'Invalid last name').isLength({min:2});
     req.check('firstName','Invalid first name').isLength({min:4});

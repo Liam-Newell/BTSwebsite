@@ -32,16 +32,30 @@
     <form method="post" role="form" class="login-form form-horizontal">
         <input name="_csrf" type="hidden"/>
         <div class="form-group">
+            <label class="col-sm-4">User Name</label>
+            <div class="col-sm-8">
+                <input placeholder="username" required="required" name="userName" type="text"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Password</label>
+            <div class="col-sm-8">
+                <input placeholder="password" required="required" name="passWord" type="password"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-4">First Name</label>
             <div class="col-sm-8">
-                <input placeholder="Your first name" required="required" name="givenName" type="text"
+                <input placeholder="your first name" required="required" name="firstName" type="text"
                        class="form-control"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-4">Last Name</label>
             <div class="col-sm-8">
-                <input placeholder="Your last name" required="required" name="surname" type="text"
+                <input placeholder="your last name" required="required" name="lastName" type="text"
                        class="form-control"/>
             </div>
         </div>
@@ -53,21 +67,38 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-4">City</label>
+            <label class="col-sm-4">Email</label>
             <div class="col-sm-8">
-                <input placeholder="e.g. City" required="required" name="city" type="text" class="form-control"/>
+                <input placeholder="e.g. email@domain.com" required="required" name="email" type="email"
+                       class="form-control"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-4">State</label>
+            <label class="col-sm-4">Phone Number 1</label>
             <div class="col-sm-8">
-                <input placeholder="e.g. CA" required="required" name="state" type="text" class="form-control"/>
+                <input placeholder="123-456-7899" required="required" name="phoneNumber" type="string"
+                       class="form-control"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-4">ZIP</label>
+            <label class="col-sm-4">Phone Number 2</label>
             <div class="col-sm-8">
-                <input placeholder="e.g. 94116" required="required" name="zip" type="text" class="form-control"/>
+                <input placeholder="123-456-7899"  name="phoneNumber2" type="string"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Date of Birth</label>
+            <div class="col-sm-8">
+                <input placeholder="" required="required" name="dateOfBirth" type="date"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Are you registering as a parent</label>
+            <div class="col-sm-8">
+                <input placeholder="" required="required" name="roleCode" type="radio"
+                       class="form-control"/>
             </div>
         </div>
         <div class="form-group">
