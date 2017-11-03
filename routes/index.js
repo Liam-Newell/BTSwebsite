@@ -1,10 +1,17 @@
 var express = require('express');
 var router = express.Router();
-var path    = require("path");
-var mongo = require('mongodb');
-var assert = require('assert');
+var mongoose = require('mongoose');
+mongoose.connect('localhost:27017/test');
 
-var url = 'mongodb://localhost:27017/test';
+var Schema = mongoose.Schema;
+
+var userDataSchema = new Schema({
+    firstname: {type: String, required: true},
+    lastname: {type: String, required: true}
+}, {collection: 'data'});
+
+
+var UserData = mongoose.model('UserData', userDataSchema);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -13,81 +20,69 @@ router.get('/', function(req, res, next) {
     req.session.errors = null;
 });
 router.get('/login', function (req, res, next) {
-    res.render('login', {});
+    res.render('login', {title: 'Church Centre'});
 });
 router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});
 });
 
-router.get('/database', function (req, res, next) {
-    var resultArray = [];
-    mongo.connect(url, function(err, db) {
-        assert.equal(null, err);
-        var cursor = db.collection('data').find();
-        cursor.forEach(function(doc, err) {
-            assert.equal(null, err);
-            resultArray.push(doc);
-        }, function() {
-            db.close();
-            res.render('database', {items: resultArray});
+
+router.get('/get-data', function (req, res, next) {
+    UserData.find()
+        .then(function(doc) {
+            if(doc.length > 0) {
+                res.render('database', {items: doc});
+            }
+            else {
+                res.render('index', {title: "database empty!"});
+            }
         });
-    });
 
 });
+
 
 router.post('/register', function (req, res, next){
 
     var item = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName
+        firstname: req.body.firstname,
+        lastname: req.body.lastname
     };
-
-    mongo.connect(url, function(err, db) {
-        assert.equal(null, err);
-        //create double check to make sure database doesnt contain dual entry
-        db.collection('data').insertOne(item, function(err, result) {
-            assert.equal(null, err);
-            console.log('Item inserted');
-            db.close();
-        });
+    req.check('lastname', 'Invalid last name').isLength({min:2});
+    req.check('firstname','Invalid first name').isLength({min:4});
+    var errors = req.validationErrors();
+    if(!errors){
+    var data = new UserData(item);
+    data.save();
+    res.render('homepage', {a: item.firstname, b: item.lastname, resultlist: 'new user'});
+    }
+    res.render('register', {
+        title: 'Incorrect Values', cuck: 'Ya messed up'
+        , success: false, errors: req.session.errors
     });
-
-    res.redirect('/');
 });
 
 
 //note '/submit' is identicial to in the index.hbs file
 router.post('/login', function(req, res, next) {
     //form validation etc
-    req.check('lastName', 'Invalid last name').isLength({min:2});
-    req.check('firstName','Invalid first name').isLength({min:4});
-
-    var lastName = req.body.lastName;
-
-    var firstName = req.body.firstName;
-    var errors = req.validationErrors();
-    var results = [];
-    mongo.connect(url, function (err, db) {
-        var cursor = db.collection('data').find();
-        cursor.forEach(function (doc, error) {
-                assert.equal(null, error);
-                results.push(doc);
-            }
-            , function () {
-                db.close();
+    var item = {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname
+    };
+    UserData.find({firstname : item.firstname, lastname : item.lastname}).then(function(doc){
+        if(doc < 1){
+            console.error('no login exists');
+            res.render('index', {
+                title: 'First last name combo doesnt exist', cuck: 'Ya messed up'
+                , success: false, errors: req.session.errors
             });
+        }
+        else {
+            res.render('homepage', {a: doc[0]._doc.firstname, b: doc[0]._doc.lastname, resultlist: doc[0]._doc._id});
+        }
     });
-    if(!errors || results.length > 0)
 
-        res.render('homepage', {a: firstName, b: lastName, resultlist: results});
 
-    else {
-        req.session.errors = errors;
-        res.render('index', {
-            title: 'Incorrect Values', cuck: 'Ya messed up'
-            , success: false, errors: req.session.errors
-        });
-    }
 
 });
 
