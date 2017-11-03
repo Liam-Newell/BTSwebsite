@@ -4,6 +4,13 @@ var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
 
+var userLoginSchema = new Schema({
+    firstname:      {type: String, required: true},
+    lastname:       {type: String, required: true}
+}, {collection: 'data'});
+
+var UserLogin = mongoose.model('UserLogin', userLoginSchema);
+
 var userDataSchema = new Schema({
     username:       {type: String, required: true},
     password:       {type: String, required: true},
@@ -59,31 +66,38 @@ router.get('/get-data', function (req, res, next) {
 /* POST REGISTER PAGE */
 router.post('/register', function (req, res, next){
 
+    // var item = {
+    //     userName: req.body.userName,
+    //     passWord: req.body.passWord,
+    //     firstName: req.body.firstName,
+    //     lastName: req.body.lastName,
+    //     streetAddress: req.body.streetAddress,
+    //     email: req.body.email,
+    //     phoneNumber: req.body.phoneNumber,
+    //     phoneNumber2: req.body.phoneNumber2,
+    //     dateOfBirth: req.body.dateOfBirth,
+    //     roleCode: req.body.roleCode
+    // };
     var item = {
-        userName: req.body.userName,
-        passWord: req.body.passWord,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        streetAddress: req.body.streetAddress,
-        email: req.body.email,
-        phoneNumber: req.body.phoneNumber,
-        phoneNumber2: req.body.phoneNumber2,
-        dateOfBirth: req.body.dateOfBirth,
-        roleCode: req.body.roleCode
+        firstname: req.body.firstname,
+        lastname: req.body.lastname
     };
     req.check('lastName', 'Invalid last name').isLength({min:2});
     req.check('firstName','Invalid first name').isLength({min:4});
     var errors = req.validationErrors();
     if(!errors){
-    var data = new UserData(item);
-    if(data.on())
-        console.log('Entry Inserted');
-    data.save();
-}
-    res.render('register', {
-        title: 'Incorrect Values', cuck: 'Ya messed up'
-        , success: false, errors: req.session.errors
-    });
+        var data = new UserLogin(item);
+        if(data.on())
+            console.log('Entry Inserted');
+        data.save();
+        res.render(('homepage'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
+    }
+    else{
+        res.render('register', {
+            title: 'Incorrect Values', cuck: 'Ya messed up'
+            , success: false, errors: req.session.errors
+        });
+    }
 });
 
 
@@ -94,7 +108,7 @@ router.post('/login', function(req, res, next) {
         firstname: req.body.firstname,
         lastname: req.body.lastname
     };
-    UserData.find({firstname : item.firstname, lastname : item.lastname}).then(function(doc){
+    UserLogin.find({firstname : item.firstname, lastname : item.lastname}).then(function(doc){
         if(doc < 1){
             console.error('no login exists');
             res.render('index', {

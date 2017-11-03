@@ -5,109 +5,109 @@
     <link rel="stylesheet" href="/stylesheets/style.css"/>
 </head>
 <body>
-<!--Navigation bar -->
-<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="/">{{title}}</a>
+    <!--Navigation bar -->
+    <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">{{title}}</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="inactive"><a href="/">Home</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+          <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+      </div>
+    </nav>
+    <!--Navigation bar -->
+    <br/><br/>
+    <p>
+        {{errors}}
+    </p>
+    <div class="container">
+        <div class="page-header">
+            <h1>My Profile</h1>
+        </div>
+        <form method="post" role="form" action="/register" class="login-form form-horizontal">
+            <input name="_csrf" type="hidden"/>
+            <div class="form-group">
+                <label class="col-sm-4">User Name</label>
+                <div class="col-sm-8">
+                    <input placeholder="username" required="required" name="userName" type="text"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Password</label>
+                <div class="col-sm-8">
+                    <input placeholder="password" required="required" name="passWord" type="password"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">First Name</label>
+                <div class="col-sm-8">
+                    <input placeholder="your first name" required="required" name="firstName" type="text"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Last Name</label>
+                <div class="col-sm-8">
+                    <input placeholder="your last name" required="required" name="lastName" type="text"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Street address</label>
+                <div class="col-sm-8">
+                    <input placeholder="e.g. 123 Sunny Ave" required="required" name="streetAddress" type="text"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Email</label>
+                <div class="col-sm-8">
+                    <input placeholder="e.g. email@domain.com" required="required" name="email" type="email"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Phone Number 1</label>
+                <div class="col-sm-8">
+                    <input placeholder="123-456-7899" required="required" name="phoneNumber" type="string"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Phone Number 2</label>
+                <div class="col-sm-8">
+                    <input placeholder="123-456-7899"  name="phoneNumber2" type="string"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Date of Birth</label>
+                <div class="col-sm-8">
+                    <input placeholder="" required="required" name="dateOfBirth" type="date"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Are you registering as a parent</label>
+                <div class="col-sm-8">
+                    <input placeholder="" required="required" name="roleCode" type="radio"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-8">
+                    <button type="submit" class="login btn btn-primary">Save</button>
+                </div>
+            </div>
+            <div class="pull-right"><a href="/">Return to home page</a></div>
+        </form>
     </div>
-    <ul class="nav navbar-nav">
-      <li class="inactive"><a href="/">Home</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li class="active"><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-    </ul>
-  </div>
-</nav>
-<!--Navigation bar -->
-<br/><br/>
-<p>
-    {{errors}}
-</p>
-<div class="container">
-    <div class="page-header">
-        <h1>My Profile</h1>
-    </div>
-    <form method="post" role="form" class="login-form form-horizontal">
-        <input name="_csrf" type="hidden"/>
-        <div class="form-group">
-            <label class="col-sm-4">User Name</label>
-            <div class="col-sm-8">
-                <input placeholder="username" required="required" name="userName" type="text"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4">Password</label>
-            <div class="col-sm-8">
-                <input placeholder="password" required="required" name="passWord" type="password"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4">First Name</label>
-            <div class="col-sm-8">
-                <input placeholder="your first name" required="required" name="firstName" type="text"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4">Last Name</label>
-            <div class="col-sm-8">
-                <input placeholder="your last name" required="required" name="lastName" type="text"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4">Street address</label>
-            <div class="col-sm-8">
-                <input placeholder="e.g. 123 Sunny Ave" required="required" name="streetAddress" type="text"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4">Email</label>
-            <div class="col-sm-8">
-                <input placeholder="e.g. email@domain.com" required="required" name="email" type="email"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4">Phone Number 1</label>
-            <div class="col-sm-8">
-                <input placeholder="123-456-7899" required="required" name="phoneNumber" type="string"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4">Phone Number 2</label>
-            <div class="col-sm-8">
-                <input placeholder="123-456-7899"  name="phoneNumber2" type="string"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4">Date of Birth</label>
-            <div class="col-sm-8">
-                <input placeholder="" required="required" name="dateOfBirth" type="date"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-4">Are you registering as a parent</label>
-            <div class="col-sm-8">
-                <input placeholder="" required="required" name="roleCode" type="radio"
-                       class="form-control"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-4 col-sm-8">
-                <button type="submit" class="login btn btn-primary">Save</button>
-            </div>
-        </div>
-        <div class="pull-right"><a href="/">Return to home page</a></div>
-    </form>
-</div>
 </body>
 </html>
