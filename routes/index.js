@@ -10,7 +10,7 @@ var options = {
     // If not connected, return errors immediately rather than waiting for reconnect
     bufferMaxEntries: 0
 };
-mongoose.connect('mongodb://localhost:27017/test',options );
+mongoose.connect('localhost:27017/test' );
 var Schema = mongoose.Schema;
 
 var userLoginSchema = new Schema({
@@ -27,24 +27,24 @@ var userDataSchema = new Schema({
     password:       {type: String, required: true},
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
-    address:        {type: String, required: true},
-    email:          {type: String, required: true},
-    phonenumber:    {type: String, required: true},
+    address:        {type: String, required: false},
+    email:          {type: String, required: false},
+    phonenumber:    {type: String, required: false},
     phonenumber2:   {type: String, required: false},
-    birthday:       {type: Date, required: true}
-}, {collection: 'user'});
+    birthday:       {type: Date, required: false}
+}, {collection: 'data'});
 
 var UserData = mongoose.model('UserData', userDataSchema);
 
-/*var childDataSchema = new Schema({
+var childDataSchema = new Schema({
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
     age:            {type: Number, min: 18, max: 99, required: true},
     birthday:       {type: Date, required: true},
     grade:          {type: Number, min: 1, max: 8, required: true}
-}, {collection: 'child'});*/
+}, {collection: 'child'});
 
-//var ChildData = mongoose.model('ChildData', childDataSchema);
+var ChildData = mongoose.model('ChildData', childDataSchema);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -78,29 +78,28 @@ router.get('/get-data', function (req, res, next) {
 /* POST REGISTER PAGE */
 router.post('/register', function (req, res, next){
 
-    // var item = {
-    //     userName: req.body.userName,
-    //     passWord: req.body.passWord,
-    //     firstName: req.body.firstName,
-    //     lastName: req.body.lastName,
-    //     streetAddress: req.body.streetAddress,
-    //     email: req.body.email,
-    //     phoneNumber: req.body.phoneNumber,
-    //     phoneNumber2: req.body.phoneNumber2,
-    //     dateOfBirth: req.body.dateOfBirth,
-    //     roleCode: req.body.roleCode
-    // };
     var item = {
+        username: req.body.username,
+        password: req.body.password,
         firstname: req.body.firstname,
         lastname: req.body.lastname,
-        password: req.body.password,
-        username: req.body.username
+        streetaddress: req.body.streetaddress,
+        email: req.body.email,
+        phonenumber: req.body.phonenumber,
+        phonenumber2: req.body.phonenumber2,
+        birthday: req.body.dateofbirth
     };
+    // var item = {
+    //     firstname: req.body.firstname,
+    //     lastname: req.body.lastname,
+    //     password: req.body.password,
+    //     username: req.body.username
+    // };
     req.check('lastname', 'Invalid last name').isLength({min:2});
     req.check('firstname','Invalid first name').isLength({min:4});
     var errors = req.validationErrors();
     if(!errors){
-        var data = new UserLogin(item);
+        var data = new UserData(item);
        // if(data.on())
       //      console.log('Entry Inserted');
         data.save();
