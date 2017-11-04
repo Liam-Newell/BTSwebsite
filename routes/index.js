@@ -4,8 +4,6 @@ var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test' );
 var Schema = mongoose.Schema;
 
-
-
 // User schema
 var userDataSchema = new Schema({
     username:       {type: String, required: true},
@@ -26,18 +24,7 @@ var userDataSchema = new Schema({
                         }
                     ]
     }, {collection: 'data'});
-/*
-// Child schema
-var childDataSchema = new Schema({
-firstname:      {type: String, required: true},
-lastname:       {type: String, required: true},
-age:            {type: Number, min: 18, max: 99, required: true},
-birthday:       {type: Date, required: true},
-grade:          {type: Number, min: 1, max: 8, required: true}
-}, {collection: 'child'});
-*/
-// Creating models based on schemas
-//var ChildData = mongoose.model('ChildData', childDataSchema);
+
 var UserData = mongoose.model('UserData', userDataSchema);
 
 /* GET home page. */
