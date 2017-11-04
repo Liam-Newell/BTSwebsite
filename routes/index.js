@@ -16,20 +16,28 @@ var userDataSchema = new Schema({
     email:          {type: String, required: false},
     phonenumber:    {type: String, required: false},
     phonenumber2:   {type: String, required: false},
-    birthday:       {type: Date, required: false}
-}, {collection: 'data'});
-
+    birthday:       {type: Date, required: false},
+    children:       [
+                        {
+                            firstname:      {type: String, required: true},
+                            lastname:       {type: String, required: true},
+                            birthday:       {type: Date, required: false},
+                            grade:          {type: Number, min: 1, max: 8, required: true}
+                        }
+                    ]
+    }, {collection: 'data'});
+/*
 // Child schema
 var childDataSchema = new Schema({
-    firstname:      {type: String, required: true},
-    lastname:       {type: String, required: true},
-    age:            {type: Number, min: 18, max: 99, required: true},
-    birthday:       {type: Date, required: true},
-    grade:          {type: Number, min: 1, max: 8, required: true}
+firstname:      {type: String, required: true},
+lastname:       {type: String, required: true},
+age:            {type: Number, min: 18, max: 99, required: true},
+birthday:       {type: Date, required: true},
+grade:          {type: Number, min: 1, max: 8, required: true}
 }, {collection: 'child'});
-
+*/
 // Creating models based on schemas
-var ChildData = mongoose.model('ChildData', childDataSchema);
+//var ChildData = mongoose.model('ChildData', childDataSchema);
 var UserData = mongoose.model('UserData', userDataSchema);
 
 /* GET home page. */
