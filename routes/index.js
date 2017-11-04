@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test' );
 var Schema = mongoose.Schema;
 
-var UserLogin = mongoose.model('UserLogin', userLoginSchema);
+
 
 // User schema
 var userDataSchema = new Schema({
@@ -56,7 +56,7 @@ router.get('/homepage2', function (req, res, next) {
 
 //get test data pagge "database button on '/index'
 router.get('/get-data', function (req, res, next) {
-    UserLogin.find()
+    UserData.find()
         .then(function(doc) {
             if(doc.length > 0) {
                 res.render('database', {items: doc});
@@ -101,11 +101,9 @@ router.post('/login', function(req, res, next) {
     //form validation etc
     var item = {
         firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        password: req.body.password,
-        username: req.body.username
+        lastname: req.body.lastname
     };
-    UserLogin.find({firstname : item.firstname, lastname : item.lastname}).then(function(doc){
+    UserData.find({firstname : item.firstname, lastname : item.lastname}).then(function(doc){
         if(doc < 1){
             console.error('no login exists');
             res.render('index', {
