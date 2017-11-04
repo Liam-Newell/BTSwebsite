@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-
 mongoose.connect('localhost:27017/test' );
 var Schema = mongoose.Schema;
 
 var UserLogin = mongoose.model('UserLogin', userLoginSchema);
 
+// User schema
 var userDataSchema = new Schema({
     username:       {type: String, required: true},
     password:       {type: String, required: true},
@@ -19,8 +19,7 @@ var userDataSchema = new Schema({
     birthday:       {type: Date, required: false}
 }, {collection: 'data'});
 
-var UserData = mongoose.model('UserData', userDataSchema);
-
+// Child schema
 var childDataSchema = new Schema({
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
@@ -29,7 +28,9 @@ var childDataSchema = new Schema({
     grade:          {type: Number, min: 1, max: 8, required: true}
 }, {collection: 'child'});
 
+// Creating models based on schemas
 var ChildData = mongoose.model('ChildData', childDataSchema);
+var UserData = mongoose.model('UserData', userDataSchema);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -37,17 +38,23 @@ router.get('/', function(req, res, next) {
     , success: false, errors: req.session.errors});
     req.session.errors = null;
 });
+
+//get login page
 router.get('/login', function (req, res, next) {
     res.render('login', {title: 'Church Centre'});
 });
+
+//get register page
 router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});
 });
+
+//get homepage2 (the nice page that will you bust a nut!)
 router.get('/homepage2', function (req, res, next) {
     res.render('homepage2', {title: 'Church Centre'});
 });
 
-
+//get test data pagge "database button on '/index'
 router.get('/get-data', function (req, res, next) {
     UserLogin.find()
         .then(function(doc) {
@@ -60,9 +67,8 @@ router.get('/get-data', function (req, res, next) {
         });
 });
 
-/* POST REGISTER PAGE */
+// post page for register
 router.post('/register', function (req, res, next){
-
     var item = {
         username: req.body.username,
         password: req.body.password,
@@ -72,15 +78,13 @@ router.post('/register', function (req, res, next){
         email: req.body.email,
         phonenumber: req.body.phonenumber,
         phonenumber2: req.body.phonenumber2,
-        birthday: req.body.dateofbirth
+        birthday: req.body.birthday
     };
     req.check('lastname', 'Invalid last name').isLength({min:2});
     req.check('firstname','Invalid first name').isLength({min:4});
     var errors = req.validationErrors();
     if(!errors){
         var data = new UserData(item);
-       // if(data.on())
-      //      console.log('Entry Inserted');
         data.save();
         res.render(('homepage2'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
     }
@@ -91,7 +95,6 @@ router.post('/register', function (req, res, next){
         });
     }
 });
-
 
 //note '/submit' is identicial to in the index.hbs file
 router.post('/login', function(req, res, next) {
@@ -114,9 +117,6 @@ router.post('/login', function(req, res, next) {
             res.render('homepage2', {a: doc[0]._doc.firstname, b: doc[0]._doc.lastname, resultlist: doc[0]._doc._id});
         }
     });
-
-
-
 });
 
 module.exports = router;
