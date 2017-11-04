@@ -1,24 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var options = {
-    useMongoClient: true,
-    autoIndex: true, // Don't build indexes
-    reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
-    reconnectInterval: 500, // Reconnect every 500ms
-    poolSize: 10, // Maintain up to 10 socket connections
-    // If not connected, return errors immediately rather than waiting for reconnect
-    bufferMaxEntries: 0
-};
+
 mongoose.connect('localhost:27017/test' );
 var Schema = mongoose.Schema;
-
-var userLoginSchema = new Schema({
-    firstname:      {type: String, required: true},
-    lastname:       {type: String, required: true},
-    password:{type: String, required: true},
-    username: {type: String, required: true}
-}, {collection: 'data'});
 
 var UserLogin = mongoose.model('UserLogin', userLoginSchema);
 
@@ -89,12 +74,6 @@ router.post('/register', function (req, res, next){
         phonenumber2: req.body.phonenumber2,
         birthday: req.body.dateofbirth
     };
-    // var item = {
-    //     firstname: req.body.firstname,
-    //     lastname: req.body.lastname,
-    //     password: req.body.password,
-    //     username: req.body.username
-    // };
     req.check('lastname', 'Invalid last name').isLength({min:2});
     req.check('firstname','Invalid first name').isLength({min:4});
     var errors = req.validationErrors();
