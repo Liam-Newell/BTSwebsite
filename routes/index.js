@@ -61,7 +61,7 @@ router.get('/get-data', function (req, res, next) {
                 res.render('database', {items: doc});
             }
             else {
-                res.render('index', {title: "database empty!"});
+                res.render('index', {title: "database empty!!"});
             }
         });
 });
