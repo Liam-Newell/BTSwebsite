@@ -49,10 +49,13 @@ router.get('/login', function (req, res, next) {
 router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});
 });
+router.get('/homepage2', function (req, res, next) {
+    res.render('homepage2', {title: 'Church Centre'});
+});
 
 
 router.get('/get-data', function (req, res, next) {
-    UserData.find()
+    UserLogin.find()
         .then(function(doc) {
             if(doc.length > 0) {
                 res.render('database', {items: doc});
@@ -86,11 +89,11 @@ router.post('/register', function (req, res, next){
     req.check('firstName','Invalid first name').isLength({min:4});
     var errors = req.validationErrors();
     if(!errors){
-        var data = new UserLogin(item);
+        var data = new UserData(item);
         if(data.on())
             console.log('Entry Inserted');
         data.save();
-        res.render(('homepage'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
+        res.render(('homepage2'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
     }
     else{
         res.render('register', {
@@ -117,7 +120,7 @@ router.post('/login', function(req, res, next) {
             });
         }
         else {
-            res.render('homepage', {a: doc[0]._doc.firstname, b: doc[0]._doc.lastname, resultlist: doc[0]._doc._id});
+            res.render('homepage2', {a: doc[0]._doc.firstname, b: doc[0]._doc.lastname, resultlist: doc[0]._doc._id});
         }
     });
 
