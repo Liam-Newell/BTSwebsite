@@ -49,6 +49,11 @@ router.get('/homepage2', function (req, res, next) {
     res.render('homepage2', {title: 'Church Centre'});
 });
 
+//get calender page currently a work in progress
+router.get('/calendar', function (req, res, next) {
+    res.render('calendar', {});
+});
+
 //get test data pagge "database button on '/index'
 router.get('/get-data', function (req, res, next) {
     UserData.find()
