@@ -34,6 +34,11 @@ router.get('/', function(req, res, next) {
     req.session.errors = null;
 });
 
+//get account page
+router.get('/account', function (req, res, next) {
+    res.render('account', {title: 'Church Centre'});
+})
+
 //get login page
 router.get('/login', function (req, res, next) {
     res.render('login', {title: 'Church Centre'});
