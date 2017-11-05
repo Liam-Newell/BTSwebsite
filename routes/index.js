@@ -91,7 +91,7 @@ router.post('/register', function (req, res, next){
     if(!errors){
         var data = new UserData(item);
         data.save();
-        res.render(('registerchild'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
+        res.render(('registerchild'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
     }
     else{
         res.render('register', {
