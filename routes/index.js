@@ -88,10 +88,24 @@ router.post('/register', function (req, res, next){
     req.check('lastname', 'Invalid last name').isLength({min:2});
     req.check('firstname','Invalid first name').isLength({min:4});
     var errors = req.validationErrors();
+
     if(!errors){
         var data = new UserData(item);
+        res.render(('homepage2'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
         data.save();
-        res.render(('registerchild'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
+        //var child = window.confirm("Add Child?\nEither OK or Cancel.\nThe button you pressed will be displayed in the result window.")
+        //{
+        //    window.open("exit.html", "Thanks for Visiting!");
+        //};
+        //if(child == true)
+        //{
+        //    res.render(('registerchild'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
+        //}
+        //else
+        //{
+        //    res.render(('homepage2'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
+        //    data.save();
+        //}
     }
     else{
         res.render('register', {
