@@ -1,0 +1,9 @@
+#panel
+{
+    height: 200px;
+    width: 200px;
+    background: #E88C37;
+    float: left;
+    display: none;
+    font-size: xx-large;
+}

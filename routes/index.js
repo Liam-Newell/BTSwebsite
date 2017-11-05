@@ -44,6 +44,11 @@ router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});
 });
 
+//get register page
+router.get('/registerchild', function (req, res, next) {
+    res.render('registerchild', {title: 'Church Centre'});
+});
+
 //get homepage2 (the nice page that will you bust a nut!)
 router.get('/homepage2', function (req, res, next) {
     res.render('homepage2', {title: 'Church Centre'});
@@ -54,7 +59,7 @@ router.get('/calendar', function (req, res, next) {
     res.render('calendar', {});
 });
 
-//get test data pagge "database button on '/index'
+//get test data page "database button on '/index'
 router.get('/get-data', function (req, res, next) {
     UserData.find()
         .then(function(doc) {
@@ -86,10 +91,37 @@ router.post('/register', function (req, res, next){
     if(!errors){
         var data = new UserData(item);
         data.save();
-        res.render(('homepage2'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
+        res.render(('registerchild'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
     }
     else{
         res.render('register', {
+            title: 'Incorrect Values', cuck: 'Ya messed up'
+            , success: false, errors: req.session.errors
+        });
+    }
+});
+
+// post page for child registration
+router.post('/registerchild', function (req, res, next){
+    var item = {
+        child:
+            [{
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                birthday: req.body.birthday,
+                grade: req.body.grade
+            }]
+    };
+    req.check('lastname', 'Invalid last name').isLength({min:2});
+    req.check('firstname','Invalid first name').isLength({min:4});
+    var errors = req.validationErrors();
+    if(!errors){
+        var data = new UserData(item);
+        data.save();
+        res.render(('registerchild'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
+    }
+    else{
+        res.render('registerchild', {
             title: 'Incorrect Values', cuck: 'Ya messed up'
             , success: false, errors: req.session.errors
         });
