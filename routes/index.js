@@ -132,10 +132,31 @@ router.post('/registerchild', function (req, res, next){
 router.post('/login', function(req, res, next) {
     //form validation etc
     var item = {
-        firstname: req.body.firstname,
-        lastname: req.body.lastname
+        username: req.body.username,
+        password: req.body.password
     };
-    UserData.find({firstname : item.firstname, lastname : item.lastname}).then(function(doc){
+    UserData.find({username : item.username, password : item.password}).then(function(doc){
+        if(doc < 1){
+            console.error('no login exists');
+            res.render('login', {
+                title: 'First last name combo doesnt exist', cuck: 'Ya messed up'
+                , success: false, errors: req.session.errors
+            });
+        }
+        else {
+            res.render('homepage2', {a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
+        }
+    });
+});
+
+//note '/submit' is identicial to in the index.hbs file
+router.post('/index', function(req, res, next) {
+    //form validation etc
+    var item = {
+        username: req.body.username,
+        password: req.body.password
+    };
+    UserData.find({username : item.username, password : item.password}).then(function(doc){
         if(doc < 1){
             console.error('no login exists');
             res.render('index', {
@@ -144,7 +165,7 @@ router.post('/login', function(req, res, next) {
             });
         }
         else {
-            res.render('homepage2', {a: doc[0]._doc.firstname, b: doc[0]._doc.lastname, resultlist: doc[0]._doc._id});
+            res.render('homepage2', {a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
         }
     });
 });
