@@ -616,6 +616,15 @@ h1, h2, h3, h4, h5, h6, figure {
   right: 10%;
   top: 50%;
 }
+/*ADDED BY Stephen Noble. Adds the calendar icon to the calendar section*/
+.fh5co-section-with-image .calendar-logo {
+  position: absolute;
+  width: 70%;
+  right: 13%;
+  top: 20%;
+  font-size: 15em;
+  color: rgba(255, 255, 255, 0.9);;
+}
 @media screen and (max-width: 992px) {
   .fh5co-section-with-image .fh5co-box {
     position: relative;
