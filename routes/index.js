@@ -34,10 +34,15 @@ router.get('/', function(req, res, next) {
     req.session.errors = null;
 });
 
+//get schedule page
+router.get('/schedule', function(req, res, next){
+    res.render('schedule', {title:'Church Centre'});
+});
+
 //get account page
 router.get('/account', function (req, res, next) {
     res.render('account', {title: 'Church Centre'});
-})
+});
 
 //get login page
 router.get('/login', function (req, res, next) {
