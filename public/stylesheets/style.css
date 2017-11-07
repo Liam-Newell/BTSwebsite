@@ -569,31 +569,32 @@ h1, h2, h3, h4, h5, h6, figure {
   color: #d9534f;
 }
 
-#fh5co-why-us, .fh5co-services {
+#account-scroll, .fh5co-services {
   padding: 7em 0;
 }
 @media screen and (max-width: 768px) {
-  #fh5co-why-us, .fh5co-services {
+  #account-scroll, .fh5co-services {
     padding: 3em 0;
   }
 }
-#fh5co-why-us .item-block, .fh5co-services .item-block {
+/*For ACCOUNT*/
+#account-scroll .item-block, .fh5co-services .item-block {
   margin-bottom: 7em;
   float: left;
 }
-#fh5co-why-us .item-block .icon, .fh5co-services .item-block .icon {
+#account-scroll .item-block .icon, .fh5co-services .item-block .icon {
   display: block;
   margin-bottom: 30px;
 }
-#fh5co-why-us .item-block .icon img, .fh5co-services .item-block .icon img {
+#account-scroll .item-block .icon img, .fh5co-services .item-block .icon img {
   max-width: inherit;
   height: 90px;
   margin: 0 auto;
 }
-#fh5co-why-us .item-block h3, .fh5co-services .item-block h3 {
+#account-scroll .item-block h3, .fh5co-services .item-block h3 {
   font-size: 20px;
 }
-#fh5co-why-us .item-block p:last-child, .fh5co-services .item-block p:last-child {
+#account-scroll .item-block p:last-child, .fh5co-services .item-block p:last-child {
   margin-bottom: 0;
 }
 
@@ -663,20 +664,26 @@ h1, h2, h3, h4, h5, h6, figure {
 .fh5co-section-with-image p:last-child {
   margin-bottom: 0;
 }
+/*SCHEDULE*/
+/*Used account's menu choice configurations*/
+#schedule-scroll .item-block .icon, .fh5co-services .item-block .icon {
+  display: block;
+  margin-bottom: 30px;
+}
 
-#fh5co-testimonial {
+#schedule-scroll {
   background: #fff;
   padding: 7em 0;
 }
 @media screen and (max-width: 768px) {
-  #fh5co-testimonial {
+  #schedule-scroll {
     padding: 3em 0;
   }
 }
-#fh5co-testimonial .item-block {
+#schedule-scroll .item-block {
   margin-bottom: 30px;
 }
-#fh5co-testimonial .item-block blockquote {
+#schedule-scroll .item-block blockquote {
   margin-bottom: 70px;
   position: relative;
   border-left: none;
@@ -694,23 +701,23 @@ h1, h2, h3, h4, h5, h6, figure {
   -o-box-shadow: 0px 15px 95px 5px rgba(0, 0, 0, 0.06);
   box-shadow: 0px 15px 95px 5px rgba(0, 0, 0, 0.06);
 }
-#fh5co-testimonial .item-block blockquote p {
+#schedule-scroll .item-block blockquote p {
   font-size: 18px;
   line-height: 1.7;
   color: #000;
   margin-bottom: 10px;
 }
-#fh5co-testimonial .item-block blockquote p:last-child {
+#schedule-scroll .item-block blockquote p:last-child {
   margin-bottom: 0;
 }
-#fh5co-testimonial .item-block blockquote .fh5co-author {
+#schedule-scroll .item-block blockquote .fh5co-author {
   color: #b3b3b3;
   font-size: 16px;
 }
-#fh5co-testimonial .item-block blockquote .fh5co-author cite {
+#schedule-scroll .item-block blockquote .fh5co-author cite {
   font-style: normal;
 }
-#fh5co-testimonial .item-block .icon {
+#schedule-scroll .item-block .icon {
   margin-top: 7px;
 }
 
