@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Database</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">{{title}}</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="inactive"><a href="/">Home</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+    </div>
+</nav>
+<h3>Get Data</h3>
+<a href="users">LOAD DATA</a>
+<div style="margin-left: 100px">
+    {{# each eventlist }}
+    <article class="item">
+        <h1><b>Year : {{ this.year }}</b></h1>
+        <div>Day : {{ this.day }}</div>
+        <div>Information : {{ this.info }}</div>
+        <div>Object ID : {{ this._id }}</div>
+        <br>
+    {{/each}}
+</div>
+</body>
