@@ -1,0 +1,75 @@
+<html>
+<head>
+    <title></title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/stylesheets/button.css"/>
+    <link rel="stylesheet" href="/stylesheets/clicktoshow.css"/>
+
+</head>
+<body>
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Church Center</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="inactive"><a href="users">Home</a></li>
+            <li><a href="users/database">Database</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+    </div>
+</nav>
+<!--Navigation bar -->
+<br/><br/>
+<p>
+    {{errors}}
+</p>
+<div class="container">
+    <div class="page-header">
+        <h1>My Event</h1>
+    </div>
+    <form method="post" role="form" action="Users/createevent" id="createevent" class="login-form form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-4">Title</label>
+            <div class="col-sm-8">
+                <input placeholder="" required="required" name="title" type="text"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Date of Event</label>
+            <div class="col-sm-8">
+                <input placeholder="" required="required" name="eventdate" type="date"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Time</label>
+            <div class="col-sm-8">
+                <input placeholder="9:99" required="required" name="time" type="time"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Info</label>
+            <div class="col-sm-8">
+                <textarea rows="4" cols="50" name="info" required="required" form="createevent"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+                <button type="submit" id="createevent" class="login btn btn-primary">Create Event</button>
+            </div>
+        </div>
+        <div class="pull-right"><a href="/">Return to home page</a></div>
+    </form>
+
+</div>
+</body>
+</html>

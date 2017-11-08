@@ -12,7 +12,7 @@
             <a class="navbar-brand" href="/">{{title}}</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="inactive"><a href="/">Home</a></li>
+            <li class="inactive"><a href="/Users">Home</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -21,12 +21,12 @@
     </div>
 </nav>
 <h3>Get Data</h3>
-<a href="users">LOAD DATA</a>
+<a href="database">LOAD DATA</a>
 <div style="margin-left: 100px">
     {{# each eventlist }}
     <article class="item">
-        <h1><b>Year : {{ this.year }}</b></h1>
-        <div>Day : {{ this.day }}</div>
+        <h1><b>Year : {{ this.date}}</b></h1>
+        <div>Day : {{ this.time }}</div>
         <div>Information : {{ this.info }}</div>
         <div>Object ID : {{ this._id }}</div>
         <br>

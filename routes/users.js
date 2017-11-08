@@ -5,8 +5,8 @@ mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
 
 var eventdataschema = new Schema({
-    year: {type: Number, min: 2015, max: 2030, required: true},
-    day: {type: Number, min: 1, max: 31, required: true},
+    title: {type: String, required: true},
+    date: {type: Date, required: true},
     info: {type: String, required: true}
 }, {collection: 'events'});
 
@@ -14,10 +14,27 @@ var EventData = mongoose.model('EventData', eventdataschema);
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    EventData.find().then(function (doc) {
+    res.render('Users/createevent');
+});
+router.post('/createevent', function (req, res, next) {
+
+    var event = {
+        title: req.body.title,
+        date: req.body.eventdate,
+        info: req.body.info
+    };
+    var time = event.date + " " + req.body.time.toString();
+    event.date = time;
+    var data = new EventData(event);
+    data.save();
+    EventData.find().sort('-date').then(function (doc) {
         res.render('Users/eventDB', {eventlist: doc});
     })
-
+});
+router.get('/database', function (req, res, next) {
+    EventData.find().sort('-date').then(function (doc) {
+        res.render('Users/eventDB', {eventlist: doc});
+    })
 });
 
 module.exports = router;
