@@ -16,6 +16,9 @@ var EventData = mongoose.model('EventData', eventdataschema);
 router.get('/', function(req, res, next) {
     res.render('Users/createevent');
 });
+router.get('/calendar', function (req, res, next) {
+    res.render('Users/calendar');
+})
 router.post('/createevent', function (req, res, next) {
 
     var event = {
