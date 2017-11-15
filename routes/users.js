@@ -28,7 +28,7 @@ router.get('/calendar', function (req, res, next) {
         {
             var events = [];
             event = doc[0]._doc;
-            for(var i = 1; i <= 30; i++){
+            for (var i = 1; i <= 31; i++) {
                     var e = {
                         title: '',
                         date: i,
@@ -39,9 +39,9 @@ router.get('/calendar', function (req, res, next) {
 
                 }
             for(var j = 0; j < doc.length; j++) {
-                for (var i = 0; i <= 31; i++) {
+                for (var i = 0; i <= 30; i++) {
                     if (doc[j]._doc.date.getDate() == i) {
-                        events[i].info = doc[j]._doc;
+                        events[(i - 1)].info = doc[j]._doc;
                     }
                 }
             }
