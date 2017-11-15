@@ -1404,4 +1404,16 @@ h1, h2, h3, h4, h5, h6, figure {
   opacity: 0;
 }
 
+.accProfile
+{
+  background-color: #b3b3b3;
+  margin: 7em;
+  padding: 1em;
+  position: relative;
+  color: black;
+}
+.accProfile p
+{
+  margin-left: 2em;
+}
 /*# sourceMappingURL=style.css.map */
