@@ -60,24 +60,27 @@
 
         <!-- Days from previous month -->
 
-
-        {{# each eventlist}}
         <ul class="days">
+        {{# each eventlist}}
+
             <li class="day">
                 <div class="date">{{this.date}}</div>
-                <div class="event">
-                    <div class="event-desc">
-                        {{this.info.title}} {{this.info.info}}
+                {{#if this.info}}
+
+                    <div class="event">
+                        <div class="event-desc">
+                            {{this.info.title}} {{this.info.info}}
+                        </div>
+                        <div class="event-time">
+                            {{this.info.date}}
+                        </div>
                     </div>
-                    <div class="event-time">
-                        {{this.info.date}}
-                    </div>
-                </div>
+                {{/if}}
             </li>
-        </ul>
+
 
         {{/each}}
-
+        </ul>
 
     </div><!-- /. calendar -->
 </div><!-- /. wrap -->
