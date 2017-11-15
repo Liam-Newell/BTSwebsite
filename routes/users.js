@@ -17,8 +17,43 @@ router.get('/', function(req, res, next) {
     res.render('Users/createevent');
 });
 router.get('/calendar', function (req, res, next) {
-    res.render('Users/calendar');
-})
+    var event = {
+        title: req.body.title,
+        date: req.body.eventdate,
+        info: req.body.info
+    };
+    EventData.find().sort('-date').then(function(doc)
+    {
+        if(doc.length > 0)
+        {
+            var events = [];
+            event = doc[0]._doc;
+            for(var i = 1; i <= 30; i++){
+                    var e = {
+                        title: '',
+                        date: i,
+                        info: ''
+
+                    };
+                    events.push(e);
+
+                }
+            for(var j = 0; j < doc.length; j++) {
+                for (var i = 0; i <= 31; i++) {
+                    if (doc[j]._doc.date.getDate() == i) {
+                        events[i].info = doc[j]._doc;
+                    }
+                }
+            }
+
+            res.render('Users/calendar',{eventlist : events, title: doc.length, month: 'November'});
+        }
+        else{
+            res.render('Users/calendar', {title : 'cucked'});
+        }
+    });
+
+});
 router.post('/createevent', function (req, res, next) {
 
     var event = {
@@ -30,9 +65,7 @@ router.post('/createevent', function (req, res, next) {
     event.date = time;
     var data = new EventData(event);
     data.save();
-    EventData.find().sort('-date').then(function (doc) {
-        res.render('Users/eventDB', {eventlist: doc});
-    })
+    res.redirect('database');
 });
 router.get('/database', function (req, res, next) {
     EventData.find().sort('-date').then(function (doc) {

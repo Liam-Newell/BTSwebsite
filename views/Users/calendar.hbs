@@ -39,12 +39,13 @@
 </nav>
 
 <!--Calander -->
+
 <div id="calendar-wrap">
     <header>
         <br>
         <br>
         <br/>
-        <h1>August 2014</h1>
+        <h1>{{Month}} 2014<p>Number Of Event Entry's {{title}}</p></h1>
     </header>
     <div id="calendar">
         <ul class="weekdays">
@@ -58,6 +59,40 @@
         </ul>
 
         <!-- Days from previous month -->
+
+
+        {{# each eventlist}}
+        <ul class="days">
+            <li class="day">
+                <div class="date">{{this.date}}</div>
+                <div class="event">
+                    <div class="event-desc">
+
+                        {{this.info.title}} {{this.info.info}}
+                    </div>
+                    <div class="event-time">
+                        {{this.info.date}}
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        {{/each}}
+        <ul class="days">
+            <li class="day">
+                <div class="date">24</div>
+            </li>
+            <li class="day">
+                <div class="date">25</div>
+                <div class="event">
+                    <div class="event-desc">
+                        Conference Call
+                    </div>
+                    <div class="event-time">
+                        1:00pm to 3:00pm
+                    </div>
+                </div>
+            </li>
 
         <ul class="days">
             <li class="day other-month">
