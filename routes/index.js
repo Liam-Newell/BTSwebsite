@@ -4,6 +4,10 @@ var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test' );
 var Schema = mongoose.Schema;
 
+//session
+var expressSession = require('express-session');
+router.use(expressSession({secret: 'max', saveUninitialized: false, resave: false}));
+
 // User schema
 var userDataSchema = new Schema({
     username:       {type: String, required: true},
