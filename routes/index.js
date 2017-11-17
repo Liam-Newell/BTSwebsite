@@ -44,8 +44,16 @@ router.get('/schedule', function(req, res, next){
 });
 
 //get account page
+//ADDED: Session information
 router.get('/account', function (req, res, next) {
-    res.render('account', {title: 'Church Centre'});
+    var userInfo = req.session;
+    console.log(userInfo.username);
+    if(userInfo.logged) {
+        res.render('account', {user: userInfo.username, title: 'Church Centre'});
+    }
+    else {
+        res.redirect('localhost:3000')
+    }
 });
 
 //get login page
@@ -64,8 +72,18 @@ router.get('/registerchild', function (req, res, next) {
 });
 
 //get homepage2 (the nice page that will you bust a nut!)
+//ADDED: SESSION INFO
 router.get('/homepage2', function (req, res, next) {
-    res.render('homepage2', {title: 'Church Centre'});
+    var userInfo = req.session;
+    if(userInfo.logged)
+    {
+        res.render('homepage2', {user: userInfo.username, title: 'Church Centre'});
+    }
+    else
+    {
+        res.redirect('localhost:3000');
+    }
+
 });
 
 //get calender page currently a work in progress
@@ -157,6 +175,7 @@ router.post('/registerchild', function (req, res, next){
 });
 
 //note '/submit' is identicial to in the index.hbs file
+//ADDED: SESS DATA
 router.post('/login', function(req, res, next) {
     //form validation etc
     var item = {
@@ -172,7 +191,12 @@ router.post('/login', function(req, res, next) {
             });
         }
         else {
-            res.render('homepage2', {a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
+            var sessData = req.session;
+            sessData.logged = true;
+            sessData.username = item.username;
+            console.log(sessData.username);
+            //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
+            res.redirect('/homepage2');
         }
     });
 });
@@ -193,6 +217,7 @@ router.post('/index', function(req, res, next) {
             });
         }
         else {
+
             res.render('homepage2', {a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
         }
     });
