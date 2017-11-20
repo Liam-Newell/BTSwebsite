@@ -19,17 +19,18 @@ var userDataSchema = new Schema({
     phonenumber:    {type: String, required: false},
     phonenumber2:   {type: String, required: false},
     birthday:       {type: Date, required: false},
-    children:       [
-                        {
-                            firstname:      {type: String, required: true},
-                            lastname:       {type: String, required: true},
-                            birthday:       {type: Date, required: false},
-                            grade:          {type: Number, min: 1, max: 8, required: true}
-                        }
-                    ]
+    child:          [{type: Schema.Types.ObjectId, ref: 'children'}]
     }, {collection: 'data'});
 
-var UserData = mongoose.model('UserData', userDataSchema);
+var childDataSchema = new Schema({
+    firstname:      {type: String, required: true},
+    lastname:       {type: String, required: true},
+    birthday:       {type: Date, required: true},
+    grade:          {type: Number, min: 1, max: 8, required: true}
+    }, {collection: 'children'});
+
+var User = mongoose.model('User', userDataSchema);
+var Child = mongoose.model('Child', childDataSchema);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -104,7 +105,8 @@ router.get('/calendar', function (req, res, next) {
 
 //get test data page "database button on '/index'
 router.get('/get-data', function (req, res, next) {
-    UserData.find()
+    User.find({username : 'barb.czegel'})
+        .populate('child.firstname')
         .then(function(doc) {
             if(doc.length > 0) {
                 res.render('database', {items: doc});
@@ -133,7 +135,7 @@ router.post('/register', function (req, res, next){
     var errors = req.validationErrors();
 
     if(!errors){
-        var data = new UserData(item);
+        var data = new User(item);
         res.render(('homepage2'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
         data.save();
         //var child = window.confirm("Add Child?\nEither OK or Cancel.\nThe button you pressed will be displayed in the result window.")
@@ -161,19 +163,17 @@ router.post('/register', function (req, res, next){
 // post page for child registration
 router.post('/registerchild', function (req, res, next){
     var item = {
-        child:
-            [{
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                birthday: req.body.birthday,
-                grade: req.body.grade
-            }]
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        birthday: req.body.birthday,
+        grade: req.body.grade
     };
+
     req.check('lastname', 'Invalid last name').isLength({min:2});
     req.check('firstname','Invalid first name').isLength({min:4});
     var errors = req.validationErrors();
     if(!errors){
-        var data = new UserData(item);
+        var data = new Child(item);
         data.save();
         res.render(('registerchild'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
     }
@@ -193,7 +193,7 @@ router.post('/login', function(req, res, next) {
         username: req.body.username,
         password: req.body.password
     };
-    UserData.find({username : item.username, password : item.password}).then(function(doc){
+    User.find({username : item.username, password : item.password}).then(function(doc){
         if(doc < 1){
             console.error('no login exists');
             res.render('login', {
@@ -220,7 +220,7 @@ router.post('/index', function(req, res, next) {
         username: req.body.username,
         password: req.body.password
     };
-    UserData.find({username : item.username, password : item.password}).then(function(doc){
+    User.find({username : item.username, password : item.password}).then(function(doc){
         if(doc < 1){
             console.error('no login exists');
             res.render('index', {
@@ -235,4 +235,6 @@ router.post('/index', function(req, res, next) {
     });
 });
 
+module.exports = mongoose.model("User", userDataSchema);
+module.exports = mongoose.model("Child", childDataSchema);
 module.exports = router;
