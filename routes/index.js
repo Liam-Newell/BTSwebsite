@@ -46,10 +46,21 @@ router.get('/schedule', function(req, res, next){
 //get account page
 //ADDED: Session information
 router.get('/account', function (req, res, next) {
-    var userInfo = req.session;
-    console.log(userInfo.username);
-    if(userInfo.logged) {
-        res.render('account', {user: userInfo.username, title: 'Church Centre'});
+    var sess = req.session;
+    var userData = sess.userDat;
+    var bday = new Date (userData.birthday).toUTCString();
+    console.log(bday);
+    if(sess.logged) {
+        res.render('account', {
+            user: sess.username,
+            title: 'Church Centre',
+            firstname: userData.firstname,
+            lastname: userData.lastname,
+            dob: bday,
+            email: userData.email,
+            ph1: userData.phonenumber,
+            ph2: userData.phonenumber2
+        });
     }
     else {
         res.redirect('localhost:3000')
@@ -193,8 +204,9 @@ router.post('/login', function(req, res, next) {
         else {
             var sessData = req.session;
             sessData.logged = true;
-            sessData.username = item.username;
-            console.log(sessData.username);
+            sessData.username = doc[0].username;
+            sessData.userDat = doc[0];
+            console.log(sessData.userDat.email);
             //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
             res.redirect('/homepage2');
         }
