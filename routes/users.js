@@ -16,14 +16,28 @@ var EventData = mongoose.model('EventData', eventdataschema);
 router.get('/', function(req, res, next) {
     res.render('Users/createevent');
 });
+router.get('/calendar/:id', function(req,res, next){
+    var string = encodeURIComponent(id);
+    res.redirect('/calendar?id=' + string);
+});
 router.get('/calendar', function (req, res, next) {
     var event = {
         title: req.body.title,
         date: req.body.eventdate,
         info: req.body.info
     };
+    var monthpassed = req.query.id;
     EventData.find().sort('-date').then(function(doc)
     {
+
+        if(!monthpassed){
+          //  var d = new Date();
+           // var n = d.getMonth();
+          //  n++;
+          //  monthpassed = n;
+            monthpassed = "november"
+        }
+        var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
         if(doc.length > 0)
         {
             var events = [];
@@ -32,21 +46,23 @@ router.get('/calendar', function (req, res, next) {
                     var e = {
                         title: '',
                         date: i,
-                        info: ''
+                        info: []
 
                     };
                     events.push(e);
 
                 }
+            for (var i = 0; i <= 30; i++) {
+                var index = 0;
             for(var j = 0; j < doc.length; j++) {
-                for (var i = 0; i <= 30; i++) {
-                    if (doc[j]._doc.date.getDate() == i) {
-                        events[(i - 1)].info = doc[j]._doc;
+                    if (doc[j]._doc.date.getDate() == i && doc[j]._doc.date.getMonth() == month) {
+                        events[(i - 1)].info[index] = doc[j]._doc;
+                        index++
                     }
                 }
             }
 
-            res.render('Users/calendar',{eventlist : events, title: doc.length, month: 'November'});
+            res.render('Users/calendar',{eventlist : events, size: doc.length, month: monthpassed, year: (new Date()).getFullYear()});
         }
         else{
             res.render('Users/calendar', {title : 'cucked'});

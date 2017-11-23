@@ -43,15 +43,19 @@ router.get('/', function(req, res, next) {
 router.get('/schedule', function(req, res, next){
     res.render('schedule', {title:'Church Centre'});
 });
+router.get('/logout', function(req, res, next){
+   req.session = new session();
 
+});
 //get account page
 //ADDED: Session information
 router.get('/account', function (req, res, next) {
     var sess = req.session;
     var userData = sess.userDat;
-    var bday = new Date (userData.birthday).toUTCString();
-    console.log(bday);
+
     if(sess.logged) {
+        var bday = new Date (userData.birthday).toUTCString();
+        console.log(bday);
         res.render('account', {
             user: sess.username,
             title: 'Church Centre',

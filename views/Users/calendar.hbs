@@ -10,6 +10,13 @@
     <!--Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!--Month Year Scripts -->
+    <script>
+        function monthfunction(month){
+            window.location.href = "/users/calendar?id="+ month;
+        }
+    </script>
 </head>
 <body>
 <!--Navigation bar -->
@@ -45,7 +52,30 @@
         <br>
         <br>
         <br/>
-        <h1>{{Month}} 2014<p>Number Of Event Entry's {{title}}</p></h1>
+        <h1>
+
+            <div id ="month"></div>
+            <select name="monthSelect" id="monthSelect" onchange="monthfunction(this.value)">
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
+            </select>
+            <script>
+                    var x = document.getElementById("monthSelect");
+                    x.value = '{{month}}';
+            </script>
+            {{year}}
+            <p>Number Of Event Entry's {{size}}</p>
+        </h1>
     </header>
     <div id="calendar">
         <ul class="weekdays">
@@ -66,15 +96,16 @@
             <li class="day">
                 <div class="date">{{this.date}}</div>
                 {{#if this.info}}
-
+                    {{# each info}}
                     <div class="event">
                         <div class="event-desc">
-                            {{this.info.title}} {{this.info.info}}
+                            {{this.title}} {{this.info}}
                         </div>
                         <div class="event-time">
-                            {{this.info.date}}
+                            {{this.date}}
                         </div>
                     </div>
+                    {{/each}}
                 {{/if}}
             </li>
 
