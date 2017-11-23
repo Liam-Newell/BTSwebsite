@@ -10,6 +10,7 @@ var expressSession = require('express-session');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var User = require('./routes/index');
 
 var app = express();
 

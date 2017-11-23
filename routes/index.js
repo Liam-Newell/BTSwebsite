@@ -8,20 +8,21 @@ var Schema = mongoose.Schema;
 var expressSession = require('express-session');
 router.use(expressSession({secret: 'max', saveUninitialized: false, resave: false}));
 
-// User schema
+//user schema
 var userDataSchema = new Schema({
     username:       {type: String, required: true},
     password:       {type: String, required: true},
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
-    address:        {type: String, required: false},
+    streetaddress:  {type: String, required: false},
     email:          {type: String, required: false},
     phonenumber:    {type: String, required: false},
     phonenumber2:   {type: String, required: false},
     birthday:       {type: Date, required: false},
-    child:          [{type: Schema.Types.ObjectId, ref: 'children'}]
+    child:          [{type: Schema.Types.ObjectId, ref: 'Child'}]
     }, {collection: 'data'});
 
+//child schema
 var childDataSchema = new Schema({
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
@@ -29,10 +30,11 @@ var childDataSchema = new Schema({
     grade:          {type: Number, min: 1, max: 8, required: true}
     }, {collection: 'children'});
 
+//instantiate schema as models "User" and "Child"
 var User = mongoose.model('User', userDataSchema);
 var Child = mongoose.model('Child', childDataSchema);
 
-/* GET home page. */
+// get home page
 router.get('/', function(req, res, next) {
     res.render('index', { title: 'Church Centre' , cuck:'liam'
     , success: false, errors: req.session.errors});
@@ -47,6 +49,7 @@ router.get('/logout', function(req, res, next){
    req.session = new session();
 
 });
+
 //get account page
 //ADDED: Session information
 router.get('/account', function (req, res, next) {
@@ -109,8 +112,8 @@ router.get('/calendar', function (req, res, next) {
 
 //get test data page "database button on '/index'
 router.get('/get-data', function (req, res, next) {
-    User.find({username : 'barb.czegel'})
-        .populate('child.firstname')
+    User.find()
+        .populate('child')
         .then(function(doc) {
             if(doc.length > 0) {
                 res.render('database', {items: doc});
