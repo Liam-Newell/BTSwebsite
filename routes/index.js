@@ -19,7 +19,7 @@ var userDataSchema = new Schema({
     phonenumber:    {type: String, required: false},
     phonenumber2:   {type: String, required: false},
     birthday:       {type: Date, required: false},
-    child:          [{type: Schema.Types.ObjectId, ref: 'Child'}]
+    children:       [{type: Schema.Types.ObjectId, ref: 'Child'}]
     }, {collection: 'data'});
 
 //child schema
@@ -87,7 +87,14 @@ router.get('/register', function (req, res, next) {
 
 //get register page
 router.get('/registerchild', function (req, res, next) {
-    res.render('registerchild', {title: 'Church Centre'});
+    var sess = req.session;
+    var userData = sess.userDat;
+    if(sess.logged) {
+        res.render('registerchild', {user: userData.username});
+    }
+    else {
+        res.render('index', {title: 'ya dun goofed kid'});
+    }
 });
 
 //get homepage2 (the nice page that will you bust a nut!)
@@ -113,7 +120,7 @@ router.get('/calendar', function (req, res, next) {
 //get test data page "database button on '/index'
 router.get('/get-data', function (req, res, next) {
     User.find()
-        .populate('child')
+        .populate('children')
         .then(function(doc) {
             if(doc.length > 0) {
                 res.render('database', {items: doc});
@@ -166,9 +173,35 @@ router.post('/register', function (req, res, next){
         });
     }
 });
+//ADDED: Session information
+router.get('/account', function (req, res, next) {
+    var sess = req.session;
+    var userData = sess.userDat;
 
-// post page for child registration
-router.post('/registerchild', function (req, res, next){
+    if(sess.logged) {
+        var bday = new Date (userData.birthday).toUTCString();
+        console.log(bday);
+        res.render('account', {
+            user: sess.username,
+            title: 'Church Centre',
+            firstname: userData.firstname,
+            lastname: userData.lastname,
+            dob: bday,
+            email: userData.email,
+            ph1: userData.phonenumber,
+            ph2: userData.phonenumber2
+        });
+    }
+    else {
+        res.redirect('localhost:3000')
+    }
+});
+
+//post page for child registration
+router.post('/registerchild', function (req, res, next) {
+    var sess = req.session;
+    var userData = sess.userDat;
+
     var item = {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
@@ -176,19 +209,31 @@ router.post('/registerchild', function (req, res, next){
         grade: req.body.grade
     };
 
-    req.check('lastname', 'Invalid last name').isLength({min:2});
-    req.check('firstname','Invalid first name').isLength({min:4});
-    var errors = req.validationErrors();
-    if(!errors){
-        var data = new Child(item);
-        data.save();
-        res.render(('registerchild'),{a : item.firstname, b:item.lastname, resultlist: 'cuck'});
-    }
-    else{
-        res.render('registerchild', {
-            title: 'Incorrect Values', cuck: 'Ya messed up'
-            , success: false, errors: req.session.errors
-        });
+    if(sess.logged) {
+        console.log(userData.username);
+            req.check('lastname', 'Invalid last name').isLength({min: 2});
+            req.check('firstname', 'Invalid first name').isLength({min: 4});
+            var errors = req.validationErrors();
+            if (!errors) {
+                var data = new Child(item);
+                data.save(function(err, child) {
+                        var child_id = child.id;
+                        userData.children._id.update(child_id)
+                    }
+                );
+
+                res.render('account');
+            }
+            else {
+                res.render('registerchild',
+                {
+                    title: 'Incorrect Values', cuck: 'Ya messed up'
+                    , success: false, errors: req.session.errors
+                });
+            }
+        }
+        else {
+            console.error("User not logged in or session cannot retrieve user information");
     }
 });
 
