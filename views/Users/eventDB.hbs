@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Database</title>
+    <link rel="stylesheet" href="/stylesheets/eventDB.css" type="text/css"/>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
@@ -18,7 +19,8 @@
 </nav>
 <h3>Get Data</h3>
 <a href="database">LOAD DATA</a>
-<div style="margin-left: 100px">
+
+<div id="event">
     {{# each eventlist }}
     <article class="item">
         <h1><b>Year : {{ this.date}}</b></h1>
