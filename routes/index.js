@@ -43,8 +43,16 @@ router.get('/', function(req, res, next) {
 
 //get schedule page
 router.get('/schedule', function(req, res, next){
-    res.render('schedule', {title:'Church Centre'});
+    var sess = req.session;
+
+    if(sess.logged) {
+        res.render('schedule', {title: 'Church Centre', user: sess.username});
+    }else{
+        res.redirect('localhost:3000');
+    }
+
 });
+
 router.get('/logout', function(req, res, next){
    req.session = new session();
 
