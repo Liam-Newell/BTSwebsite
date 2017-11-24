@@ -150,8 +150,16 @@ router.post('/register', function (req, res, next){
 
     if(!errors){
         var data = new User(item);
-        res.render(('homepage2'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
+        //res.render(('homepage2'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
         data.save();
+        //LOGGING IN NEW USER - temp fix  || S.N.
+        var sessData = req.session;
+        sessData.logged = true;
+        sessData.username = item.username;
+        sessData.userDat = item;
+        console.log(sessData.userDat.email);
+        //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
+        res.redirect('/homepage2');
         //var child = window.confirm("Add Child?\nEither OK or Cancel.\nThe button you pressed will be displayed in the result window.")
         //{
         //    window.open("exit.html", "Thanks for Visiting!");
