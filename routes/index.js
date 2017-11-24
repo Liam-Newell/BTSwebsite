@@ -41,7 +41,7 @@ router.get('/', function(req, res, next) {
     req.session.errors = null;
 });
 
-//get schedule page
+//get schedule page!
 router.get('/schedule', function(req, res, next){
     var sess = req.session;
 
