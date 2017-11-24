@@ -20,6 +20,13 @@ router.get('/calendar/:id', function(req,res, next){
     var string = encodeURIComponent(id);
     res.redirect('/calendar?id=' + string);
 });
+router.get('/viewevent/:id', function(req, res, next){
+    var event = id;
+    EventData.findOne({_id: id}).then(function(doc){
+        res.render('Users/event' , {info: doc});
+    });
+
+});
 router.get('/calendar', function (req, res, next) {
     var event = {
         title: req.body.title,
@@ -88,5 +95,6 @@ router.get('/database', function (req, res, next) {
         res.render('Users/eventDB', {eventlist: doc});
     })
 });
+
 
 module.exports = router;

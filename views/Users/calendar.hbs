@@ -16,6 +16,9 @@
         function monthfunction(month){
             window.location.href = "/users/calendar?id="+ month;
         }
+        function eventviewer(event){
+            window.location.href = "/users/viewevent?id="+ event;
+        }
     </script>
 </head>
 <body>
@@ -74,7 +77,7 @@
                     x.value = '{{month}}';
             </script>
             {{year}}
-            <p>Number Of Event Entry's {{size}}</p>
+            <p>Number Of Event Entries {{size}}</p>
         </h1>
     </header>
     <div id="calendar">
@@ -97,7 +100,8 @@
                 <div class="date">{{this.date}}</div>
                 {{#if this.info}}
                     {{# each info}}
-                    <div class="event">
+                        <a onclick="eventviewer('{{this._id}}')">
+                    <div class="event" onclick="eventviewer('{{this._id}}')">
                         <div class="event-desc">
                             {{this.title}} {{this.info}}
                         </div>
@@ -105,6 +109,7 @@
                             {{this.date}}
                         </div>
                     </div>
+                        </a>
                     {{/each}}
                 {{/if}}
             </li>
