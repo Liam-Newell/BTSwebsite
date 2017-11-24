@@ -303,6 +303,22 @@ router.post('/index', function(req, res, next) {
     });
 });
 
+//SIGN OUT SEQUENCE - removes session, and prepare the app to
+router.get('/sign-out', function(req, res, next) {
+    var sess = req.session;
+    var userData = sess.userDat;
+
+    if(sess.logged)
+    {
+        //delete session
+        res.redirect('localhost:3000');
+    }
+    else
+    {
+        res.redirect('localhost:3000');
+    }
+});
+
 module.exports = mongoose.model("User", userDataSchema);
 module.exports = mongoose.model("Child", childDataSchema);
 module.exports = router;
