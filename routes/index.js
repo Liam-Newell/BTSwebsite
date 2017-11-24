@@ -209,7 +209,7 @@ router.get('/account', function (req, res, next) {
         });
     }
     else {
-        res.redirect('localhost:3000')
+        res.redirect('localhost:3000');
     }
 });
 
