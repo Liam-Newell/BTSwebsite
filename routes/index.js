@@ -88,6 +88,7 @@ router.get('/login', function (req, res, next) {
     res.render('login', {title: 'Church Centre'});
 });
 
+
 //get register page
 router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});

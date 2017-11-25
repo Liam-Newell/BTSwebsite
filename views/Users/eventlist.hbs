@@ -23,12 +23,16 @@
 <!--Month Year Scripts -->
 <script>
     function monthfunction(month){
-        window.location.href = "/users/database?id="+ month;
+        window.location.href = "/users/eventlist?id="+ month;
     }
 </script>
 
 <h3>Get Data</h3>
-<a href="database">LOAD DATA</a>
+<a href="eventlist">LOAD DATA</a>
+
+
+
+<h1>Month passed: {{output}}</h1>
 
 <div id ="month"></div>
 <select name="monthSelect" id="monthSelect" onchange="monthfunction(this.value)">
@@ -58,7 +62,7 @@
         <div>Day : {{ this.title }}</div>
         <div>Information : {{ this.info }}</div>
         <div>Object ID : {{ this._id }}</div>
-        <br>
+        <br><br>
     {{/each}}
 </div>
 </body>

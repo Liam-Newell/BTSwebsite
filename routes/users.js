@@ -16,17 +16,26 @@ var EventData = mongoose.model('EventData', eventdataschema);
 router.get('/', function(req, res, next) {
     res.render('Users/createevent');
 });
+
+/* Routers for selecting a month in the calander*/
 router.get('/calendar/:id', function(req,res, next){
     var string = encodeURIComponent(id);
     res.redirect('/calendar?id=' + string);
 });
+
 router.get('/viewevent/:id', function(req, res, next){
     var event = id;
     EventData.findOne({_id: id}).then(function(doc){
         res.render('Users/event' , {info: doc});
     });
-
 });
+
+/* Routers for selecting a month in the event list*/
+router.get('/database/:id', function (req,res,next) {
+    var string = encodeURIComponent(id);
+    res.redirect('/database?id' + string);
+});
+
 router.get('/calendar', function (req, res, next) {
     var event = {
         title: req.body.title,
@@ -77,6 +86,8 @@ router.get('/calendar', function (req, res, next) {
     });
 
 });
+
+
 router.post('/createevent', function (req, res, next) {
 
     var event = {
@@ -90,11 +101,29 @@ router.post('/createevent', function (req, res, next) {
     data.save();
     res.redirect('database');
 });
+
 router.get('/database', function (req, res, next) {
     EventData.find().sort('-date').then(function (doc) {
         res.render('Users/eventDB', {eventlist: doc});
     })
 });
 
+
+//MINAS ADDED CODE. I am trying to get the monthe to pass and display it
+router.get('/eventlist', function (req, res, next) {
+
+    var monthpassed = req.query.id;
+
+
+    EventData.find().sort('-date').then(function (doc){
+        res.render('Users/eventlist', {eventlist: doc, output:monthpassed});
+    })
+
+});
+
+router.get('/eventlist/:id', function(req,res, next){
+    var string = encodeURIComponent(id);
+    res.redirect('eventlist?id=' + string);
+});
 
 module.exports = router;
