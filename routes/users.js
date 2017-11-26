@@ -114,11 +114,26 @@ router.get('/eventlist', function (req, res, next) {
 
     var monthpassed = req.query.id;
 
-
     EventData.find().sort('-date').then(function (doc){
-        res.render('Users/eventlist', {eventlist: doc, output:monthpassed});
-    })
 
+        if(!monthpassed){
+            monthpassed = "january";
+        }
+
+        var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
+
+        var events = [];
+
+        if(doc.length > 0){
+            for(var j = 0; j < doc.length; j++) {
+                if (doc[j]._doc.date.getMonth() == month) {
+                    events[j].info[index] = doc[j]._doc;
+                    index++
+                }
+            }
+        }
+        res.render('Users/eventlist', {eventlist: events, output:monthpassed});
+    })
 });
 
 router.get('/eventlist/:id', function(req,res, next){
