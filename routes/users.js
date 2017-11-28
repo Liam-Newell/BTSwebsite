@@ -45,7 +45,7 @@ router.get('/calendar', function (req, res, next) {
     var monthpassed = req.query.id;
     Event.find().sort('-date').then(function(doc)
     {
-
+        var userInfo = req.session;
         if(!monthpassed){
 
             monthpassed = "november"
@@ -74,8 +74,16 @@ router.get('/calendar', function (req, res, next) {
                     }
                 }
             }
-
-            res.render('Users/calendar',{eventlist : events, size: doc.length, month: monthpassed, year: (new Date()).getFullYear()});
+            //Allows the personalized account message
+            if(userInfo.logged)
+            {
+                var user = userInfo.username;
+            }
+            else
+            {
+                var user = "Guest"
+            }
+            res.render('Users/calendar',{eventlist : events, size: doc.length, month: monthpassed, year: (new Date()).getFullYear(), user: user});
         }
         else{
             res.render('Users/calendar', {title : 'cucked'});
