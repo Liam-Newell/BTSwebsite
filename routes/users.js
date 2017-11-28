@@ -4,13 +4,13 @@ var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
 
-var eventdataschema = new Schema({
+var eventDataSchema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
     info: {type: String, required: true}
 }, {collection: 'events'});
 
-var EventData = mongoose.model('EventData', eventdataschema);
+var Event = mongoose.model('Event', eventDataSchema);
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -25,7 +25,7 @@ router.get('/calendar/:id', function(req,res, next){
 
 router.get('/viewevent/:id', function(req, res, next){
     var event = id;
-    EventData.findOne({_id: id}).then(function(doc){
+    Event.findOne({_id: id}).then(function(doc){
         res.render('Users/event' , {info: doc});
     });
 });
@@ -43,7 +43,7 @@ router.get('/calendar', function (req, res, next) {
         info: req.body.info
     };
     var monthpassed = req.query.id;
-    EventData.find().sort('-date').then(function(doc)
+    Event.find().sort('-date').then(function(doc)
     {
 
         if(!monthpassed){
@@ -94,13 +94,13 @@ router.post('/createevent', function (req, res, next) {
     };
     var time = event.date + " " + req.body.time.toString();
     event.date = time;
-    var data = new EventData(event);
+    var data = new Event(event);
     data.save();
     res.redirect('database');
 });
 
 router.get('/database', function (req, res, next) {
-    EventData.find().sort('-date').then(function (doc) {
+    Event.find().sort('-date').then(function (doc) {
         res.render('Users/eventDB', {eventlist: doc});
     })
 });
@@ -111,7 +111,7 @@ router.get('/eventlist', function (req, res, next) {
 
     var monthpassed = req.query.id;
 
-    EventData.find().sort('-date').then(function (doc){
+    Event.find().sort('-date').then(function (doc){
 
         if(!monthpassed){
             monthpassed = "january";
