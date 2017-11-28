@@ -271,7 +271,7 @@ router.post('/login', function(req, res, next) {
             var sessData = req.session;
             sessData.logged = true;
             sessData.username = doc[0].username;
-            sessData.userDat = doc[0];
+            sessData.userDat = doc[0]._doc;
             console.log(sessData.userDat.email);
             //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
             res.redirect('/homepage2');
