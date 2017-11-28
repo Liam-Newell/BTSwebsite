@@ -78,12 +78,15 @@ router.get('/calendar', function (req, res, next) {
             if(userInfo.logged)
             {
                 var user = userInfo.username;
+                var redirectTo = "homepage2"
             }
             else
             {
+                //Used when not logged in
                 var user = "Guest"
+                var redirectTo = ""
             }
-            res.render('Users/calendar',{eventlist : events, size: doc.length, month: monthpassed, year: (new Date()).getFullYear(), user: user});
+            res.render('Users/calendar',{eventlist : events, size: doc.length, month: monthpassed, year: (new Date()).getFullYear(), user: user, redirect: redirectTo});
         }
         else{
             res.render('Users/calendar', {title : 'cucked'});
