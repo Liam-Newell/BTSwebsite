@@ -19,8 +19,8 @@ var userDataSchema = new Schema({
     phonenumber:    {type: String, required: false},
     phonenumber2:   {type: String, required: false},
     birthday:       {type: Date, required: false},
-    children:       [{type: Schema.Types.ObjectId, ref: 'Child'}],
-    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}]
+    children:       [{type: Schema.Types.ObjectId, ref: 'Child'}], //an array of child ObjectID's referencing Child collection
+    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
     }, {collection: 'data'});
 
 //child schema
@@ -29,7 +29,7 @@ var childDataSchema = new Schema({
     lastname:       {type: String, required: true},
     birthday:       {type: Date, required: true},
     grade:          {type: Number, min: 1, max: 8, required: true},
-    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}]
+    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
     }, {collection: 'children'});
 
 //instantiate schema as models "User" and "Child"
