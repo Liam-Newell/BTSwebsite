@@ -16,9 +16,7 @@
         function monthfunction(month){
             window.location.href = "/users/calendar?id="+ month;
         }
-        function eventviewer(event){
-            window.location.href = "/users/viewevent?id="+ event;
-        }
+
     </script>
 </head>
 <body>
@@ -91,7 +89,14 @@
         </ul>
 
         <!-- Days from previous month -->
-
+        <form method="post" role="form" action="/users/event" id="eventform" name="eventform" class="login-form form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-8">
+                    <input type="hidden" placeholder="blank" value="thisisblank" required="required" name="eventid" id="eventid" type="text"
+                           class="form-control"/>
+                </div>
+            </div>
+        </form>
         <ul class="days">
         {{# each eventlist}}
 
@@ -99,8 +104,8 @@
                 <div class="date">{{this.date}}</div>
                 {{#if this.info}}
                     {{# each info}}
-                        <a onclick="eventviewer('{{this._id}}')">
-                    <div class="event" onclick="eventviewer('{{this._id}}')">
+                        <a href="javascript:(eventviewer('{{this._id}}'));">
+                    <div class="event" name="{{this._id}}" >
                         <div class="event-desc">
                             {{this.title}} {{this.info}}
                         </div>
@@ -116,6 +121,13 @@
 
         {{/each}}
         </ul>
+        <script>
+            function eventviewer(eventid){
+                var formid = document.getElementById("eventform");
+                document.eventform.eventid.value = eventid;
+                document.getElementById("eventform").submit();
+            }
+        </script>
 
     </div><!-- /. calendar -->
 </div><!-- /. wrap -->

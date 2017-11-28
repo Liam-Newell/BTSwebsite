@@ -154,7 +154,7 @@ router.post('/register', function (req, res, next){
         birthday: req.body.birthday
     };
     req.check('lastname', 'Invalid last name').isLength({min:2});
-    req.check('firstname','Invalid first name').isLength({min:4});
+    req.check('firstname','Invalid first name').isLength({min:2});
     var errors = req.validationErrors();
 
     if(!errors){
@@ -310,13 +310,15 @@ router.get('/sign-out', function(req, res, next) {
     var userData = sess.userDat;
 
     if(sess.logged)
-    {
-        //delete session
-        res.redirect('localhost:3000');
-    }
-    else
-    {
-        res.redirect('localhost:3000');
+        req.session.destroy(function(err) {
+            if(err) {
+                console.log(err);
+            } else {
+                res.redirect('/');
+            }
+        });
+    else{
+        res.redirect('/')
     }
 });
 

@@ -47,10 +47,7 @@ router.get('/calendar', function (req, res, next) {
     {
 
         if(!monthpassed){
-          //  var d = new Date();
-           // var n = d.getMonth();
-          //  n++;
-          //  monthpassed = n;
+
             monthpassed = "november"
         }
         var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
