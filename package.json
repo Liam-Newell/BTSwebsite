@@ -13,6 +13,7 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
     "express-validator": "^4.3.0",
+    "finalhandler": "^1.1.0",
     "jade": "~1.11.0",
     "mongodb": "^2.2.33",
     "mongoose": "^4.13.0",

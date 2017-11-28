@@ -19,7 +19,8 @@ var userDataSchema = new Schema({
     phonenumber:    {type: String, required: false},
     phonenumber2:   {type: String, required: false},
     birthday:       {type: Date, required: false},
-    children:       [{type: Schema.Types.ObjectId, ref: 'Child'}]
+    children:       [{type: Schema.Types.ObjectId, ref: 'Child'}],
+    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}]
     }, {collection: 'data'});
 
 //child schema
@@ -27,7 +28,8 @@ var childDataSchema = new Schema({
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
     birthday:       {type: Date, required: true},
-    grade:          {type: Number, min: 1, max: 8, required: true}
+    grade:          {type: Number, min: 1, max: 8, required: true},
+    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}]
     }, {collection: 'children'});
 
 //instantiate schema as models "User" and "Child"
@@ -227,26 +229,21 @@ router.post('/registerchild', function (req, res, next) {
     };
 
     if(sess.logged) {
-        console.log(userData.username);
             req.check('lastname', 'Invalid last name').isLength({min: 2});
             req.check('firstname', 'Invalid first name').isLength({min: 4});
             var errors = req.validationErrors();
             if (!errors) {
                 var data = new Child(item);
-                data.save(function(err, child) {
-                        var child_id = child.id;
-                        userData.children._id.update(child_id)
-                    }
-                );
-
+                data.save();
+                userData.children.id.update(data.id);
                 res.render('account');
             }
             else {
-                res.render('registerchild',
+                res.render('registerchild'),
                 {
                     title: 'Incorrect Values', cuck: 'Ya messed up'
                     , success: false, errors: req.session.errors
-                });
+                }
             }
         }
         else {
