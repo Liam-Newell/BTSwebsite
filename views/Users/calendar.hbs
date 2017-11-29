@@ -17,6 +17,22 @@
             window.location.href = "/users/calendar?id="+ month;
         }
 
+        function eventviewer(event) {
+            var url = "Users/viewevent";
+            var params = "lorem=ipsum&name=alpha";
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
+
+//Send the proper header information along with the request
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            xhr.send(params);
+            //window.location.href = "/users/viewevent?id="+ event;
+
+            Handlebars.registerHelper('say my name', function () {
+                return "heisenberg";
+            });
+        }
     </script>
 </head>
 <body>
@@ -37,10 +53,10 @@
                 </ul>
             </li>
             <li><a href="#">Calendar</a></li>
-            <li><a href="/users/calendar">Schedule</a></li>
+            <li><a href="/schedule">Schedule</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li style="padding-top: 10px; padding-right: 15px;">Welcome, <span style="text-transform: uppercase;">{{user}}</span> !</li>
+            <li style="padding-top: 10px; padding-right: 15px;">Welcome, User!</li>
         </ul>
     </div>
 </nav>
@@ -77,6 +93,7 @@
             <p>Number Of Event Entries {{size}}</p>
         </h1>
     </header>
+
     <div id="calendar">
         <ul class="weekdays">
             <li>Sunday</li>
@@ -85,18 +102,11 @@
             <li>Wednesday</li>
             <li>Thursday</li>
             <li>Friday</li>
-            <li>Saturday</li>
+            <li>Saturday{{'say my name'}}</li>
         </ul>
 
         <!-- Days from previous month -->
-        <form method="post" role="form" action="/users/event" id="eventform" name="eventform" class="login-form form-horizontal">
-            <div class="form-group">
-                <div class="col-sm-8">
-                    <input type="hidden" placeholder="blank" value="thisisblank" required="required" name="eventid" id="eventid" type="text"
-                           class="form-control"/>
-                </div>
-            </div>
-        </form>
+
         <ul class="days">
         {{# each eventlist}}
 
@@ -104,8 +114,8 @@
                 <div class="date">{{this.date}}</div>
                 {{#if this.info}}
                     {{# each info}}
-                        <a href="javascript:(eventviewer('{{this._id}}'));">
-                    <div class="event" name="{{this._id}}" >
+                        <a onclick="eventviewer('{{this._id}}')">
+                            <div class="event" onclick="eventviewer('{{this._id}}')">
                         <div class="event-desc">
                             {{this.title}} {{this.info}}
                         </div>
@@ -121,13 +131,6 @@
 
         {{/each}}
         </ul>
-        <script>
-            function eventviewer(eventid){
-                var formid = document.getElementById("eventform");
-                document.eventform.eventid.value = eventid;
-                document.getElementById("eventform").submit();
-            }
-        </script>
 
     </div><!-- /. calendar -->
 </div><!-- /. wrap -->
