@@ -6,19 +6,3 @@ header {
     text-align: center;
 }
 
-#event{
-    margin-left: 50px;
-    margin-right: 100px;
-    clear: both;
-    display: block;
-    font-size: 13px;
-    border-radius: 4px;
-    padding: 5px;
-    margin-top: 40px;
-    margin-bottom: 5px;
-    line-height: 14px;
-    background: #606060;
-    border: 1px solid #b5dbdc;
-    color: #00B906;
-    text-decoration: none;
-}

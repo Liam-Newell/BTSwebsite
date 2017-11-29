@@ -1416,4 +1416,30 @@ h1, h2, h3, h4, h5, h6, figure {
 {
   margin-left: 2em;
 }
+/*FOR EVENT SCHEDULE - S.N.*/
+#event{
+  margin-left: 50px;
+  margin-right: 100px;
+  clear: both;
+  display: block;
+  font-size: 13px;
+  border-radius: 4px;
+  padding: 5px;
+  margin-top: 40px;
+  margin-bottom: 5px;
+  line-height: 14px;
+  background: #606060;
+  border: 1px solid #b5dbdc;
+  color: #00B906;
+  text-decoration: none;
+}
+#event .item
+{
+  font-size: 20px;
+}
+#event .event-date
+{
+  margin-top: -0.5em;
+  margin-bottom: 1em;
+}
 /*# sourceMappingURL=style.css.map */

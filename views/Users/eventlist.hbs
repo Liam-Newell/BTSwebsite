@@ -2,69 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Database</title>
-    <link rel="stylesheet" href="/stylesheets/eventDB.css" type="text/css"/>
+    <title>Schedule</title>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/stylesheets/eventDB.css" type="text/css"/>
+
+    <!--Bootstrap JS - Used to make the Account drop down function-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+<!--Navigation bar -->
+    <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                 <div class="navbar-header">
+                      <a class="navbar-brand" href="/homepage2">Church Centre</a>
+                 </div>
+                 <ul class="nav navbar-nav">
+                      <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                           <li><a href="../account">View Account</a></li>
+                           <li><a href="#">View Registered Children</a></li>
+                           <li><a href="#">Register a child</a></li>
+                        </ul>
+                      </li>
+                      <li><a href="/Users/calendar">Calendar</a></li>
+                      <li><a href="#">Schedule</a></li>
+                 </ul>
+                 <ul class="nav navbar-nav navbar-right">
+                      <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
+                 </ul>
+            </div>
+    </nav>
 
-<!--Nav Bar-->
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/">{{title}}</a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li class="inactive"><a href="/Users">Home</a></li>
-        </ul>
+    <!--Month Year Scripts -->
+    <script>
+        function monthfunction(month){
+            window.location.href = "/users/eventlist?id="+ month;
+        }
+    </script>
+
+    <h3>Get Data</h3>
+    <a href="eventlist">LOAD DATA</a>
+
+
+
+    <h1>Month passed: {{output}}</h1>
+
+    <div id ="month"></div>
+    <select name="monthSelect" id="monthSelect" onchange="monthfunction(this.value)">
+        <option value="january">January</option>
+        <option value="february">February</option>
+        <option value="march">March</option>
+        <option value="april">April</option>
+        <option value="may">May</option>
+        <option value="june">June</option>
+        <option value="july">July</option>
+        <option value="august">August</option>
+        <option value="september">September</option>
+        <option value="october">October</option>
+        <option value="november">November</option>
+        <option value="december">December</option>
+    </select>
+
+    <script>
+        var x = document.getElementById("monthSelect");
+        x.value = '{{month}}';
+    </script>
+
+    <div id="event">
+            {{# each eventlist }}
+            <article class="item">
+                <h1><b>{{ this.title }}</b></h1>
+                <div class="event-date" style="font-size: 25px;"><b>{{ this.date}}</b></div>
+                <br/>
+                <div>Note : {{ this.info }}</div>
+                <br/>
+                <div>Object ID : {{ this._id }}</div>
+                <br><br>
+            </article>
+            {{/each}}
     </div>
-</nav>
-
-<!--Month Year Scripts -->
-<script>
-    function monthfunction(month){
-        window.location.href = "/users/eventlist?id="+ month;
-    }
-</script>
-
-<h3>Get Data</h3>
-<a href="eventlist">LOAD DATA</a>
-
-
-
-<h1>Month passed: {{output}}</h1>
-
-<div id ="month"></div>
-<select name="monthSelect" id="monthSelect" onchange="monthfunction(this.value)">
-    <option value="january">January</option>
-    <option value="february">February</option>
-    <option value="march">March</option>
-    <option value="april">April</option>
-    <option value="may">May</option>
-    <option value="june">June</option>
-    <option value="july">July</option>
-    <option value="august">August</option>
-    <option value="september">September</option>
-    <option value="october">October</option>
-    <option value="november">November</option>
-    <option value="december">December</option>
-</select>
-
-<script>
-    var x = document.getElementById("monthSelect");
-    x.value = '{{month}}';
-</script>
-
-<div id="event">
-        {{# each eventlist }}
-        <article class="item">
-            <h1><b>Year : {{ this.date}}</b></h1>
-            <div>Day : {{ this.title }}</div>
-            <div>Information : {{ this.info }}</div>
-            <div>Object ID : {{ this._id }}</div>
-            <br><br>
-        </article>
-        {{/each}}
-
-</div>
 </body>

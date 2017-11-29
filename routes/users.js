@@ -53,7 +53,8 @@ router.post('/registerevent', function (req, res, next) {
     var data = new User(item);
     data.save();
     req.session.userDat.events.push(req.body.id);
-    res.redirect('/');
+    //When registered, user is redirected to calendar
+    res.redirect('/Users/calendar');
 
 });
 router.get('/calendar', function (req, res, next) {
@@ -62,7 +63,18 @@ router.get('/calendar', function (req, res, next) {
         date: req.body.eventdate,
         info: req.body.info
     };
+    var userDat = req.session;
     var monthpassed = req.query.id;
+    if(userDat.logged)
+    {
+        var redirectTo = "homepage2";
+        var username = userDat.username;
+    }
+    else
+    {
+        var redirectTo = "";
+        var username = "Guest";
+    }
     EventData.find().sort('-date').then(function (doc)
     {
 
@@ -102,7 +114,9 @@ router.get('/calendar', function (req, res, next) {
                 eventlist: events,
                 size: doc.length,
                 month: monthpassed,
-                year: (new Date()).getFullYear()
+                year: (new Date()).getFullYear(),
+                user: username,
+                redirect: redirectTo
             });
         }
         else{
@@ -137,35 +151,46 @@ router.get('/eventlist', function (req, res, next) {
     var monthpassed = req.query.id;
     var eventQuery = [];
     var events = [];
-    for (l in req.session.userDat.events) {
-        var o = req.session.userDat.events[l];
-        eventQuery.push(new mongoose.Types.ObjectId(o));
+    var userDat = req.session;
+
+    //LIST OF EVENTS CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
+    if(userDat.logged)
+    {
+        for (l in req.session.userDat.events) {
+            var o = req.session.userDat.events[l];
+            eventQuery.push(new mongoose.Types.ObjectId(o));
+        }
+        EventData.find({
+            '_id': {$in: eventQuery}
+        }, function (err, docs) {
+            console.log(docs);
+
+            if (!monthpassed) {
+                monthpassed = "january";
+            }
+
+            for (i in docs) {
+                events.push(docs[i]._doc);
+            }
+            // var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
+            // var userEvents = req.session.userDat.events;
+            // var events = docs._doc;
+            // if(userEvents.length > 0){
+            //     for(var j = 0; j < userEvents.length; j++) {
+            //         if (doc[j]._doc.date.getMonth() == month) {
+            //             events.push(doc[j]._doc);
+            //         }
+            //     }
+            // }
+
+        });
+        res.render('Users/eventlist', {eventlist: events, output:monthpassed, user: userDat.username});
     }
-    EventData.find({
-        '_id': {$in: eventQuery}
-    }, function (err, docs) {
-        console.log(docs);
+    else
+    {
+        res.redirect('/');
+    }
 
-        if (!monthpassed) {
-            monthpassed = "january";
-        }
-
-        for (i in docs) {
-            events.push(docs[i]._doc);
-        }
-        // var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
-        // var userEvents = req.session.userDat.events;
-        // var events = docs._doc;
-        // if(userEvents.length > 0){
-        //     for(var j = 0; j < userEvents.length; j++) {
-        //         if (doc[j]._doc.date.getMonth() == month) {
-        //             events.push(doc[j]._doc);
-        //         }
-        //     }
-        // }
-
-    });
-        res.render('Users/eventlist', {eventlist: events, output:monthpassed});
 });
 
 router.get('/eventlist/:id', function(req,res, next){
