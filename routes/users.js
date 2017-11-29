@@ -146,7 +146,7 @@ router.get('/eventlist', function (req, res, next) {
     }, function (err, docs) {
         console.log(docs);
 
-        if(!monthpassed){
+        if (!monthpassed) {
             monthpassed = "january";
         }
 

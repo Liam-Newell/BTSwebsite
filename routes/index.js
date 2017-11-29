@@ -277,7 +277,13 @@ router.post('/login', function(req, res, next) {
             });
         }
         else {
+
             var sessData = req.session;
+            if (sessData.logged)
+                req.session.destroy(function (err) {
+                    if (err)
+                        console.log(err);
+                });
             sessData.logged = true;
             sessData.username = doc[0].username;
             sessData.userDat = doc[0]._doc;
