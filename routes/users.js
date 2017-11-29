@@ -136,7 +136,7 @@ router.get('/eventlist', function (req, res, next) {
 
     var monthpassed = req.query.id;
     var eventQuery = [];
-    var eventlist = [];
+    var events = [];
     for (l in req.session.userDat.events) {
         var o = req.session.userDat.events[l];
         eventQuery.push(new mongoose.Types.ObjectId(o));
@@ -151,7 +151,7 @@ router.get('/eventlist', function (req, res, next) {
         }
 
         for (i in docs) {
-            eventlist.push(doc[i]._doc);
+            events.push(docs[i]._doc);
         }
         // var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
         // var userEvents = req.session.userDat.events;
