@@ -136,6 +136,7 @@ router.get('/eventlist', function (req, res, next) {
 
     var monthpassed = req.query.id;
     var eventQuery = [];
+    var eventlist = [];
     for (l in req.session.userDat.events) {
         var o = req.session.userDat.events[l];
         eventQuery.push(new mongoose.Types.ObjectId(o));
@@ -149,16 +150,20 @@ router.get('/eventlist', function (req, res, next) {
             monthpassed = "january";
         }
 
-        var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
-        var userEvents = req.session.userDat.events;
-        var events = docs._doc;
-        if(userEvents.length > 0){
-            for(var j = 0; j < userEvents.length; j++) {
-                if (doc[j]._doc.date.getMonth() == month) {
-                    events.push(doc[j]._doc);
-                }
-            }
+        for (i in docs) {
+            eventlist.push(doc[i]._doc);
         }
+        // var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
+        // var userEvents = req.session.userDat.events;
+        // var events = docs._doc;
+        // if(userEvents.length > 0){
+        //     for(var j = 0; j < userEvents.length; j++) {
+        //         if (doc[j]._doc.date.getMonth() == month) {
+        //             events.push(doc[j]._doc);
+        //         }
+        //     }
+        // }
+
     });
         res.render('Users/eventlist', {eventlist: events, output:monthpassed});
 });
