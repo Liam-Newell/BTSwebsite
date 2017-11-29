@@ -145,7 +145,7 @@ router.get('/database', function (req, res, next) {
 });
 
 
-//MINAS ADDED CODE. I am trying to get the monthe to pass and display it
+//MINAS ADDED CODE.
 router.get('/eventlist', function (req, res, next) {
 
     var monthpassed = req.query.id;
