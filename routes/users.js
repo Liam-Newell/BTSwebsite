@@ -131,4 +131,34 @@ router.get('/database', function (req, res, next) {
 });
 
 
+//MINAS ADDED CODE. I am trying to get the monthe to pass and display it
+router.get('/eventlist', function (req, res, next) {
+
+    var monthpassed = req.query.id;
+
+    Event.find().sort('-date').then(function (doc){
+
+        if(!monthpassed){
+            monthpassed = "january";
+        }
+
+        var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
+        var userEvents = req.session.userDat.events;
+        var events = [];
+        if(userEvents.length > 0){
+            for(var j = 0; j < userEvents.length; j++) {
+                if (doc[j]._doc.date.getMonth() == month) {
+                    events.push(doc[j]._doc);
+                }
+            }
+        }
+        res.render('Users/eventlist', {eventlist: events, output:monthpassed});
+    })
+});
+
+router.get('/eventlist/:id', function(req,res, next){
+    var string = encodeURIComponent(id);
+    res.redirect('eventlist?id=' + string);
+});
+
 module.exports = router;
