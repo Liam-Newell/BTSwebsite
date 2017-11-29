@@ -106,7 +106,14 @@
         </ul>
 
         <!-- Days from previous month -->
-
+        <form method="post" role="form" action="/users/event" id="eventform" name="eventform" class="login-form form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-8">
+                    <input type="hidden" placeholder="blank" value="thisisblank" required="required" name="eventid" id="eventid" type="text"
+                           class="form-control"/>
+                </div>
+            </div>
+        </form>
         <ul class="days">
         {{# each eventlist}}
 
@@ -131,6 +138,13 @@
 
         {{/each}}
         </ul>
+        <script>
+            function eventviewer(eventid){
+                var formid = document.getElementById("eventform");
+                document.eventform.eventid.value = eventid;
+                document.getElementById("eventform").submit();
+            }
+        </script>
 
     </div><!-- /. calendar -->
 </div><!-- /. wrap -->
