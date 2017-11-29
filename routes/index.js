@@ -118,7 +118,7 @@ router.get('/homepage2', function (req, res, next) {
     }
     else
     {
-        res.redirect('localhost:3000');
+        res.redirect('/');
     }
 
 });
@@ -321,4 +321,5 @@ router.get('/sign-out', function(req, res, next) {
 
 module.exports = mongoose.model("User", userDataSchema);
 module.exports = mongoose.model("Child", childDataSchema);
+module.exports = expressSession();
 module.exports = router;

@@ -126,10 +126,10 @@ router.get('/eventlist', function (req, res, next) {
         }
 
         var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
-
+        var userEvents = req.session.userDat.events;
         var events = [];
-        if(doc.length > 0){
-            for(var j = 0; j < doc.length; j++) {
+        if(userEvents.length > 0){
+            for(var j = 0; j < userEvents.length; j++) {
                 if (doc[j]._doc.date.getMonth() == month) {
                     events.push(doc[j]._doc);
                 }
