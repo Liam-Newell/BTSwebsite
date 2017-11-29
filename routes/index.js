@@ -56,7 +56,14 @@ router.get('/schedule', function(req, res, next){
 });
 
 router.get('/logout', function(req, res, next){
-   req.session = new session();
+    var sess = req.session;
+
+    if (sess.logged) {
+        res.render('schedule', {title: 'Church Centre', user: sess.username});
+    } else {
+        res.redirect('/');
+    }
+
 
 });
 
@@ -153,7 +160,9 @@ router.post('/register', function (req, res, next){
         email: req.body.email,
         phonenumber: req.body.phonenumber,
         phonenumber2: req.body.phonenumber2,
-        birthday: req.body.birthday
+        birthday: req.body.birthday,
+        children: [],
+        events: []
     };
     req.check('lastname', 'Invalid last name').isLength({min:2});
     req.check('firstname','Invalid first name').isLength({min:2});
@@ -212,7 +221,7 @@ router.get('/account', function (req, res, next) {
         });
     }
     else {
-        res.redirect('localhost:3000');
+        res.redirect('/');
     }
 });
 
@@ -318,8 +327,9 @@ router.get('/sign-out', function(req, res, next) {
         res.redirect('/')
     }
 });
-
+module.exports.userDataSchema = userDataSchema;
 module.exports = mongoose.model("User", userDataSchema);
+module.exports.User = User;
 module.exports = mongoose.model("Child", childDataSchema);
 module.exports = expressSession();
 module.exports = router;

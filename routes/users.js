@@ -3,12 +3,18 @@ var router = express.Router();
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
+//user schema
+var myModule = require('./index');
+var userDataSchema = myModule.userDataSchema;
+var User = mongoose.model("User", userDataSchema);
+
 
 var eventdataschema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
     info: {type: String, required: true}
 }, {collection: 'events'});
+//instantiate schema as models "User" and "Child"
 
 var EventData = mongoose.model('EventData', eventdataschema);
 
@@ -21,16 +27,33 @@ router.get('/calendar/:id', function(req,res, next){
     res.redirect('/calendar?id=' + string);
 });
 router.post('/viewevent', function (req, res, next) {
-    var event = req.body.id;
-    EventData.findOne({_id: id}).then(function (doc) {
+    var event = req.body.eventid;
+    EventData.findOne({_id: event}).then(function (doc) {
         res.render('Users/event', {info: doc});
     });
-})
+});
 router.get('/viewevent/:id', function(req, res, next){
     var event = id;
     EventData.findOne({_id: id}).then(function (doc) {
         res.render('Users/event' , {info: doc});
     });
+
+});
+router.post('/registerevent', function (req, res, next) {
+    var item = req.session.userDat;
+    item.events.push(req.body.id);
+    User.findByIdAndUpdate(item._id,
+        {"$push": {"events": req.body.id}},
+        {"new": true, "upsert": true},
+        function (err, managerevent) {
+            if (err) throw err;
+            console.log(managerevent);
+        }
+    );
+    var data = new User(item);
+    data.save();
+    req.session.userDat.push(req.body.id);
+    res.redirect('/');
 
 });
 router.get('/calendar', function (req, res, next) {
