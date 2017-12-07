@@ -7,8 +7,7 @@ header {
 }
 
 #calendar {
-    float: right;
-    width: 97%;
+    width: 100%;
 }
 
 #calendar a {
@@ -20,7 +19,7 @@ header {
     list-style: none;
     padding: 0;
     margin: 0;
-    width: 97%;
+    width: 100%;
 }
 
 #calendar li {
@@ -36,7 +35,7 @@ header {
 
 #calendar ul.weekdays {
     height: 40px;
-    background: #00B906;
+    background: #8e352e;
 }
 
 #calendar ul.weekdays li {
@@ -77,14 +76,14 @@ header {
     margin-top: 40px;
     margin-bottom: 5px;
     line-height: 14px;
-    background: #606060;
+    background: #e4f2f2;
     border: 1px solid #b5dbdc;
-    color: #00B906;
+    color: #009aaf;
     text-decoration: none;
 }
 
 #calendar .event-desc {
-    color: white;
+    color: #666;
     margin: 3px 0 7px 0;
     text-decoration: none;
 }
@@ -95,7 +94,7 @@ header {
 }
 
 /* ============================
-	    Mobile Responsiveness
+				Mobile Responsiveness
    ============================*/
 
 
