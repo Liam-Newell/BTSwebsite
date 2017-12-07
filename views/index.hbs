@@ -1,32 +1,68 @@
 <html>
 <head>
-    <title></title>
+    <title>Home Page</title>
+    <meta charset="UTF-8">
+
+    <!-- Scale the webpage to specific device-->
+    <meta name="viewport" conetent="width=device-width, initial-scale=1">
+
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
 </head>
+
 <body>
 <!--Navigation bar -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top" >
   <div class="container-fluid" >
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">{{title}}</a>
+      <a class="navbar-brand" href="/">{{title}}</a>
     </div>
+
     <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Home</a></li>
+      <li class="active"><a href="/">Home</a></li>
     </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <li><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-    </ul>
+
   </div>
 </nav>
 
-<div class="container">
-    <div class="jumbotron">
-        <h1>Hello!</h1>
-        <p>Welcome Church Center!, ready to get started?</p>
-        <p><a href="/login" class="btn btn-primary">Login now</a></p>
-        <p><span class="small">Don't have an account?</span><span>&nbsp;</span><a href="/register" class="small">Register
-            noww</a></p>
+<!--Navigation bar -->
+<div class="container" style="padding-top: 5em">
+    <div class="jumbotron" style="padding-top: 2em">
+        <center><h1>Log In</h1></center>
+
+        <center>
+        <form method="post" role="form" action="/login" class="login-form form-horizontal">
+
+            <input name="_csrf" type="hidden"/>
+            <div class="form-group">
+                <div class="col-sm-8">
+                    <input placeholder="Username" required="required" name="username" type="text"
+                           style="width: 300px; margin-left: 350px"
+                           class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-8">
+                    <input placeholder="Password" required="required" name="password" type="password"
+                           style="width: 300px; margin-left: 350px"
+                           class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-8">
+                    <button type="submit" class="login btn btn-primary">Login</button>
+                    <a href="/register" class="btn btn-primary"style="margin-right: 350px">Register</a></p>
+                </div>
+            </div>
+        </form>
+        <br/>
+        <p>Developer Options(Will be removed later)</p>
+        <p><a href="/get-data" class="small">View Database</a></p>
+        <p><a href="/Users/calendar" class="small">View Calendar</a></p>
+            <p><a href="/users" class="small">View Events</a></p>
+        </center>
     </div>
 </div>
 </body>
