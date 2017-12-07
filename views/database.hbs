@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Database</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid" >
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">{{title}}</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="inactive"><a href="/">Home</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+    </div>
+</nav>
+<h3>Get Data</h3>
+<a href="/get-data">LOAD DATA</a>
+<div style="margin-left: 100px">
+    {{# each items }}
+        <article class="item">
+            <h1><b>PARENT - {{ this.firstname }}</b></h1>
+            <div>ID: {{ this._id }}</div>
+            <div>UserName: {{ this.username }}</div>
+            <div>FirstName: {{ this.firstname }}</div>
+            <div>LastName: {{ this.lastname }}</div>
+            <div>Address: {{ this.streetaddress }}</div>
+            <div>Email: {{ this.email }}</div>
+            <div>PhoneNumber: {{ this.phonenumber }}</div>
+            <div>Birthday: {{ this.birthday }}</div>
+            <div>Child IDs: {{this.children.[0]._id}}</div>
+
+            <br>
+            <h3><b>CHILD 1</b></h3>
+            <div>ID: {{ this.children.[0]._id }}</div>
+            <div>FirstName: {{ this.children.[0].firstname }}</div>
+            <div>LastName: {{ this.children.[0].lastname}}</div>
+            <div>Grade: {{ this.children.[0].grade}}</div>
+            <div>Age: {{ this.children.[0].age}}</div>
+            <div>Birthday: {{ this.children.[0].birthday}}</div>
+            <br>
+        </article>
+    {{/each}}
+</div>
+</body>
+</html>

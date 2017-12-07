@@ -1,0 +1,82 @@
+<!--Child Registration-->
+<html>
+<head>
+    <title></title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/stylesheets/button.css"/>
+</head>
+<body>
+<!--Navigation bar -->
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/homepage2">Church Centre</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">View Account</a></li>
+                    <li><a href="#">View Registered Children</a></li>
+                    <li><a href="#">Register a child</a></li>
+                </ul>
+            </li>
+            <li><a href="/calendar">Calendar</a></li>
+            <li><a href="/schedule">Schedule</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top: 10px; padding-right: 15px;">Welcome, <span style="text-transform: uppercase;">{{user}}</span> !</li>
+            <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
+        </ul>
+    </div>
+</nav>
+<!--Navigation bar -->
+<br/><br/>
+<p>
+    {{errors}}
+</p>
+<div class="container">
+    <div class="page-header">
+        <h1>Register Child</h1>
+    </div>
+        <form method="post" role="form" action="/registerchild" class="login-form form-horizontal">
+            <input name="_csrf" type="hidden"/>
+            <div class="form-group">
+                <label class="col-sm-4">First Name</label>
+                <div class="col-sm-8">
+                    <input placeholder="your first name" required="required" name="firstname" type="text"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Last Name</label>
+                <div class="col-sm-8">
+                    <input placeholder="your last name" required="required" name="lastname" type="text"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Date of Birth</label>
+                <div class="col-sm-8">
+                    <input placeholder="" required="required" name="birthday" type="date"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Grade</label>
+                <div class="col-sm-8">
+                    <input placeholder="" required="required" name="grade" type="number"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div>
+                <button type="submit"  class="login btn btn-primary">Add Child</button>
+            </div>
+            <div class="pull-right"><a href="/">Return to home page</a></div>
+        </form>
+    </div>
+</body>
+</html>

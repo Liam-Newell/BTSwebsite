@@ -1,14 +1,49 @@
-<h1>{{title}}</h1>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="calendar.css" type="text/css" />
+    <title>Calander</title>
+    <link rel="stylesheet" href="/stylesheets/calendar.css" type="text/css"/>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+
+    <!--Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+          <div class="navbar-header">
+              <a class="navbar-brand" href="homepage2">Church Centre</a>
+          </div>
+          <ul class="nav navbar-nav">
+              <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                      <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="/account">View Account</a></li>
+                      <li><a href="#">View Registered Children</a></li>
+                      <li><a href="#">Register a child</a></li>
+                  </ul>
+              </li>
+              <li><a href="#">Calendar</a></li>
+              <li><a href="schedule">Schedule</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              <li style="padding-top: 10px; padding-right: 15px;">Welcome, {{user}}</li>
+              <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
+          </ul>
+     </div>
+</nav>
+
+<!--Calander -->
 <div id="calendar-wrap">
     <header>
+        <br>
+        <br>
+        <br/>
         <h1>August 2014</h1>
     </header>
     <div id="calendar">

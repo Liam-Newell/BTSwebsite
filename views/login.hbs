@@ -1,24 +1,54 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{cuck}}</p>
-{{# if errors }}
-    <section class="errors">
-        <ul>
-            {{# each errors }}
-                <li>{{ this.msg }}</li>
-            {{/each}}
-        </ul>
-    </section>
-{{/if}}
-<form action="/login" method="post">
-
-    <div class="input">
-        <p1>First Name<input type="text" id="firstName" name="firstName"></p1>
+<html>
+<head>
+    <title></title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+</head>
+<body>
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">{{title}}</a>
     </div>
-    <br><br>
-    <div class="input">
-        <p1>Last Name<input type="text" id="lastName" name="lastName"></p1>
+    <ul class="nav navbar-nav">
+      <li class="inactive"><a href="/">Home</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li class="active"><a href="login"><span class="glyphicon glyphicon-log-in" ></span> Login</a></li>
+    </ul>
+  </div>
+</nav>
+<br/>
+<div class="container">
+    <div class="page-header">
+        <h1>Login</h1>
     </div>
 
-    <button type="submit">Submit</button>
-</form>
-<a href="register">I don't have an account :(</a>
+    <form method="post" role="form" action="/login" class="login-form form-horizontal">
+        <input name="_csrf" type="hidden"/>
+        <div class="form-group">
+            <label class="col-sm-4">User Name</label>
+            <div class="col-sm-8">
+                <input placeholder="Your first name" required="required" name="username" type="text"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Password</label>
+            <div class="col-sm-8">
+                <input placeholder="Your last name" required="required" name="password" type="password"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+                <button type="submit" class="login btn btn-primary">Login</button>
+            </div>
+        </div>
+        <div class="pull-right"><a href="/">Return to home page</a></div>
+    </form>
+</div>
+</body>
+</html>

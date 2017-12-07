@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Database</title>
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/stylesheets/eventDB.css" type="text/css"/>
+
+
+
+    <!--Bootstrap JS-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Church Center</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="inactive"><a href="/">Home</a></li>
+            <li><a href="eventlist">List Of Events</a></li>
+            <li><a href="calendar">Calendar</a></li>
+            <li><a href="#">Database</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!--Month Year Scripts -->
+<script>
+    function monthfunction(month){
+        window.location.href = "/users/database?id="+ month;
+    }
+</script>
+
+<h3>Get Data</h3>
+<a href="database">LOAD DATA</a>
+
+<div id ="month"></div>
+<select name="monthSelect" id="monthSelect" onchange="monthfunction(this.value)">
+    <option value="January">January</option>
+    <option value="February">February</option>
+    <option value="March">March</option>
+    <option value="April">April</option>
+    <option value="May">May</option>
+    <option value="June">June</option>
+    <option value="July">July</option>
+    <option value="August">August</option>
+    <option value="September">September</option>
+    <option value="October">October</option>
+    <option value="November">November</option>
+    <option value="December">December</option>
+</select>
+
+<script>
+    var x = document.getElementById("monthSelect");
+    x.value = '{{month}}';
+</script>
+
+<div id="event">
+    {{# each eventlist }}
+    <article class="item">
+    <h1><b>{{ this.title }}</b></h1>
+    <div class="event-date" style="font-size: 25px;"><b>{{ this.date}}</b></div>
+    <br/>
+    <div>Note : {{ this.info }}</div>
+    <br/>
+    <div>Object ID : {{ this._id }}</div>
+    <br><br>
+    </article>
+    {{/each}}
+</div>
+</body>
