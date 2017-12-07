@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calander</title>
+    <link rel="stylesheet" href="/stylesheets/calendar.css" type="text/css"/>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+
+    <!--Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!--Month Year Scripts -->
+    <script>
+        function monthfunction(month){
+            window.location.href = "/users/calendar?id="+ month;
+        }
+
+    </script>
+</head>
+<body>
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/{{redirect}}">Church Centre</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/account">View Account</a></li>
+                    <li><a href="#">View Registered Children</a></li>
+                    <li><a href="#">Register a child</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Calendar</a></li>
+            <li><a href="/Users/eventlist">Schedule</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top: 10px; padding-right: 15px;">Welcome, <span style="text-transform: uppercase;">{{user}}</span></li>
+        </ul>
+    </div>
+</nav>
+
+<!--Calander -->
+
+<div id="calendar-wrap">
+    <header>
+        <br>
+        <br>
+        <br/>
+        <h1>
+
+            <div id ="month"></div>
+            <select name="monthSelect" id="monthSelect" onchange="monthfunction(this.value)">
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
+            </select>
+            <script>
+                    var x = document.getElementById("monthSelect");
+                    x.value = '{{month}}';
+            </script>
+            {{year}}
+            <p>Number Of Event Entries {{size}}</p>
+        </h1>
+    </header>
+
+    <div id="calendar">
+        <ul class="weekdays">
+            <li>Sunday</li>
+            <li>Monday</li>
+            <li>Tuesday</li>
+            <li>Wednesday</li>
+            <li>Thursday</li>
+            <li>Friday</li>
+            <li>Saturday{{'say my name'}}</li>
+        </ul>
+
+        <!-- Days from previous month -->
+        <form method="post" role="form" action="/users/viewevent" id="eventform" name="eventform"
+              class="login-form form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-8">
+                    <input type="hidden" placeholder="blank" value="thisisblank" required="required" name="eventid" id="eventid" type="text"
+                           class="form-control"/>
+                </div>
+            </div>
+        </form>
+        <ul class="days">
+        {{# each eventlist}}
+
+            <li class="day">
+                <div class="date">{{this.date}}</div>
+                {{#if this.info}}
+                    {{# each info}}
+                        <a href="javascript:eventviewer('{{this._id}}');">
+                            <div class="event">
+                        <div class="event-desc">
+                            {{this.title}} {{this.info}}
+                        </div>
+                        <div class="event-time">
+                            {{this.date}}
+                        </div>
+                    </div>
+                        </a>
+                    {{/each}}
+                {{/if}}
+            </li>
+
+
+        {{/each}}
+        </ul>
+        <script>
+            function eventviewer(eventid){
+                var formid = document.getElementById("eventform");
+                document.eventform.eventid.value = eventid;
+                document.getElementById("eventform").submit();
+            }
+        </script>
+
+    </div><!-- /. calendar -->
+</div><!-- /. wrap -->
+</body>
+</html>

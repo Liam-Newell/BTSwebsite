@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+
+    <!--Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <!--Navigation bar -->
+    <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+             <div class="navbar-header">
+                  <a class="navbar-brand" href="/homepage2">Church Centre</a>
+             </div>
+             <ul class="nav navbar-nav">
+                  <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                    <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                       <li><a href="#">View Account</a></li>
+                       <li><a href="#">View Registered Children</a></li>
+                       <li><a href="#">Register a child</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="/Users/calendar">Calendar</a></li>
+                  <li><a href="/Users/eventlist">Schedule</a></li>
+             </ul>
+             <ul class="nav navbar-nav navbar-right">
+                  <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
+             </ul>
+        </div>
+    </nav>
+    <div class="accProfile">
+        <br/><br/>
+        <h1>Account Profile</h1>
+        <hr>
+        <h2>{{lastname}}, {{firstname}}</h2>
+        <p>Username: {{user}}</p>
+        <p>Date of Birth: {{dob}}</p>
+        <p>Email Address: {{email}}</p>
+        <p>Phone Number 1: {{ph1}}</p>
+        <p>Phone Number 2: {{ph2}}</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+body {
+    font-family: Tahoma;
+    margin-left: 2em;
+}
+
+header {
+    text-align: center;
+}
+#monthSelect
+{
+    margin-left: 2.5em;
+}
