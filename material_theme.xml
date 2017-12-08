@@ -1,0 +1,7 @@
+<application>
+  <component name="MaterialThemeConfig">
+    <option name="version" value="1.4.0" />
+    <option name="highlightColor" value="80cbc4" />
+    <option name="accentColor" value="80cbc4" />
+  </component>
+</application>
