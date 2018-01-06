@@ -254,7 +254,6 @@ router.post('/registerchild', function (req, res, next) {
         birthday: req.body.birthday,
         grade: req.body.grade
     };
-
     if(sess.logged) {
             req.check('lastname', 'Invalid last name').isLength({min: 2});
             req.check('firstname', 'Invalid first name').isLength({min: 4});
