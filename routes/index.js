@@ -261,18 +261,16 @@ router.post('/registerchild', function (req, res, next) {
             var errors = req.validationErrors();
             if (!errors) {
                 var data = new Child(item);
-                data.save(function(err,child)
-                {
-                    var childId = child._id;
-                    var userItem = req.session.userDat;
-                    User.findByIdAndUpdate(userItem._id,
-                        {$set: {children: childId}},
-                        {new : true}, function (err, childreg){
-                            if (err) throw err;
-                            console.log(childreg);
-                        }
-                    );
-                });
+                var cid = data._id;
+                data.save();
+                var userItem = req.session.userDat;
+                User.findByIdAndUpdate(userItem._id,
+                    {$push: {children: cid}},
+                    {new : true}, function (err, childreg){
+                        if (err) throw err;
+                        console.log(childreg);
+                    }
+                );
                 res.render('account');
             }
             else {
