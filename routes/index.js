@@ -225,10 +225,28 @@ router.get('/account', function (req, res, next) {
     }
 });
 
+router.post('/registerevent', function (req, res, next) {
+    var item = req.session.userDat;
+    item.events.push(req.body.id);
+    User.findByIdAndUpdate(item._id,
+        {"$push": {"events": req.body.id}},
+        {"new": true, "upsert": true},
+        function (err, managerevent) {
+            if (err) throw err;
+            console.log(managerevent);
+        }
+    );
+    var data = new User(item);
+    data.save();
+    req.session.userDat.events.push(req.body.id);
+    //When registered, user is redirected to calendar
+    res.redirect('/Users/calendar');
+
+});
 //post page for child registration
 router.post('/registerchild', function (req, res, next) {
+    var userData = req.session.userDat;
     var sess = req.session;
-    var userData = sess.userDat;
 
     var item = {
         firstname: req.body.firstname,
@@ -243,8 +261,18 @@ router.post('/registerchild', function (req, res, next) {
             var errors = req.validationErrors();
             if (!errors) {
                 var data = new Child(item);
-                data.save();
-                userData.children.id.update(data.id);
+                data.save(function(err,child)
+                {
+                    var childId = child._id;
+                    var userItem = req.session.userDat;
+                    User.findByIdAndUpdate(userItem._id,
+                        {$set: {children: childId}},
+                        {new : true}, function (err, childreg){
+                            if (err) throw err;
+                            console.log(childreg);
+                        }
+                    );
+                });
                 res.render('account');
             }
             else {
@@ -254,9 +282,6 @@ router.post('/registerchild', function (req, res, next) {
                     , success: false, errors: req.session.errors
                 }
             }
-        }
-        else {
-            console.error("User not logged in or session cannot retrieve user information");
     }
 });
 
