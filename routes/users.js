@@ -55,8 +55,23 @@ router.post('/registerevent', function (req, res, next) {
     req.session.userDat.events.push(req.body.id);
     //When registered, user is redirected to calendar
     res.redirect('/Users/calendar');
+});
+
+router.post('/deleteevent', function (req, res, next) {
+    EventData.findByIdAndRemove(req.body.id,
+        function (err, managerevent) {
+            if (err) throw err;
+            console.log(managerevent);
+        }
+    );
+    //var data = new User(item);
+    //data.save();
+    //req.session.userDat.events.push(req.body.id);
+    //When registered, user is redirected to calendar
+    res.redirect('/Users/calendar');
 
 });
+
 router.get('/calendar', function (req, res, next) {
     var event = {
         title: req.body.title,
@@ -83,7 +98,7 @@ router.get('/calendar', function (req, res, next) {
             // var n = d.getMonth();
             //  n++;
             //  monthpassed = n;
-            monthpassed = "november"
+            monthpassed = "january"
         }
         var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
         if(doc.length > 0)
@@ -143,7 +158,6 @@ router.get('/database', function (req, res, next) {
         res.render('Users/eventDB', {eventlist: doc});
     })
 });
-
 
 //MINAS ADDED CODE.
 router.get('/eventlist', function (req, res, next) {
