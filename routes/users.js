@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+//var popupS = require('popups');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
 //user schema
@@ -64,10 +65,6 @@ router.post('/deleteevent', function (req, res, next) {
             console.log(managerevent);
         }
     );
-    //var data = new User(item);
-    //data.save();
-    //req.session.userDat.events.push(req.body.id);
-    //When registered, user is redirected to calendar
     res.redirect('/Users/calendar');
 
 });
@@ -141,18 +138,18 @@ router.get('/calendar', function (req, res, next) {
 
 });
 router.post('/createevent', function (req, res, next) {
-
-    var event = {
-        title: req.body.title,
-        date: req.body.eventdate,
-        info: req.body.info
-    };
-    var time = event.date + " " + req.body.time.toString();
-    event.date = time;
-    var data = new EventData(event);
-    data.save();
-    res.redirect('database');
+        var event = {
+            title: req.body.title,
+            date: req.body.eventdate,
+            info: req.body.info
+        };
+        var time = event.date + " " + req.body.time.toString();
+        event.date = time;
+        var data = new EventData(event);
+        data.save();
+        res.redirect('database');
 });
+
 router.get('/database', function (req, res, next) {
     EventData.find().sort('-date').then(function (doc) {
         res.render('Users/eventDB', {eventlist: doc});

@@ -46,24 +46,16 @@
     </script>
 
     <h3>Get Data</h3>
-    <a href="eventlist" style="margin-left: 2.5em;">LOAD DATA</a>
-    <!--
-    <h1 style="margin-left: 1em;">Month passed: {{output}}</h1>
+    <a href="childList" style="margin-left: 2.5em;">LOAD DATA</a>
 
-    <script>
-        var x = document.getElementById("monthSelect");
-        x.value = '{{month}}';
-    </script>
-
-    <div id="event">
-            {{# each eventlist }}
+    <div id="childList">
+            {{# each childList }}
             <article class="item">
-                <h1><b>{{ this.title }}</b></h1>
-                <div class="event-date" style="font-size: 25px;"><b>{{ this.date}}</b></div>
+                <h1><b>Registered Children</b></h1>
                 <br/>
-                <div>Note : {{ this.info }}</div>
+                <div>First Mame : {{ this.children.firstname }}</div>
                 <br/>
-                <div>Object ID : {{ this._id }}</div>
+                <div>Last Name : {{ this.children.lastname }}</div>
                 <br><br>
             </article>
             {{/each}}

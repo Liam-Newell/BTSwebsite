@@ -130,10 +130,7 @@ router.get('/homepage2', function (req, res, next) {
 
 });
 
-//get calender page currently a work in progress
-router.get('/calendar', function (req, res, next) {
-    res.render('calendar', {});
-});
+
 
 //get test data page "database button on '/index'
 router.get('/get-data', function (req, res, next) {
@@ -225,24 +222,6 @@ router.get('/account', function (req, res, next) {
     }
 });
 
-router.post('/registerevent', function (req, res, next) {
-    var item = req.session.userDat;
-    item.events.push(req.body.id);
-    User.findByIdAndUpdate(item._id,
-        {"$push": {"events": req.body.id}},
-        {"new": true, "upsert": true},
-        function (err, managerevent) {
-            if (err) throw err;
-            console.log(managerevent);
-        }
-    );
-    var data = new User(item);
-    data.save();
-    req.session.userDat.events.push(req.body.id);
-    //When registered, user is redirected to calendar
-    res.redirect('/Users/calendar');
-
-});
 //post page for child registration
 router.post('/registerchild', function (req, res, next) {
     var userData = req.session.userDat;
@@ -270,7 +249,7 @@ router.post('/registerchild', function (req, res, next) {
                         console.log(childreg);
                     }
                 );
-                res.render('account');
+                res.render('Users/childList');
             }
             else {
                 res.render('registerchild'),
