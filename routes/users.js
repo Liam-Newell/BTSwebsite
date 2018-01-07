@@ -212,4 +212,33 @@ router.get('/eventlist/:id', function(req,res, next){
     res.redirect('eventlist?id=' + string);
 });
 
+router.get('/childList', function (req, res, next) {
+
+    //var monthpassed = req.query.id;
+    var childQuery = [];
+    var children = [];
+    var userDat = req.session;
+
+    //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
+    if(userDat.logged)
+    {
+        for (l in req.session.userDat.events) {
+            var o = req.session.userDat.children[l];
+            childQuery.push(new mongoose.Types.ObjectId(o));
+        }
+        EventData.find({
+            '_id': {$in: childQuery}
+        }, function (err, docs) {
+            console.log(docs);
+
+        });
+        res.render('Users/eventlist', {childlist: children, user: userDat.username});
+    }
+    else
+    {
+        res.redirect('/');
+    }
+
+});
+
 module.exports = router;
