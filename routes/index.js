@@ -249,7 +249,7 @@ router.post('/registerchild', function (req, res, next) {
                         console.log(childreg);
                     }
                 );
-                res.render('Users/childList');
+                res.render('childList');
             }
             else {
                 res.render('registerchild'),
@@ -333,6 +333,39 @@ router.get('/sign-out', function(req, res, next) {
     else{
         res.redirect('/')
     }
+});
+
+router.get('/childList', function (req, res, next) {
+
+    //var monthpassed = req.query.id;
+    var childQuery = [];
+    var children = [];
+    var userDat = req.session;
+
+    //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
+    if(userDat.logged)
+    {
+        for (l in req.session.userDat.children) {
+            var o = req.session.userDat.children[l];
+            childQuery.push(new mongoose.Types.ObjectId(o));
+        }
+        Child.find({
+            '_id': {$in: childQuery}
+        }, function (err, docs) {
+            console.log(docs);
+
+            for (i in docs) {
+                children.push(docs[i]._doc);
+            }
+
+        });
+        res.render('childList', {childList: children, user: userDat.username});
+    }
+    else
+    {
+        res.redirect('/');
+    }
+
 });
 module.exports.userDataSchema = userDataSchema;
 module.exports = mongoose.model("User", userDataSchema);
