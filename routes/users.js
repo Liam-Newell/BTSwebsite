@@ -23,16 +23,19 @@ var EventData = mongoose.model('EventData', eventdataschema);
 router.get('/', function(req, res, next) {
     res.render('Users/createevent');
 });
+
 router.get('/calendar/:id', function(req,res, next){
     var string = encodeURIComponent(id);
     res.redirect('/calendar?id=' + string);
 });
+
 router.post('/viewevent', function (req, res, next) {
     var event = req.body.eventid;
     EventData.findOne({_id: event}).then(function (doc) {
         res.render('Users/event', {info: doc});
     });
 });
+
 router.get('/viewevent/:id', function(req, res, next){
     var event = id;
     EventData.findOne({_id: id}).then(function (doc) {
@@ -40,6 +43,7 @@ router.get('/viewevent/:id', function(req, res, next){
     });
 
 });
+
 router.post('/registerevent', function (req, res, next) {
     var item = req.session.userDat;
     item.events.push(req.body.id);
@@ -147,7 +151,7 @@ router.post('/createevent', function (req, res, next) {
         event.date = time;
         var data = new EventData(event);
         data.save();
-        res.redirect('database');
+        res.redirect('calendar');
 });
 
 router.get('/database', function (req, res, next) {
