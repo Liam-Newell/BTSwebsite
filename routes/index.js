@@ -1,4 +1,6 @@
 var express = require('express');
+var asserts = require('asserts');
+var assert = require('assert');
 var router = express.Router();
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test' );
@@ -247,7 +249,9 @@ router.post('/registerchild', function (req, res, next) {
                     {new : true}, function (err, childreg){
                         if (err) throw err;
                         console.log(childreg);
+                        //data.save();
                     }
+
                 );
                 res.render('childList');
             }
@@ -357,9 +361,8 @@ router.get('/childList', function (req, res, next) {
             for (i in docs) {
                 children.push(docs[i]._doc);
             }
-
         });
-        res.render('childList', {childList: children, user: userDat.username});
+        res.render('childList', {childList: children, user: userDat.username, title: "Registered Children | Church Centre"});
     }
     else
     {
