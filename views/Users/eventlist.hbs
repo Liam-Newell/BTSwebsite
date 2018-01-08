@@ -82,7 +82,12 @@
                 <div>Note : {{ this.info }}</div>
                 <br/>
                 <div>Object ID : {{ this._id }}</div>
-                <br><br>
+                <br>
+                <div>Participants: </div>
+                <br>
+                {{# each eventlist }}
+                    <hr/>
+                {{/each}}
             </article>
             {{/each}}
     </div>
