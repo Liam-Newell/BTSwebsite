@@ -15,7 +15,7 @@ var Child = mongoose.model("Child", childDataSchema);
 var eventdataschema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
-    info: {type: String, required: true}
+    info: {type: String, required: true},
     registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
 }, {collection: 'events'});
 //instantiate schema as models "User" and "Child"
@@ -69,21 +69,22 @@ router.get('/viewevent/:id', function(req, res, next){
 
 router.post('/registerevent', function (req, res, next) {
     var item = req.session.userDat;
-
     item.events.push(req.body.id);
+
     User.findByIdAndUpdate(item._id,
         {"$push": {"events": req.body.id}},
         {"new": true, "upsert": true},
         function (err, managerevent) {
             if (err) throw err;
-            console.log(managerevent);
-        }
+                console.log(managerevent);
+        });
 
     var data = new User(item);
     data.save();
     req.session.userDat.events.push(req.body.id);
     //When registered, user is redirected to calendar
     res.redirect('./calendar');
+
 });
 
 router.post('/deleteevent', function (req, res, next) {
