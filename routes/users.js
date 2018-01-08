@@ -15,9 +15,8 @@ var Child = mongoose.model("Child", childDataSchema);
 var eventdataschema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
-    info: {type: String, required: true}
-    /*Causes program to crash fix is needed*/
-    //registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
+    info: {type: String, required: true},
+    registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
 }, {collection: 'events'});
 //instantiate schema as models "User" and "Child"
 
