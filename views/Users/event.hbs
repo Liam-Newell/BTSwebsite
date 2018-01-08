@@ -7,10 +7,16 @@
 <body>
 <p>{{info.info}}</p>
 <p>{{info.date}}</p>
-<p>{{children.[0].firstname}}</p>
 
 <form method="post" id="eventregister" name="eventregister" action="/users/registerevent">
     <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
+    <select>
+        {{# each childList }}
+            <option>
+                {{ this.firstname }}</div>
+            </option>
+        {{/each}}
+    </select>
     <button type="submit" id="register">
         register for event
     </button>

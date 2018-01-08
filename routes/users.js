@@ -8,12 +8,15 @@ var Schema = mongoose.Schema;
 var myModule = require('./index');
 var userDataSchema = myModule.userDataSchema;
 var User = mongoose.model("User", userDataSchema);
+var childDataSchema = myModule.childDataSchema;
+var Child = mongoose.model("Child", childDataSchema);
 
 
 var eventdataschema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
     info: {type: String, required: true}
+    registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
 }, {collection: 'events'});
 //instantiate schema as models "User" and "Child"
 
@@ -31,21 +34,42 @@ router.get('/calendar/:id', function(req,res, next){
 
 router.post('/viewevent', function (req, res, next) {
     var event = req.body.eventid;
+    var userDat = req.session;
+    var childQuery = [];
+    var children = [];
+
+    if(userDat.logged) {
+        for (l in req.session.userDat.children) {
+            var o = req.session.userDat.children[l];
+            childQuery.push(new mongoose.Types.ObjectId(o));
+        }
+        Child.find({
+            '_id': {$in: childQuery}
+        }, function (err, docs) {
+            console.log(docs);
+
+            for (i in docs) {
+                children.push(docs[i]._doc);
+            }
+        });
+
+        }
+
     EventData.findOne({_id: event}).then(function (doc) {
-        res.render('Users/event', {info: doc});
+        res.render('Users/event', {childList: children, info: doc});
     });
 });
 
 router.get('/viewevent/:id', function(req, res, next){
-    var event = id;
-    EventData.findOne({_id: id}).then(function (doc) {
-        res.render('Users/event' , {info: doc});
-    });
+        EventData.findOne({_id: id}).then(function (doc) {
+           res.render('Users/event' , {info: doc});
+        });
 
 });
 
 router.post('/registerevent', function (req, res, next) {
     var item = req.session.userDat;
+
     item.events.push(req.body.id);
     User.findByIdAndUpdate(item._id,
         {"$push": {"events": req.body.id}},
@@ -54,12 +78,12 @@ router.post('/registerevent', function (req, res, next) {
             if (err) throw err;
             console.log(managerevent);
         }
-    );
+
     var data = new User(item);
     data.save();
     req.session.userDat.events.push(req.body.id);
     //When registered, user is redirected to calendar
-    res.redirect('/Users/calendar');
+    res.redirect('./calendar');
 });
 
 router.post('/deleteevent', function (req, res, next) {
@@ -69,7 +93,7 @@ router.post('/deleteevent', function (req, res, next) {
             console.log(managerevent);
         }
     );
-    res.redirect('/Users/calendar');
+    res.redirect('./calendar');
 
 });
 
