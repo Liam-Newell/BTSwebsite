@@ -24,9 +24,9 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
                         <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                           <li><a href="account">View Account</a></li>
+                           <li><a href="../account">View Account</a></li>
                            <li><a href="#">View Registered Children</a></li>
-                           <li><a href="registerchild">Register a child</a></li>
+                           <li><a href="#">Register a child</a></li>
                         </ul>
                       </li>
                       <li><a href="/Users/calendar">Calendar</a></li>
@@ -45,21 +45,19 @@
         }
     </script>
 
-    <br/>
-    <h1 style="margin-top: 1.5em;"><b>Registered Children</b></h1>
-    <hr/>
-    <a href="childList" style="margin-left: 2.5em;">REFRESH</a>
+    <h3>Get Data</h3>
+    <a href="childList" style="margin-left: 2.5em;">LOAD DATA</a>
 
     <div id="childList">
             {{# each childList }}
             <article class="item">
+                <h1><b>Registered Children</b></h1>
                 <br/>
-                <h2> {{ this.firstname }} {{ this.lastname }} </h2>
-                <div>Grade : {{ this.grade }}</div>
-                <br>
-                <hr/>
+                <div>First Name : {{ this.firstname }}</div>
+                <br/>
+                <div>Last Name : {{ this.lastname }}</div>
+                <br><br>
             </article>
-
             {{/each}}
     </div>
 </body>

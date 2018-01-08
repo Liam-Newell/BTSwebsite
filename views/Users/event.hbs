@@ -7,6 +7,8 @@
 <body>
 <p>{{info.info}}</p>
 <p>{{info.date}}</p>
+<p>{{children.[0].firstname}}</p>
+
 <form method="post" id="eventregister" name="eventregister" action="/users/registerevent">
     <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
     <button type="submit" id="register">
