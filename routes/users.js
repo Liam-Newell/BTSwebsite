@@ -16,7 +16,8 @@ var eventdataschema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
     info: {type: String, required: true}
-    registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
+    /*Causes program to crash fix is needed*/
+    //registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
 }, {collection: 'events'});
 //instantiate schema as models "User" and "Child"
 
@@ -78,7 +79,7 @@ router.post('/registerevent', function (req, res, next) {
             if (err) throw err;
             console.log(managerevent);
         }
-
+    );
     var data = new User(item);
     data.save();
     req.session.userDat.events.push(req.body.id);
