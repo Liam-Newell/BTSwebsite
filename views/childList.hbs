@@ -46,17 +46,15 @@
     </script>
 
     <h3>Get Data</h3>
-    <a href="childList" style="margin-left: 2.5em;">LOAD DATA</a>
-
+    <a href="childList" style="margin-left: 2.5em;">REFRESH</a>
+    <h1><b>Registered Children</b></h1>
+    <hr/>
     <div id="childList">
             {{# each childList }}
             <article class="item">
-                <h1><b>Registered Children</b></h1>
-                <br/>
-                <div>First Name : {{ this.firstname }}</div>
-                <br/>
-                <div>Last Name : {{ this.lastname }}</div>
-                <br><br>
+                <h2> {{ this.firstname }} {{ this.lastname }} </h2>
+                <div>Grade : {{ this.grade }}</div>
+                <br><hr/>
             </article>
             {{/each}}
     </div>
