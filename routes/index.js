@@ -117,7 +117,6 @@ router.get('/registerchild', function (req, res, next) {
     }
 });
 
-//get homepage2 (the nice page that will you bust a nut!)
 //ADDED: SESSION INFO
 router.get('/homepage2', function (req, res, next) {
     var userInfo = req.session;
