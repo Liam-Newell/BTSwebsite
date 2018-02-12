@@ -254,6 +254,7 @@ router.post('/registerchild', function (req, res, next) {
                     }
 
                 );
+                req.session.userDat.childList.push(cid);
                 res.render('childList');
             }
             else {
@@ -348,8 +349,9 @@ router.get('/childList', function (req, res, next) {
     var userDat = req.session;
 
     //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(userDat.logged)
+    if(userDat)
     {
+
         for (l in req.session.userDat.children) {
             var o = req.session.userDat.children[l];
             childQuery.push(new mongoose.Types.ObjectId(o));
@@ -363,6 +365,7 @@ router.get('/childList', function (req, res, next) {
                 children.push(docs[i]._doc);
             }
         });
+        console.log("\n\n\n\n\n" + children);
         res.render('childList', {childList: children, user: userDat.username, title: "Registered Children | Church Centre"});
     }
     else
