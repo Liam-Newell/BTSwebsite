@@ -10,11 +10,9 @@
 
 <form method="post" id="eventregister" name="eventregister" action="/users/registerevent">
     <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
-    <select>
+    <select name="selectChild">
         {{# each childList }}
-            <option>
-                {{ this.firstname }} {{ this.lastname }}</div>
-            </option>
+              <option value = {{this._id}}> {{ this.firstname }} {{this.lastname}} </option>
         {{/each}}
     </select>
     <button type="submit" id="register">
