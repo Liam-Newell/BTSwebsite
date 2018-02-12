@@ -48,7 +48,10 @@
             <article class="item">
                 <h2> {{ this.firstname }} {{ this.lastname }} </h2>
                 <div>Grade : {{ this.grade }}</div>
-                <br><hr/>
+                <br>
+                <!-- Link Disabled -->
+                <a href="/deletechild" style="margin-left: 2.5em; color: red;">REMOVE CHILD</a>
+                <hr/>
             </article>
             {{/each}}
     </div>

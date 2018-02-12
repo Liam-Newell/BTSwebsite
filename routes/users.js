@@ -62,7 +62,9 @@ router.post('/viewevent', function (req, res, next) {
 
 router.get('/viewevent/:id', function(req, res, next){
         EventData.findOne({_id: id}).then(function (doc) {
-           res.render('Users/event' , {info: doc});
+            var user = req.session.userDat;
+            var children = user.children;
+           res.render('Users/event' , {info: doc, children: children});
         });
 
 });
@@ -80,8 +82,22 @@ router.post('/registerevent', function (req, res, next) {
         });
 
     var data = new User(item);
-    data.save();
+    data.save(); //item does not link to the event.
+
+    //For child
+    item.events.push(req.body.id);
+    Child.findByIdAndUpdate(item._id,
+        {"$push": {"events": req.body.id}},
+        {"new": true, "upsert": true},
+        function (err, managerevent) {
+            if (err) throw err;
+            console.log(managerevent);
+        }
+    );
+    var data = new Child(item);
+
     req.session.userDat.events.push(req.body.id);
+    data.save();
     //When registered, user is redirected to calendar
     res.redirect('./calendar');
 
