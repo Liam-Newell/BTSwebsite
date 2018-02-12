@@ -89,6 +89,12 @@ h1, h2, h3, h4, h5, h6, figure {
   color: #fff;
   border: 2px solid #00B906;
 }
+/*Delete Button*/
+.btn-primary-delete {
+  background: #ff0000;
+  color: #fff;
+  border: 2px solid #ff0000;
+}
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
   background: #00d307 !important;
   border-color: #00d307 !important;

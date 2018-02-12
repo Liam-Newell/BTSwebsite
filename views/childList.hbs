@@ -46,11 +46,11 @@
     <div id="childList">
             {{# each childList }}
             <article class="item">
-                <h2> {{ this.firstname }} {{ this.lastname }} </h2>
-                <div>Grade : {{ this.grade }}</div>
-                <br>
+                <h2> {{ this.firstname }} {{ this.lastname }}  </h2>
                 <!-- Link Disabled -->
-                <a href="/deletechild" style="margin-left: 2.5em; color: red;">REMOVE CHILD</a>
+                <a class="btn btn-primary-delete pull-right" href="/deletechild" role="button" style="margin-right: 20em; margin-top: -1em;">Delete</a>
+                <div>Grade : {{ this.grade }}</div>
+                <br/>
                 <hr/>
             </article>
             {{/each}}
