@@ -20,6 +20,7 @@ var userDataSchema = new Schema({
     email:          {type: String, required: false},
     phonenumber:    {type: String, required: false},
     phonenumber2:   {type: String, required: false},
+    isAdmin:        {type: Boolean, required: true},
     birthday:       {type: Date, required: false},
     children:       [{type: Schema.Types.ObjectId, ref: 'Child'}], //an array of child ObjectID's referencing Child collection
     events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
@@ -158,6 +159,7 @@ router.post('/register', function (req, res, next){
         email: req.body.email,
         phonenumber: req.body.phonenumber,
         phonenumber2: req.body.phonenumber2,
+        isAdmin: req.body.isAdmin || false,
         birthday: req.body.birthday,
         children: [],
         events: []
