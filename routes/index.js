@@ -1,16 +1,27 @@
+//ADD-ONS SECTION
+
+//Require statments to include proper funtionality
 var express = require('express');
+
 var asserts = require('asserts');
 var assert = require('assert');
+
 var router = express.Router();
+
+//For mongoDB
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
 
-//session
+//For sessions
 var expressSession = require('express-session');
 router.use(expressSession({secret: 'max', saveUninitialized: false, resave: false}));
 
-//user schema
+
+
+//DATABASE SECTION
+
+//Database Schema : USER
 var userDataSchema = new Schema({
     username:       {type: String, required: true},
     password:       {type: String, required: true},
@@ -26,7 +37,7 @@ var userDataSchema = new Schema({
     events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
     }, {collection: 'data'});
 
-//child schema
+//Database Schema : CHILD
 var childDataSchema = new Schema({
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
@@ -35,43 +46,30 @@ var childDataSchema = new Schema({
     events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
     }, {collection: 'children'});
 
-//instantiate schema as models "User" and "Child"
+//Instantiate Schema as Models: User, Child
 var User = mongoose.model('User', userDataSchema);
 var Child = mongoose.model('Child', childDataSchema);
 
-// get home page
+
+
+//ROUTER SECTION
+
+//GETTERS
+
+//Get: log-in page (index.hbs)
 router.get('/', function(req, res, next) {
-    res.render('index', { title: 'Church Centre' , cuck:'liam'
-    , success: false, errors: req.session.errors});
+
+    res.render('index', {
+        title: 'Church Centre' ,
+        success: false,
+        errors: req.session.errors
+    });
+
     req.session.errors = null;
-});
-
-//get schedule page!
-router.get('/schedule', function(req, res, next){
-    var sess = req.session;
-
-    if(sess.logged) {
-        res.render('schedule', {title: 'Church Centre', user: sess.username});
-    }else{
-        res.redirect('localhost:3000');
-    }
 
 });
 
-router.get('/logout', function(req, res, next){
-    var sess = req.session;
-
-    if (sess.logged) {
-        res.render('schedule', {title: 'Church Centre', user: sess.username});
-    } else {
-        res.redirect('/');
-    }
-
-
-});
-
-//get account page
-//ADDED: Session information
+//Get: account page (account.hbs)
 router.get('/account', function (req, res, next) {
     var sess = req.session;
     var userData = sess.userDat;
@@ -79,6 +77,7 @@ router.get('/account', function (req, res, next) {
     if(sess.logged) {
         var bday = new Date (userData.birthday).toUTCString();
         console.log(bday);
+
         res.render('account', {
             user: sess.username,
             title: 'Church Centre',
@@ -89,41 +88,117 @@ router.get('/account', function (req, res, next) {
             ph1: userData.phonenumber,
             ph2: userData.phonenumber2
         });
-    }
-    else {
+
+    }else{
         res.redirect('localhost:3000')
     }
 });
 
-//get login page
-router.get('/login', function (req, res, next) {
-    res.render('login', {title: 'Church Centre'});
-});
-
-
-//get register page
+//Get: register page (register.hbs)
 router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});
 });
 
-//get register page
+//Get: registerchild page (registerchild.hbs)
 router.get('/registerchild', function (req, res, next) {
     var sess = req.session;
     var userData = sess.userDat;
+
     if(sess.logged) {
-        res.render('registerchild', {user: userData.username});
-    }
-    else {
-        res.render('index', {title: 'ya dun goofed kid'});
+
+        res.render('registerchild', {
+            user: userData.username
+        });
+
+    }else{
+        res.render('index', {title: 'Church Centre'});
     }
 });
 
-//ADDED: SESSION INFO
+//Get: homepage (homepage2.hbs)
 router.get('/homepage2', function (req, res, next) {
+
     var userInfo = req.session;
-    if(userInfo.logged)
+
+    if(userInfo.logged){
+
+        res.render('homepage2', {
+            user: userInfo.username,
+            title: 'Church Centre'
+        });
+
+    }else{
+        res.redirect('/');
+    }
+
+});
+
+//Get: database page (database.hbs)
+router.get('/get-data', function (req, res, next) {
+
+    User.find()
+        .populate('children')
+        .then(function(doc){
+            if(doc.length > 0) {
+
+                res.render('database', {
+                    items: doc
+                });
+
+            }else{
+                res.render('index', {title: "database empty!!"});
+            }
+        });
+
+});
+
+//Get: sign-out sequence
+router.get('/sign-out', function(req, res, next) {
+
+    var sess = req.session;
+    var userData = sess.userDat;
+
+    if(sess.logged){
+        req.session.destroy(function (err) {
+
+            if (err) {
+                console.log(err);
+            } else {
+                res.redirect('/');
+            }
+
+        });
+
+    }else{
+        res.redirect('/')
+    }
+});
+
+//Get: childList page (childList.hbs)
+router.get('/childList', function (req, res, next) {
+
+    //var monthpassed = req.query.id;
+    var childQuery = [];
+    var children = [];
+    var userDat = req.session;
+
+    //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
+    if(userDat.logged)
     {
-        res.render('homepage2', {user: userInfo.username, title: 'Church Centre'});
+        for (l in req.session.userDat.children) {
+            var o = req.session.userDat.children[l];
+            childQuery.push(new mongoose.Types.ObjectId(o));
+        }
+        Child.find({
+            '_id': {$in: childQuery}
+        }, function (err, docs) {
+            console.log(docs);
+
+            for (i in docs) {
+                children.push(docs[i]._doc);
+            }
+        });
+        res.render('childList', {childList: children, user: userDat.username, title: "Registered Children | Church Centre"});
     }
     else
     {
@@ -132,24 +207,11 @@ router.get('/homepage2', function (req, res, next) {
 
 });
 
+//POSTS
 
-
-//get test data page "database button on '/index'
-router.get('/get-data', function (req, res, next) {
-    User.find()
-        .populate('children')
-        .then(function(doc) {
-            if(doc.length > 0) {
-                res.render('database', {items: doc});
-            }
-            else {
-                res.render('index', {title: "database empty!!"});
-            }
-        });
-});
-
-// post page for register
+//Post: register page (register.hbs)
 router.post('/register', function (req, res, next){
+
     var item = {
         username: req.body.username,
         password: req.body.password,
@@ -164,68 +226,37 @@ router.post('/register', function (req, res, next){
         children: [],
         events: []
     };
+
     req.check('lastname', 'Invalid last name').isLength({min:2});
     req.check('firstname','Invalid first name').isLength({min:2});
+
     var errors = req.validationErrors();
 
     if(!errors){
         var data = new User(item);
-        //res.render(('homepage2'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
         data.save();
-        //LOGGING IN NEW USER - temp fix  || S.N.
+
+        //Logging in new user - temp fix  || S.N.
         var sessData = req.session;
         sessData.logged = true;
         sessData.username = item.username;
         sessData.userDat = item;
         console.log(sessData.userDat.email);
-        //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
+
         res.redirect('/homepage2');
-        //var child = window.confirm("Add Child?\nEither OK or Cancel.\nThe button you pressed will be displayed in the result window.")
-        //{
-        //    window.open("exit.html", "Thanks for Visiting!");
-        //};
-        //if(child == true)
-        //{
-        //    res.render(('registerchild'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
-        //}
-        //else
-        //{
-        //    res.render(('homepage2'),{a : item.firstname, b : item.lastname, resultlist: 'cuck'});
-        //    data.save();
-        //}
-    }
-    else{
+
+    }else{
+
         res.render('register', {
-            title: 'Incorrect Values', cuck: 'Ya messed up'
-            , success: false, errors: req.session.errors
+            title: 'Incorrect Values',
+            success: false,
+            errors: req.session.errors
         });
-    }
-});
-//ADDED: Session information
-router.get('/account', function (req, res, next) {
-    var sess = req.session;
-    var userData = sess.userDat;
 
-    if(sess.logged) {
-        var bday = new Date (userData.birthday).toUTCString();
-        console.log(bday);
-        res.render('account', {
-            user: sess.username,
-            title: 'Church Centre',
-            firstname: userData.firstname,
-            lastname: userData.lastname,
-            dob: bday,
-            email: userData.email,
-            ph1: userData.phonenumber,
-            ph2: userData.phonenumber2
-        });
-    }
-    else {
-        res.redirect('/');
     }
 });
 
-//post page for child registration
+//Post: register child (registerchild.hbs)
 router.post('/registerchild', function (req, res, next) {
     var userData = req.session.userDat;
     var sess = req.session;
@@ -236,10 +267,14 @@ router.post('/registerchild', function (req, res, next) {
         birthday: req.body.birthday,
         grade: req.body.grade
     };
-    if(sess.logged) {
+
+    if(sess.logged){
+
             req.check('lastname', 'Invalid last name').isLength({min: 2});
             req.check('firstname', 'Invalid first name').isLength({min: 4});
+
             var errors = req.validationErrors();
+
             if (!errors) {
                 var data = new Child(item);
                 var cid = data._id;
@@ -254,36 +289,40 @@ router.post('/registerchild', function (req, res, next) {
                     }
 
                 );
-                req.session.userDat.childList.push(cid);
                 res.render('childList');
             }
             else {
-                res.render('registerchild'),
-                {
-                    title: 'Incorrect Values', cuck: 'Ya messed up'
-                    , success: false, errors: req.session.errors
+
+                res.render('registerchild'),{
+                    title: 'Incorrect Values',
+                    cuck: 'Ya messed up',
+                    success: false,
+                    errors: req.session.errors
+
                 }
             }
     }
 });
 
-//note '/submit' is identicial to in the index.hbs file
-//ADDED: SESS DATA
+//Post: login sequence (index.html)
 router.post('/login', function(req, res, next) {
     //form validation etc
     var item = {
         username: req.body.username,
         password: req.body.password
     };
+
     User.find({username : item.username, password : item.password}).then(function(doc){
         if(doc < 1){
             console.error('no login exists');
-            res.render('login', {
-                title: 'First last name combo doesnt exist', cuck: 'Ya messed up'
-                , success: false, errors: req.session.errors
+
+            res.render('login',{
+                title: 'First last name combo doesnt exist',
+                cuck: 'Ya messed up',
+                success: false, errors: req.session.errors
             });
-        }
-        else {
+
+        }else{
 
             var sessData = req.session;
             if (sessData.logged)
@@ -301,7 +340,7 @@ router.post('/login', function(req, res, next) {
     });
 });
 
-//note '/submit' is identicial to in the index.hbs file
+//Post: '/submit' is identicial to in the index.hbs file
 router.post('/index', function(req, res, next) {
     //form validation etc
     var item = {
@@ -323,57 +362,6 @@ router.post('/index', function(req, res, next) {
     });
 });
 
-//SIGN OUT SEQUENCE - removes session, and prepare the app to
-router.get('/sign-out', function(req, res, next) {
-    var sess = req.session;
-    var userData = sess.userDat;
-
-    if(sess.logged)
-        req.session.destroy(function(err) {
-            if(err) {
-                console.log(err);
-            } else {
-                res.redirect('/');
-            }
-        });
-    else{
-        res.redirect('/')
-    }
-});
-
-router.get('/childList', function (req, res, next) {
-
-    //var monthpassed = req.query.id;
-    var childQuery = [];
-    var children = [];
-    var userDat = req.session;
-
-    //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(userDat)
-    {
-
-        for (l in req.session.userDat.children) {
-            var o = req.session.userDat.children[l];
-            childQuery.push(new mongoose.Types.ObjectId(o));
-        }
-        Child.find({
-            '_id': {$in: childQuery}
-        }, function (err, docs) {
-            console.log(docs);
-
-            for (i in docs) {
-                children.push(docs[i]._doc);
-            }
-        });
-        console.log("\n\n\n\n\n" + children);
-        res.render('childList', {childList: children, user: userDat.username, title: "Registered Children | Church Centre"});
-    }
-    else
-    {
-        res.redirect('/');
-    }
-
-});
 module.exports.userDataSchema = userDataSchema;
 module.exports = mongoose.model("User", userDataSchema);
 module.exports.User = User;
