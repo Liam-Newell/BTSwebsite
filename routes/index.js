@@ -256,7 +256,7 @@ router.post('/register', function (req, res, next){
     }
 });
 
-//Post: register child (registerchild.hbs)
+//Post: register child (registerchild.hbs).
 router.post('/registerchild', function (req, res, next) {
     var userData = req.session.userDat;
     var sess = req.session;
