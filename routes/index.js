@@ -236,14 +236,15 @@ router.get('/childList', function (req, res, next) {
     if(userDat.logged)
     {
         if(!req.session.childrenCache) {
-            for (l in req.session.userDat.children) {
-                var o = req.session.userDat.children[l];
+            for (var i = 0; i < req.session.userDat.children.length; i++) {
+                var o = req.session.userDat.children[i];
                 childQuery.push(new mongoose.Types.ObjectId(o));
             }
             Child.find({
                 '_id': {$in: childQuery}
             }, function (err, docs) {
                 console.log(docs);
+                req.session.childrenCache = null;
                 req.session.childrenCache = [];
                 for (i in docs) {
                     req.session.childrenCache.push(docs[i]._doc);
@@ -278,7 +279,7 @@ router.post('/registerchild', function (req, res, next) {
 
             var errors = req.validationErrors();
             if(req.session.childrenCache){
-                req.session.childrenCache = [];
+                req.session.childrenCache = null;
             }
             if (!errors) {
                 var data = new Child(item);
@@ -309,45 +310,40 @@ router.post('/registerchild', function (req, res, next) {
     }
 });
 //Remove Child from the account
-router.post('/deletechild', function (req, res, next) {
+router.get('/deletechild/:id', function (req, res, next) {
+    var childID = encodeURIComponent(req.params.id);
     var found = false;
-    var childID;
     var userData = req.session.userDat;
     var sess = req.session;
     //get Child ID
     if(sess.logged)
     {
         if(req.session.childrenCache){
-            req.session.childrenCache = [];
+            req.session.childrenCache = null;
         }
-        Child.findById(req.body.id,
-            function (err, managerchild) {
-                if (err) throw err;
-                console.log(managerchild);
-                found = true;
-            }
-        ).then(function (doc)
-            {
-                if(doc > 1)
-                {
-                    childID = doc[0]._id;
-                    console.log(childID);
+            //Remove Link to User Account as well
+        User.findById(userData._id, function (err, user) {
+            if (err) throw err;
+            var search = new mongoose.Types.ObjectId(childID);
+            for(var i = 0;i < user._doc.children.length; i++){
+                if(user._doc.children[i].id.toString('hex') === search.id.toString('hex')){
+                    user._doc.children.splice(i, 1);
                 }
             }
-        );
+            user.save(function (err, updateduser) {
+                if (err) throw err;
+                console.log(updateduser);
+            });
+        });
 
-        if(found)
-        {
-            //Remove Link to User Account as well
-            userData.children.findByIdAndRemove(childID);
+           // User.findByIdAndRemove(childID);
             //Remove Child from database
-            Child.findByIdAndRemove(req.body.id,
+            Child.findByIdAndRemove(childID,
                 function (err, managerchild) {
                     if (err) throw err;
                     console.log(managerchild);
                 }
             );
-        }
         res.redirect('./childList');
     }
     else
