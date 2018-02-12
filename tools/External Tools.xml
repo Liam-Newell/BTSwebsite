@@ -1,7 +1,7 @@
 <toolSet name="External Tools">
-  <tool name="Launch Server" showInMainMenu="true" showInEditor="true" showInProject="true" showInSearchPopup="true" disabled="false" useConsole="false" showConsoleOnStdOut="false" showConsoleOnStdErr="false" synchronizeAfterRun="true">
+  <tool name="Launch Server" showInMainMenu="true" showInEditor="true" showInProject="true" showInSearchPopup="true" disabled="false" useConsole="true" showConsoleOnStdOut="false" showConsoleOnStdErr="false" synchronizeAfterRun="true">
     <exec>
-      <option name="COMMAND" value="C:\Program Files\MongoDB\Server\3.4\bin\mongod.exe" />
+      <option name="COMMAND" value="C:\Program Files\MongoDB\Server\3.4\bin\launch.bat" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="C:/Program Files/MongoDB/Server/3.4/bin" />
     </exec>
