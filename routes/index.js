@@ -174,38 +174,6 @@ router.get('/sign-out', function(req, res, next) {
     }
 });
 
-//Get: childList page (childList.hbs)
-router.get('/childList', function (req, res, next) {
-
-    //var monthpassed = req.query.id;
-    var childQuery = [];
-    var children = [];
-    var userDat = req.session;
-
-    //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(userDat.logged)
-    {
-        for (l in req.session.userDat.children) {
-            var o = req.session.userDat.children[l];
-            childQuery.push(new mongoose.Types.ObjectId(o));
-        }
-        Child.find({
-            '_id': {$in: childQuery}
-        }, function (err, docs) {
-            console.log(docs);
-
-            for (i in docs) {
-                children.push(docs[i]._doc);
-            }
-        });
-        res.render('childList', {childList: children, user: userDat.username, title: "Registered Children | Church Centre"});
-    }
-    else
-    {
-        res.redirect('/');
-    }
-
-});
 
 //POSTS
 
@@ -256,6 +224,41 @@ router.post('/register', function (req, res, next){
     }
 });
 
+//Get: childList page (childList.hbs)
+router.get('/childList', function (req, res, next) {
+
+    //var monthpassed = req.query.id;
+    var childQuery = [];
+    var children = [];
+    var userDat = req.session;
+
+    //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
+    if(userDat.logged)
+    {
+        if(!req.session.childrenCache) {
+            for (l in req.session.userDat.children) {
+                var o = req.session.userDat.children[l];
+                childQuery.push(new mongoose.Types.ObjectId(o));
+            }
+            Child.find({
+                '_id': {$in: childQuery}
+            }, function (err, docs) {
+                console.log(docs);
+                req.session.childrenCache = [];
+                for (i in docs) {
+                    req.session.childrenCache.push(docs[i]._doc);
+                }
+            });
+        }
+
+        res.render('childList', {childList: req.session.childrenCache, user: userDat.username, title: "Registered Children | Church Centre"});
+    }
+    else
+    {
+        res.redirect('/');
+    }
+
+});
 //Post: register child (registerchild.hbs).
 router.post('/registerchild', function (req, res, next) {
     var userData = req.session.userDat;
@@ -274,7 +277,9 @@ router.post('/registerchild', function (req, res, next) {
             req.check('firstname', 'Invalid first name').isLength({min: 4});
 
             var errors = req.validationErrors();
-
+            if(req.session.childrenCache){
+                req.session.childrenCache = [];
+            }
             if (!errors) {
                 var data = new Child(item);
                 var cid = data._id;
@@ -303,7 +308,53 @@ router.post('/registerchild', function (req, res, next) {
             }
     }
 });
+//Remove Child from the account
+router.post('/deletechild', function (req, res, next) {
+    var found = false;
+    var childID;
+    var userData = req.session.userDat;
+    var sess = req.session;
+    //get Child ID
+    if(sess.logged)
+    {
+        if(req.session.childrenCache){
+            req.session.childrenCache = [];
+        }
+        Child.findById(req.body.id,
+            function (err, managerchild) {
+                if (err) throw err;
+                console.log(managerchild);
+                found = true;
+            }
+        ).then(function (doc)
+            {
+                if(doc > 1)
+                {
+                    childID = doc[0]._id;
+                    console.log(childID);
+                }
+            }
+        );
 
+        if(found)
+        {
+            //Remove Link to User Account as well
+            userData.children.findByIdAndRemove(childID);
+            //Remove Child from database
+            Child.findByIdAndRemove(req.body.id,
+                function (err, managerchild) {
+                    if (err) throw err;
+                    console.log(managerchild);
+                }
+            );
+        }
+        res.redirect('./childList');
+    }
+    else
+    {
+        res.redirect('/');
+    }
+});
 //Post: login sequence (index.html)
 router.post('/login', function(req, res, next) {
     //form validation etc
@@ -362,50 +413,8 @@ router.post('/index', function(req, res, next) {
     });
 });
 
-//Remove Child from the account
-router.post('/deletechild', function (req, res, next) {
-    var found = false;
-    var childID;
-    var userData = req.session.userDat;
-    var sess = req.session;
-    //get Child ID
-    if(sess.logged)
-    {
-        Child.findById(req.body.id,
-            function (err, managerchild) {
-                if (err) throw err;
-                console.log(managerchild);
-                found = true;
-            }
-        ).then(function (doc)
-            {
-                if(doc > 1)
-                {
-                    childID = doc[0]._id;
-                    console.log(childID);
-                }
-            }
-        );
 
-        if(found)
-        {
-            //Remove Link to User Account as well
-            userData.children.findByIdAndRemove(childID);
-            //Remove Child from database
-            Child.findByIdAndRemove(req.body.id,
-                function (err, managerchild) {
-                    if (err) throw err;
-                    console.log(managerchild);
-                }
-            );
-        }
-        res.redirect('./childList');
-    }
-    else
-    {
-        res.redirect('/');
-    }
-});
+
 
 module.exports.userDataSchema = userDataSchema;
 module.exports = mongoose.model("User", userDataSchema);
