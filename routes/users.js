@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+
 //var popupS = require('popups');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
+
 //user schema
 var myModule = require('./index');
 var userDataSchema = myModule.userDataSchema;
@@ -18,8 +20,8 @@ var eventdataschema = new Schema({
     info: {type: String, required: true},
     registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
 }, {collection: 'events'});
-//instantiate schema as models "User" and "Child"
 
+//instantiate schema as models "User" and "Child"
 var EventData = mongoose.model('EventData', eventdataschema);
 
 /* GET users listing. */
@@ -70,24 +72,26 @@ router.get('/viewevent/:id', function(req, res, next){
 });
 
 router.post('/registerevent', function (req, res, next) {
-    var item = req.session.userDat;
 
+    var item = req.session.userDat;
     item.events.push(req.body.id);
+
     User.findByIdAndUpdate(item._id,
         {"$push": {"events": req.body.id}},
         {"new": true, "upsert": true},
         function (err, managerevent) {
             if (err) throw err;
-            console.log(managerevent);
-        }
-    );
+                console.log(managerevent);
+        });
+
     var data = new User(item);
     data.save(); //item does not link to the event.
 
     //For child
-    item.events.push(req.body.id);
-    Child.findByIdAndUpdate(item._id,
-        {"$push": {"events": req.body.id}},
+    var childId = req.body.selectChild; //gets selected child id from event form
+
+    Child.findByIdAndUpdate(childId,
+        {"$push": {"events": childId}},
         {"new": true, "upsert": true},
         function (err, managerevent) {
             if (err) throw err;
@@ -100,6 +104,7 @@ router.post('/registerevent', function (req, res, next) {
     data.save();
     //When registered, user is redirected to calendar
     res.redirect('./calendar');
+
 });
 
 router.post('/deleteevent', function (req, res, next) {
@@ -181,6 +186,7 @@ router.get('/calendar', function (req, res, next) {
     });
 
 });
+
 router.post('/createevent', function (req, res, next) {
         var event = {
             title: req.body.title,
