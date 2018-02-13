@@ -281,10 +281,11 @@ router.get('/removeChildEvent/:id', function(req, res, next){
         if (err) throw err;
         for(let i = 0; i < user._doc.events.length; i++){
             if(user._doc.events[i]._id === eventId){
-                user._doc.registered.splice(i, 1);
+                user._doc.events.splice(i, 1);
             }
 
         }
+        req.session.userDat.events = user._doc.events;
         user.save(function (err, doc){
             if (err) throw err;
             console.log("Successfully removed from user "+doc);
