@@ -265,10 +265,10 @@ router.get('/removeChildEvent/:id', function(req, res, next){
         for (let i = 0; i < req.session.userDat.children.length; i++) {
             search.push(new mongoose.Types.ObjectId(req.session.userDat.children[i]));
         }
-        for (var i = 0; i < docs._doc.registered.length; i++) {
-            for(var j = 0; j < search.length; j++)
-            if (docs._doc.registered[i].toString('hex') === search[j].id.toString('hex')) {
-                docs._doc.registered.splice(i, 1);
+        for (var i = 0; i < search.length; i++) {
+            for(var j = 0; j < docs._doc.registered.length; j++)
+            if (docs._doc.registered[j].toString('hex') === search[i].id.toString('hex')) {
+                docs._doc.registered.splice(j, 1);
             }
         }
         docs.save(function (err, rChild) {

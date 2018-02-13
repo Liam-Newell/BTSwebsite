@@ -320,7 +320,7 @@ router.post('/registerchild', function (req, res, next) {
                     success: false,
                     errors: req.session.errors
 
-                }
+                };
             }
     }
 });
