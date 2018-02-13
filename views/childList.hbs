@@ -26,7 +26,7 @@
                         <ul class="dropdown-menu">
                            <li><a href="../account">View Account</a></li>
                            <li><a href="#">View Registered Children</a></li>
-                           <li><a href="#">Register a child</a></li>
+                           <li><a href="../registerchild">Register a child</a></li>
                         </ul>
                       </li>
                       <li><a href="/Users/calendar">Calendar</a></li>
@@ -40,8 +40,9 @@
 
 
     <h3>Get Data</h3>
-    <a href="childList" style="margin-left: 2.5em;">REFRESH</a>
+
     <h1><b>Registered Children</b></h1>
+    <a class="btn btn-primary" href="childList" >Refresh</a>
     <hr/>
     <div id="childList">
             {{# each childList }}
@@ -55,4 +56,5 @@
             </article>
             {{/each}}
     </div>
+    <a class="btn btn-primary" href="childList" >Refresh</a>
 </body>

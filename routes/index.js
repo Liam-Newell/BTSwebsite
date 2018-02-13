@@ -257,7 +257,7 @@ router.get('/childList', function (req, res, next) {
                     });
                 });
             }else {
-                res.render('childList', {user: userDat.username, title: "Registered Children | Church Centre"});
+                res.render('childList', {childList: req.session.childrenCache, user: userDat.username, title: "Registered Children | Church Centre"});
             }
         }
         else{
