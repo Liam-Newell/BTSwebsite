@@ -76,6 +76,7 @@ router.post('/registerevent', function (req, res, next) {
     var item = req.session.userDat;
     item.events.push(req.body.id);
 
+    //Query and update User events array with event id
     User.findByIdAndUpdate(item._id,
         {"$push": {"events": req.body.id}},
         {"new": true, "upsert": true},
@@ -85,26 +86,40 @@ router.post('/registerevent', function (req, res, next) {
         });
 
     var data = new User(item);
-    data.save(); //item does not link to the event.
+    data.save();
 
-    //For child
+    //Query and update Child events array with event id
     var childId = req.body.selectChild; //gets selected child id from event form
+    var eventId = req.body.id; //gets selected child id from event form
 
     Child.findByIdAndUpdate(childId,
-        {"$push": {"events": childId}},
+        {"$push": {"events": eventId}},
         {"new": true, "upsert": true},
         function (err, managerevent) {
             if (err) throw err;
             console.log(managerevent);
         }
     );
+
     var data = new Child(item);
+    data.save();
+
+
+
+    EventData.findByIdAndUpdate(eventId,
+        {"$push": {"registered": childId}},
+        {"new": true, "upsert": true},
+        function (err, managerevent) {
+            if (err) throw err;
+            console.log(managerevent);
+        }
+    );
+
+    var data = new EventData(item);
+    data.save();
 
     req.session.userDat.events.push(req.body.id);
-    data.save();
-    //When registered, user is redirected to calendar
     res.redirect('./calendar');
-
 });
 
 router.post('/deleteevent', function (req, res, next) {
@@ -221,6 +236,7 @@ router.get('/eventlist', function (req, res, next) {
             var o = req.session.userDat.events[l];
             eventQuery.push(new mongoose.Types.ObjectId(o));
         }
+
         EventData.find({
             '_id': {$in: eventQuery}
         }, function (err, docs) {
@@ -233,17 +249,6 @@ router.get('/eventlist', function (req, res, next) {
             for (i in docs) {
                 events.push(docs[i]._doc);
             }
-            // var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
-            // var userEvents = req.session.userDat.events;
-            // var events = docs._doc;
-            // if(userEvents.length > 0){
-            //     for(var j = 0; j < userEvents.length; j++) {
-            //         if (doc[j]._doc.date.getMonth() == month) {
-            //             events.push(doc[j]._doc);
-            //         }
-            //     }
-            // }
-
         });
         res.render('Users/eventlist', {eventlist: events, output:monthpassed, user: userDat.username});
     }
@@ -251,14 +256,25 @@ router.get('/eventlist', function (req, res, next) {
     {
         res.redirect('/');
     }
-
 });
 
+router.get('Users/removeChildEvent/:id', function(req, res, next){
+    var eventId = encodeURIComponent(req.params.id);
+    var userData = req.session.userDat;
+    var test = req.body.id;
+    EventData.findByIdAndUpdate(eventId,
+        {"$set": {"registered": "test"}},
+        function(err, updatedEvent){
+            if(err) throw err;
+        })
+    res.render('Users/eventlist');
+});
+/*
 router.get('/eventlist/:id', function(req,res, next){
     var string = encodeURIComponent(id);
     res.redirect('eventlist?id=' + string);
 });
-
+*/
 
 
 module.exports = router;

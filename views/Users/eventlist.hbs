@@ -72,22 +72,19 @@
         var x = document.getElementById("monthSelect");
         x.value = '{{month}}';
     </script>
-
-    <div id="event">
+    <hr/>
+    <div id="event" style="...">
             {{# each eventlist }}
             <article class="item">
-                <h1><b>{{ this.title }}</b></h1>
-                <div class="event-date" style="font-size: 25px;"><b>{{ this.date}}</b></div>
-                <br/>
-                <div>Note : {{ this.info }}</div>
-                <br/>
-                <div>Object ID : {{ this._id }}</div>
+                <h2>{{ this.title }}</h2>
+                <div class="event-date" style="font-size: 25px;"><b>{{this.date}}</b></div>
                 <br>
-                <div>Participants: </div>
+                <div>Event details: {{this.info }}</div>
                 <br>
-                {{# each eventlist }}
-                    <hr/>
-                {{/each}}
+                <div name = "cid">Participants: {{this.registered}}<br></div>
+                <a class="btn btn-primary-delete pull-right" href="/removeChildEvent/{{this._id}}" role="button" style="margin-right: 20em; margin-top: -1em;">Delete</a>
+                <br>
+                <hr/>
             </article>
             {{/each}}
     </div>
