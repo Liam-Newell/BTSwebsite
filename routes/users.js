@@ -267,7 +267,7 @@ router.get('/removeChildEvent/:id', function(req, res, next){
         }
         for (var i = 0; i < docs._doc.registered.length; i++) {
             for(var j = 0; j < search.length; j++)
-            if (docs._doc.registered[i].id.toString('hex') === search[j].id.toString('hex')) {
+            if (docs._doc.registered[i].toString('hex') === search[j].id.toString('hex')) {
                 docs._doc.registered.splice(i, 1);
             }
         }
