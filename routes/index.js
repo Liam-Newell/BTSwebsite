@@ -256,6 +256,8 @@ router.get('/childList', function (req, res, next) {
                         title: "Registered Children | Church Centre"
                     });
                 });
+            }else {
+                res.render('childList', {user: userDat.username, title: "Registered Children | Church Centre"});
             }
         }
         else{
@@ -304,7 +306,7 @@ router.post('/registerchild', function (req, res, next) {
                         console.log(childreg);
                         //data.save();
                         req.session.userDat.children.push(data._id.toString('hex'));
-                        res.render('childList');
+                        res.redirect('/childList');
                 }
 
                 );
