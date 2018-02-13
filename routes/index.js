@@ -235,24 +235,35 @@ router.get('/childList', function (req, res, next) {
     //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
     if(userDat.logged)
     {
-        if(!req.session.childrenCache) {
-            for (var i = 0; i < req.session.userDat.children.length; i++) {
-                var o = req.session.userDat.children[i];
-                childQuery.push(new mongoose.Types.ObjectId(o));
-            }
-            Child.find({
-                '_id': {$in: childQuery}
-            }, function (err, docs) {
-                console.log(docs);
-                req.session.childrenCache = null;
-                req.session.childrenCache = [];
-                for (i in docs) {
-                    req.session.childrenCache.push(docs[i]._doc);
+        if(req.session.userDat.children.length > 0 ) {
+            if (!req.session.childrenCache) {
+                for (var i = 0; i < req.session.userDat.children.length; i++) {
+                    var o = req.session.userDat.children[i];
+                    childQuery.push(new mongoose.Types.ObjectId(o));
                 }
-            });
+                Child.find({
+                    '_id': {$in: childQuery}
+                }, function (err, docs) {
+                    console.log(docs);
+                    req.session.childrenCache = null;
+                    req.session.childrenCache = [];
+                    for (i in docs) {
+                        req.session.childrenCache.push(docs[i]._doc);
+                    }
+                    res.render('childList', {
+                        childList: req.session.childrenCache,
+                        user: userDat.username,
+                        title: "Registered Children | Church Centre"
+                    });
+                });
+            }
+        }
+        else{
+            res.render('childList', {user: userDat.username, title: "Registered Children | Church Centre"});
         }
 
-        res.render('childList', {childList: req.session.childrenCache, user: userDat.username, title: "Registered Children | Church Centre"});
+
+
     }
     else
     {
@@ -292,10 +303,12 @@ router.post('/registerchild', function (req, res, next) {
                         if (err) throw err;
                         console.log(childreg);
                         //data.save();
-                    }
+                        req.session.userDat.children.push(data._id.toString('hex'));
+                        res.render('childList');
+                }
 
                 );
-                res.render('childList');
+
             }
             else {
 
@@ -312,6 +325,7 @@ router.post('/registerchild', function (req, res, next) {
 //Remove Child from the account
 router.get('/deletechild/:id', function (req, res, next) {
     var childID = encodeURIComponent(req.params.id);
+    var search = new mongoose.Types.ObjectId(childID);
     var found = false;
     var userData = req.session.userDat;
     var sess = req.session;
@@ -322,6 +336,10 @@ router.get('/deletechild/:id', function (req, res, next) {
             req.session.childrenCache = null;
         }
             //Remove Link to User Account as well
+        Child.findByIdAndRemove(childID, (err, child) => {
+                if (err) throw err;
+                console.log(child);
+            });
         User.findById(userData._id, function (err, user) {
             if (err) throw err;
             var search = new mongoose.Types.ObjectId(childID);
@@ -330,21 +348,19 @@ router.get('/deletechild/:id', function (req, res, next) {
                     user._doc.children.splice(i, 1);
                 }
             }
-            user.save(function (err, updateduser) {
+            user.save(function (err) {
                 if (err) throw err;
-                console.log(updateduser);
+                console.log(user);
+                res.redirect('/childList');
             });
+            // User.findByIdAndRemove(childID);
+            //Remove Child from database
+
+
         });
 
-           // User.findByIdAndRemove(childID);
-            //Remove Child from database
-            Child.findByIdAndRemove(childID,
-                function (err, managerchild) {
-                    if (err) throw err;
-                    console.log(managerchild);
-                }
-            );
-        res.redirect('./childList');
+
+
     }
     else
     {
