@@ -5,6 +5,7 @@
     <title>Account</title>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/stylesheets/eventDB.css"/>
 
     <!--Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -35,16 +36,20 @@
              </ul>
         </div>
     </nav>
-    <div class="accProfile">
-        <br/><br/>
-        <h1>Account Profile</h1>
-        <hr>
-        <h2>{{lastname}}, {{firstname}}</h2>
-        <p>Username: {{user}}</p>
-        <p>Date of Birth: {{dob}}</p>
-        <p>Email Address: {{email}}</p>
-        <p>Phone Number 1: {{ph1}}</p>
-        <p>Phone Number 2: {{ph2}}</p>
+
+    <br><br><br>
+    <h2>Profile</h2>
+    <hr/>
+    <div id="account">
+        <article class="item">
+            <h3> {{ this.firstname }} {{ this.lastname }} </h3>
+            <div>Username: {{this.user}}</div>
+            <div>Date of Birth: {{this.dob}}</div>
+            <div>Email Address: {{this.email}}</div>
+            <div>Phone Number 1: {{this.ph1}}</div>
+            <div>Phone Number 2: {{this.ph2}}</div>
+            <br/>
+            <hr/>
+        </article>
     </div>
 </body>
-</html>

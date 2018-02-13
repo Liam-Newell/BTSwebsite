@@ -38,54 +38,20 @@
             </div>
     </nav>
 
-    <!--Month Year Scripts -->
-    <script>
-        function monthfunction(month){
-            window.location.href = "/users/eventlist?id="+ month;
-        }
-    </script>
-
-    <h3>Get Data</h3>
-    <a href="eventlist" style="margin-left: 2.5em;">LOAD DATA</a>
-
-
-    <!--
-    <h1 style="margin-left: 1em;">Month passed: {{output}}</h1>
-
-    <div id ="month"></div>
-    <select name="monthSelect" id="monthSelect" onchange="monthfunction(this.value)">
-        <option value="January">January</option>
-        <option value="February">February</option>
-        <option value="March">March</option>
-        <option value="April">April</option>
-        <option value="May">May</option>
-        <option value="June">June</option>
-        <option value="July">July</option>
-        <option value="August">August</option>
-        <option value="September">September</option>
-        <option value="October">October</option>
-        <option value="November">November</option>
-        <option value="December">December</option>
-    </select>
-    -->
-    <script>
-        var x = document.getElementById("monthSelect");
-        x.value = '{{month}}';
-    </script>
+    <br><br><br>
+    <h2>Registered events</h2>
+    <!--<a class="btn btn-primary" href="eventlist" >Refresh</a>-->
     <hr/>
-    <div id="event" style="...">
-            {{# each eventlist }}
+    <div id="eventlist">
+        {{# each eventlist }}
             <article class="item">
-                <h2>{{ this.title }}</h2>
-                <div class="event-date" style="font-size: 25px;"><b>{{this.date}}</b></div>
-                <br>
-                <div>Event details: {{this.info }}</div>
-                <br>
-                <div name = "cid">Participants: {{this.registered}}<br></div>
-                <a class="btn btn-primary-delete pull-right" href="/Users/removeChildEvent/{{this._id}}" role="button" style="margin-right: 20em; margin-top: -1em;">Delete</a>
-                <br>
+                <h3> {{ this.title }} </h3>
+                <a class="btn btn-primary-delete pull-right" href="/removeChildEvent/{{this._id}}" role="button" style="margin-right: 20em; margin-top: -1em;">Remove</a>
+                <div class="event-date">{{this.date}}</div>
+                <div>Event details : {{ this.info }}</div>
+                <div>Registered children: {{this.registered}}</div>
                 <hr/>
             </article>
-            {{/each}}
+        {{/each}}
     </div>
 </body>
