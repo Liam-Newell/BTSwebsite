@@ -187,7 +187,7 @@ router.post('/register', function (req, res, next){
         isAdmin: req.body.isAdmin || false,
         children: []
     };
-    cPassword = req.body.cPassword;
+    var cPassword = req.body.cPassword;
 
 
 
@@ -196,34 +196,78 @@ router.post('/register', function (req, res, next){
 
     var errors = req.validationErrors();
     if(item.password !== cPassword){
-        res.render('register', {
-            title: 'Passwords are not identical',
-            success: false,
-            errors: req.session.errors
-        });
+            errors = 'Passwords are not identical';
     }
     if(!errors){
         var data = new User(item);
-        data.save();
+        data.save(function (err, doc){
+            if(err) {
+                res.render('register', {
+                    title: 'Missing Values',
+                    success: false,
+                    errors: req.session.errors
+                });
+            }
+            var sessData = req.session;
+            if (sessData.logged)
+                req.session.destroy(function (err) {
+                    if (err)
+                        console.log(err);
+                });
+            sessData.logged = true;
+            sessData.userDat = doc._doc;
+            console.log(sessData.userDat.email);
+            //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
+            res.redirect('/homepage2');
+
+        });
 
         //Logging in new user - temp fix  || S.N.
-        var sessData = req.session;
-        sessData.logged = true;
-        sessData.username = item.username;
-        sessData.userDat = item;
-        console.log(sessData.userDat.email);
 
-        res.redirect('/homepage2');
 
     }else{
 
         res.render('register', {
-            title: 'Incorrect Values',
+            title: errors,
             success: false,
             errors: req.session.errors
         });
 
     }
+});
+//Post: login sequence (index.html)
+router.post('/login', function(req, res, next) {
+    //form validation etc
+    var item = {
+        username: req.body.username,
+        password: req.body.password
+    };
+
+    User.find({username : item.username, password : item.password}).then(function(doc){
+        if(doc < 1){
+            console.error('no login exists');
+
+            res.render('login',{
+                title: 'First last name combo doesnt exist',
+                cuck: 'Ya messed up',
+                success: false, errors: req.session.errors
+            });
+
+        }else{
+
+            var sessData = req.session;
+            if (sessData.logged)
+                req.session.destroy(function (err) {
+                    if (err)
+                        console.log(err);
+                });
+            sessData.logged = true;
+            sessData.userDat = doc[0]._doc;
+            console.log(sessData.userDat.email);
+            //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
+            res.redirect('/homepage2');
+        }
+    });
 });
 
 //Get: childList page (childList.hbs)
@@ -355,57 +399,20 @@ router.get('/deletechild/:id', function (req, res, next) {
             user.save(function (err) {
                 if (err) throw err;
                 console.log(user);
-                res.redirect('/childList');
             });
             // User.findByIdAndRemove(childID);
             //Remove Child from database
 
 
         });
-
-
-
     }
     else
     {
         res.redirect('/');
     }
+    res.redirect('/childList');
 });
-//Post: login sequence (index.html)
-router.post('/login', function(req, res, next) {
-    //form validation etc
-    var item = {
-        username: req.body.username,
-        password: req.body.password
-    };
 
-    User.find({username : item.username, password : item.password}).then(function(doc){
-        if(doc < 1){
-            console.error('no login exists');
-
-            res.render('login',{
-                title: 'First last name combo doesnt exist',
-                cuck: 'Ya messed up',
-                success: false, errors: req.session.errors
-            });
-
-        }else{
-
-            var sessData = req.session;
-            if (sessData.logged)
-                req.session.destroy(function (err) {
-                    if (err)
-                        console.log(err);
-                });
-            sessData.logged = true;
-            sessData.username = doc[0].username;
-            sessData.userDat = doc[0]._doc;
-            console.log(sessData.userDat.email);
-            //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
-            res.redirect('/homepage2');
-        }
-    });
-});
 
 //Post: '/submit' is identicial to in the index.hbs file
 router.post('/index', function(req, res, next) {
