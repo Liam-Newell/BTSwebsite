@@ -30,18 +30,14 @@ var userDataSchema = new Schema({
     streetaddress:  {type: String, required: false},
     email:          {type: String, required: false},
     phonenumber:    {type: String, required: false},
-    phonenumber2:   {type: String, required: false},
     isAdmin:        {type: Boolean, required: true},
-    birthday:       {type: Date, required: false},
     children:       [{type: Schema.Types.ObjectId, ref: 'Child'}], //an array of child ObjectID's referencing Child collection
-    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
     }, {collection: 'data'});
 
 //Database Schema : CHILD
 var childDataSchema = new Schema({
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
-    birthday:       {type: Date, required: true},
     grade:          {type: Number, min: 1, max: 8, required: true},
     events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
     }, {collection: 'children'});
@@ -79,7 +75,7 @@ router.get('/account', function (req, res, next) {
         console.log(bday);
 
         res.render('account', {
-            user: sess.username,
+            user: sess.userDat.username,
             title: 'Church Centre',
             firstname: userData.firstname,
             lastname: userData.lastname,
@@ -123,7 +119,7 @@ router.get('/homepage2', function (req, res, next) {
     if(userInfo.logged){
 
         res.render('homepage2', {
-            user: userInfo.username,
+            user: userInfo.userDat.username,
             title: 'Church Centre'
         });
 
@@ -188,40 +184,90 @@ router.post('/register', function (req, res, next){
         streetaddress: req.body.streetaddress,
         email: req.body.email,
         phonenumber: req.body.phonenumber,
-        phonenumber2: req.body.phonenumber2,
         isAdmin: req.body.isAdmin || false,
-        birthday: req.body.birthday,
-        children: [],
-        events: []
+        children: []
     };
+    var cPassword = req.body.cPassword;
+
+
 
     req.check('lastname', 'Invalid last name').isLength({min:2});
     req.check('firstname','Invalid first name').isLength({min:2});
 
     var errors = req.validationErrors();
-
+    if(item.password !== cPassword){
+            errors = 'Passwords are not identical';
+    }
     if(!errors){
         var data = new User(item);
-        data.save();
+        data.save(function (err, doc){
+            if(err) {
+                res.render('register', {
+                    title: 'Missing Values',
+                    success: false,
+                    errors: req.session.errors
+                });
+            }
+            var sessData = req.session;
+            if (sessData.logged)
+                req.session.destroy(function (err) {
+                    if (err)
+                        console.log(err);
+                });
+            sessData.logged = true;
+            sessData.userDat = doc._doc;
+            console.log(sessData.userDat.email);
+            //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
+            res.redirect('/homepage2');
+
+        });
 
         //Logging in new user - temp fix  || S.N.
-        var sessData = req.session;
-        sessData.logged = true;
-        sessData.username = item.username;
-        sessData.userDat = item;
-        console.log(sessData.userDat.email);
 
-        res.redirect('/homepage2');
 
     }else{
 
         res.render('register', {
-            title: 'Incorrect Values',
+            title: errors,
             success: false,
             errors: req.session.errors
         });
 
     }
+});
+//Post: login sequence (index.html)
+router.post('/login', function(req, res, next) {
+    //form validation etc
+    var item = {
+        username: req.body.username,
+        password: req.body.password
+    };
+
+    User.find({username : item.username, password : item.password}).then(function(doc){
+        if(doc < 1){
+            console.error('no login exists');
+
+            res.render('login',{
+                title: 'First last name combo doesnt exist',
+                cuck: 'Ya messed up',
+                success: false, errors: req.session.errors
+            });
+
+        }else{
+
+            var sessData = req.session;
+            if (sessData.logged)
+                req.session.destroy(function (err) {
+                    if (err)
+                        console.log(err);
+                });
+            sessData.logged = true;
+            sessData.userDat = doc[0]._doc;
+            console.log(sessData.userDat.email);
+            //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
+            res.redirect('/homepage2');
+        }
+    });
 });
 
 //Get: childList page (childList.hbs)
@@ -252,7 +298,7 @@ router.get('/childList', function (req, res, next) {
                     }
                     res.render('childList', {
                         childList: req.session.childrenCache,
-                        user: userDat.username,
+                        user: userDat.userDat.username,
                         title: "Registered Children | Church Centre"
                     });
                 });
@@ -353,57 +399,20 @@ router.get('/deletechild/:id', function (req, res, next) {
             user.save(function (err) {
                 if (err) throw err;
                 console.log(user);
-                res.redirect('/childList');
             });
             // User.findByIdAndRemove(childID);
             //Remove Child from database
 
 
         });
-
-
-
     }
     else
     {
         res.redirect('/');
     }
+    res.redirect('/childList');
 });
-//Post: login sequence (index.html)
-router.post('/login', function(req, res, next) {
-    //form validation etc
-    var item = {
-        username: req.body.username,
-        password: req.body.password
-    };
 
-    User.find({username : item.username, password : item.password}).then(function(doc){
-        if(doc < 1){
-            console.error('no login exists');
-
-            res.render('login',{
-                title: 'First last name combo doesnt exist',
-                cuck: 'Ya messed up',
-                success: false, errors: req.session.errors
-            });
-
-        }else{
-
-            var sessData = req.session;
-            if (sessData.logged)
-                req.session.destroy(function (err) {
-                    if (err)
-                        console.log(err);
-                });
-            sessData.logged = true;
-            sessData.username = doc[0].username;
-            sessData.userDat = doc[0]._doc;
-            console.log(sessData.userDat.email);
-            //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
-            res.redirect('/homepage2');
-        }
-    });
-});
 
 //Post: '/submit' is identicial to in the index.hbs file
 router.post('/index', function(req, res, next) {
