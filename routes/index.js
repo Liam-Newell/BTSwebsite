@@ -30,18 +30,14 @@ var userDataSchema = new Schema({
     streetaddress:  {type: String, required: false},
     email:          {type: String, required: false},
     phonenumber:    {type: String, required: false},
-    phonenumber2:   {type: String, required: false},
     isAdmin:        {type: Boolean, required: true},
-    birthday:       {type: Date, required: false},
     children:       [{type: Schema.Types.ObjectId, ref: 'Child'}], //an array of child ObjectID's referencing Child collection
-    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
     }, {collection: 'data'});
 
 //Database Schema : CHILD
 var childDataSchema = new Schema({
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
-    birthday:       {type: Date, required: true},
     grade:          {type: Number, min: 1, max: 8, required: true},
     events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
     }, {collection: 'children'});
@@ -188,18 +184,24 @@ router.post('/register', function (req, res, next){
         streetaddress: req.body.streetaddress,
         email: req.body.email,
         phonenumber: req.body.phonenumber,
-        phonenumber2: req.body.phonenumber2,
         isAdmin: req.body.isAdmin || false,
-        birthday: req.body.birthday,
-        children: [],
-        events: []
+        children: []
     };
+    cPassword = req.body.cPassword;
+
+
 
     req.check('lastname', 'Invalid last name').isLength({min:2});
     req.check('firstname','Invalid first name').isLength({min:2});
 
     var errors = req.validationErrors();
-
+    if(item.password !== cPassword){
+        res.render('register', {
+            title: 'Passwords are not identical',
+            success: false,
+            errors: req.session.errors
+        });
+    }
     if(!errors){
         var data = new User(item);
         data.save();
