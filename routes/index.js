@@ -75,7 +75,7 @@ router.get('/account', function (req, res, next) {
         console.log(bday);
 
         res.render('account', {
-            user: sess.username,
+            user: sess.userDat.username,
             title: 'Church Centre',
             firstname: userData.firstname,
             lastname: userData.lastname,
@@ -119,7 +119,7 @@ router.get('/homepage2', function (req, res, next) {
     if(userInfo.logged){
 
         res.render('homepage2', {
-            user: userInfo.username,
+            user: userInfo.userDat.username,
             title: 'Church Centre'
         });
 
@@ -298,7 +298,7 @@ router.get('/childList', function (req, res, next) {
                     }
                     res.render('childList', {
                         childList: req.session.childrenCache,
-                        user: userDat.username,
+                        user: userDat.userDat.username,
                         title: "Registered Children | Church Centre"
                     });
                 });

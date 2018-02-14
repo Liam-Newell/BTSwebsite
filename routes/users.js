@@ -141,7 +141,7 @@ router.get('/calendar', function (req, res, next) {
     if(userDat.logged)
     {
         var redirectTo = "homepage2";
-        var username = userDat.username;
+        var username = userDat.userDat.username;
     }
     else
     {
@@ -247,7 +247,7 @@ router.get('/eventlist', function (req, res, next) {
                 events.push(docs[i]._doc);
             }
         });
-        res.render('Users/eventlist', {eventlist: events, output:monthpassed, user: userDat.username});
+        res.render('Users/eventlist', {eventlist: events, output:monthpassed, user: userDat.userDat.username});
     }
     else
     {
