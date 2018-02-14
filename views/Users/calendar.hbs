@@ -6,17 +6,27 @@
     <link rel="stylesheet" href="/stylesheets/calendar.css" type="text/css"/>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/stylesheets/popupbox.css"/>
 
     <!--Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!--Month Year Scripts -->
-    <script>
+    <script type="text/javascript">
+        //Function for toggling pop up
+        function toggle_visibility(id){
+            var e = document.getElementById(id);
+            if(e.style.display == 'block') {
+                e.style.display = 'none';
+            }else{
+                e.style.display = 'block';
+            }
+        }
+
         function monthfunction(month){
             window.location.href = "/users/calendar?id="+ month;
         }
-
     </script>
 </head>
 <body>
@@ -104,18 +114,22 @@
         {{# each eventlist}}
 
             <li class="day">
+
                 <div class="date">{{this.date}}</div>
+
                 {{#if this.info}}
                     {{# each info}}
-                        <a href="javascript:eventviewer('{{this._id}}');">
+
+                        <a href="javascript:void(0)" onclick="toggle_visibility('popup-box');">
                             <div class="event">
-                        <div class="event-desc">
-                            {{this.title}} {{this.info}}
-                        </div>
-                        <div class="event-time">
-                            {{this.date}}
-                        </div>
-                    </div>
+                                <div class="event-desc">
+                                    {{this.title}} {{this.info}}
+                                </div>
+                                <div class="event-time">
+                                    {{this.date}}
+                                </div>
+
+                            </div>
                         </a>
                     {{/each}}
                 {{/if}}
@@ -124,7 +138,25 @@
 
         {{/each}}
         </ul>
-        <script>
+
+        <!--Code for popup box-->
+        <div id="popup-box" class="popup-position">
+            <div id="popup-wrapper">
+                <div id="popup-container">
+                    {{# each eventlist}}
+                        {{#if this.info}}
+                            {{# each info}}
+                                    {{this.title}} {{this.info}}
+
+                            {{/each}}
+                        {{/if}}
+                    {{/each}}
+                    <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box')">Close Pop Up Box</a> </p>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
             function eventviewer(eventid){
                 var formid = document.getElementById("eventform");
                 document.eventform.eventid.value = eventid;
