@@ -7,7 +7,7 @@ specific events
 
 # How to use
 1. Clone the repo
-2. Execute the 'www.js' file using the IDE of your choice
+2. Execute the `www.js` file using the IDE of your choice
 
 # What to modify
 * To modify the code associated with the routing or databases, please edit **user.js** or **index.js** only. 
