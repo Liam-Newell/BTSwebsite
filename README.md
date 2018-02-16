@@ -15,3 +15,6 @@ specific events
 
 # Contributing
 Please **do not directly commit changes to the master branch**. When working on a new feature or experimenting with the code, please create a separate branch. Once the code has matured and tested to be robust, it is recommended to submit a pull request to the master branch from your development branch for code review. Only in extra-ordinary cases should code be directly merged back to master branch.
+
+# Link To Course Group Repo
+https://github.com/SenecaCollegeBTSProjects/Group_7
