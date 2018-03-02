@@ -116,7 +116,7 @@ router.post('/registerevent', function (req, res, next) {
    //data.save();
 
     req.session.userDat.events.push(req.body.id);
-    res.redirect('./calendar');
+    res.redirect('./calendar2');
 });
 
 router.post('/deleteevent', function (req, res, next) {
@@ -126,11 +126,11 @@ router.post('/deleteevent', function (req, res, next) {
             console.log(managerevent);
         }
     );
-    res.redirect('./calendar');
+    res.redirect('./calendar2');
 
 });
 
-router.get('/calendar', function (req, res, next) {
+router.get('/calendar2', function (req, res, next) {
     var event = {
         title: req.body.title,
         date: req.body.eventdate,
@@ -183,7 +183,7 @@ router.get('/calendar', function (req, res, next) {
                 }
             }
 
-            res.render('Users/calendar', {
+            res.render('Users/calendar2', {
                 eventlist: events,
                 size: doc.length,
                 month: monthpassed,
@@ -193,7 +193,7 @@ router.get('/calendar', function (req, res, next) {
             });
         }
         else{
-            res.render('Users/calendar', {title : 'cucked'});
+            res.render('Users/calendar2', {title : 'cucked'});
         }
     });
 
@@ -209,7 +209,7 @@ router.post('/createevent', function (req, res, next) {
         event.date = time;
         var data = new EventData(event);
         data.save();
-        res.redirect('calendar');
+        res.redirect('calendar2');
 });
 
 router.get('/database', function (req, res, next) {

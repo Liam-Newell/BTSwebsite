@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='/stylesheets/fullcalendar.css' />
+    <!--Bootstrap JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--NavBar Design-->
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <!--Calendar Design and JS -->
+        <script src='/js/jquery.min.js'></script>
+        <script src='/js/moment.min.js'></script>
+        <script src='/js/fullcalendar.js'></script>
+        <script type='text/javascript' src='/js/gcal.js'></script>
+    <script>
+
+      $(document).ready(function() {
+
+        $('#calendar').fullCalendar({
+
+          header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,listYear'
+          },
+
+          displayEventTime: false, // don't show the time column in list view
+
+
+          googleCalendarApiKey: 'AIzaSyDtGdxYRFAJLVp6lVLpRRvn6BRbvRffFUU',
+          events: {
+          // Calendar
+          googleCalendarId: 'eskmblui7diket7q64ms95cv58@group.calendar.google.com'
+          },
+
+          //opens Google Calendar page of the event (Problem?)
+          eventClick: function(event) {
+            // opens events in a popup window
+            window.open(event.url, 'gcalevent', 'width=700,height=600');
+            return false;
+          },
+
+          loading: function(bool) {
+            $('#loading').toggle(bool);
+          }
+
+        });
+
+      });
+
+    </script>
+    <style>
+
+      body {
+        margin: 40px 10px;
+        padding-top: 50px;
+        font-size: 14px;
+      }
+
+      #loading {
+        display: none;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+
+      #calendar {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+    </style>
+
+
+<head/>
+<body>
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/{{redirect}}">Church Centre</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/account">View Account</a></li>
+                    <li><a href="/childList">View Registered Children</a></li>
+                    <li><a href="/registerchild">Register a child</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Calendar</a></li>
+            <li><a href="/Users/eventlist">Schedule</a></li>
+            <li><a href="/Users">Add Event</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
+        </ul>
+    </div>
+</nav>
+
+    <div id='loading'>loading...</div>
+    <div id='calendar'></div>
+</body>
