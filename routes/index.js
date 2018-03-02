@@ -1,12 +1,13 @@
 //ADD-ONS SECTION
-
-//Require statments to include proper funtionality
 var express = require('express');
-
 var asserts = require('asserts');
 var assert = require('assert');
-
 var router = express.Router();
+var bcrypt = require('bcryptjs');
+
+//Models
+var User = require('../models/user');
+var Child = require('../models/child');
 
 //For mongoDB
 var mongoose = require('mongoose');
@@ -16,37 +17,6 @@ var Schema = mongoose.Schema;
 //For sessions
 var expressSession = require('express-session');
 router.use(expressSession({secret: 'max', saveUninitialized: false, resave: false}));
-
-
-
-//DATABASE SECTION
-
-//Database Schema : USER
-var userDataSchema = new Schema({
-    username:       {type: String, required: true},
-    password:       {type: String, required: true},
-    firstname:      {type: String, required: true},
-    lastname:       {type: String, required: true},
-    streetaddress:  {type: String, required: false},
-    email:          {type: String, required: false},
-    phonenumber:    {type: String, required: false},
-    isAdmin:        {type: Boolean, required: true},
-    children:       [{type: Schema.Types.ObjectId, ref: 'Child'}], //an array of child ObjectID's referencing Child collection
-    }, {collection: 'data'});
-
-//Database Schema : CHILD
-var childDataSchema = new Schema({
-    firstname:      {type: String, required: true},
-    lastname:       {type: String, required: true},
-    grade:          {type: Number, min: 1, max: 8, required: true},
-    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
-    }, {collection: 'children'});
-
-//Instantiate Schema as Models: User, Child
-var User = mongoose.model('User', userDataSchema);
-var Child = mongoose.model('Child', childDataSchema);
-
-
 
 //ROUTER SECTION
 
@@ -170,7 +140,6 @@ router.get('/sign-out', function(req, res, next) {
     }
 });
 
-
 //POSTS
 
 //Post: register page (register.hbs)
@@ -179,6 +148,7 @@ router.post('/register', function (req, res, next){
     var item = {
         username: req.body.username,
         password: req.body.password,
+        cPassword: req.body.cPassword,
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         streetaddress: req.body.streetaddress,
@@ -187,54 +157,61 @@ router.post('/register', function (req, res, next){
         isAdmin: req.body.isAdmin || false,
         children: []
     };
-    var cPassword = req.body.cPassword;
 
-
-
-    req.check('lastname', 'Invalid last name').isLength({min:2});
-    req.check('firstname','Invalid first name').isLength({min:2});
+    //Validation of form fields
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('firstname', 'Firstname is required').notEmpty();
+    req.checkBody('lastname', 'Lastname is required').notEmpty();
+    req.checkBody('email', 'email is required').isEmail();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('password', 'Password is required').notEmpty();
+    req.checkBody('cPassword', 'Passwords do not match').equals(req.body.password);
 
     var errors = req.validationErrors();
-    if(item.password !== cPassword){
-            errors = 'Passwords are not identical';
-    }
-    if(!errors){
-        var data = new User(item);
-        data.save(function (err, doc){
-            if(err) {
-                res.render('register', {
-                    title: 'Missing Values',
-                    success: false,
-                    errors: req.session.errors
-                });
-            }
-            var sessData = req.session;
-            if (sessData.logged)
-                req.session.destroy(function (err) {
-                    if (err)
-                        console.log(err);
-                });
-            sessData.logged = true;
-            sessData.userDat = doc._doc;
-            console.log(sessData.userDat.email);
-            //res.render('homepage2', {user: sessData.username, a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
-            res.redirect('/homepage2');
 
+    if(errors)
+    {
+        res.render('register',{
+            errors:errors
         });
+    }
+    else
+    {
+        var newUser = new User(item);
+        User.createUser(newUser, function(err, user){
+            if(err) throw err;
+            console.log(user);
+        })
 
-        //Logging in new user - temp fix  || S.N.
+        //TODO
+        //setup passport strategy to allow the use of flash for messages.
+        //req.flash('success message', 'You are registered and can now login');
+        res.redirect('/');
+    }
+
+       /* //Session
+        var sessData = req.session;
+        if (sessData.logged)
+            req.session.destroy(function (err) {
+                if (err)
+                    console.log(err);
+            });
+        sessData.logged = true;
+        sessData.userDat = doc._doc;
+        res.redirect('/homepage2');
 
 
-    }else{
-
+    //Logging in new user - temp fix  || S.N
+    else {
         res.render('register', {
             title: errors,
             success: false,
             errors: req.session.errors
         });
-
-    }
+    }*/
 });
+
 //Post: login sequence (index.html)
 router.post('/login', function(req, res, next) {
     //form validation etc
@@ -430,18 +407,9 @@ router.post('/index', function(req, res, next) {
             });
         }
         else {
-
             res.render('homepage2', {a: doc[0]._doc.username, b: doc[0]._doc.password, resultlist: doc[0]._doc._id});
         }
     });
 });
 
-
-
-
-module.exports.userDataSchema = userDataSchema;
-module.exports = mongoose.model("User", userDataSchema);
-module.exports.User = User;
-module.exports = mongoose.model("Child", childDataSchema);
-module.exports = expressSession();
 module.exports = router;
