@@ -104,7 +104,7 @@ function listEvents(auth) {
     var calendar = google.calendar('v3');
     calendar.events.list({
         auth: auth,
-        calendarId: 'primary',
+        calendarId: 'eskmblui7diket7q64ms95cv58@group.calendar.google.com',
         timeMin: (new Date()).toISOString(),
         maxResults: 10,
         singleEvents: true,
