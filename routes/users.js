@@ -136,8 +136,10 @@ router.get('/calendar', function (req, res, next) {
         date: req.body.eventdate,
         info: req.body.info
     };
+
     var userDat = req.session;
     var monthpassed = req.query.id;
+
     if(userDat.logged)
     {
         var redirectTo = "homepage2";
@@ -183,13 +185,37 @@ router.get('/calendar', function (req, res, next) {
                 }
             }
 
+            var event = req.body.eventid;
+            var userDat = req.session;
+            var childQuery = [];
+            var children = [];
+
+            if(userDat.logged) {
+                for (l in req.session.userDat.children) {
+                    var o = req.session.userDat.children[l];
+                    childQuery.push(new mongoose.Types.ObjectId(o));
+                }
+                Child.find({
+                    '_id': {$in: childQuery}
+                }, function (err, docs) {
+                    console.log(docs);
+
+                    for (i in docs) {
+                        children.push(docs[i]._doc);
+                    }
+                });
+
+            }
+
             res.render('Users/calendar', {
                 eventlist: events,
                 size: doc.length,
                 month: monthpassed,
                 year: (new Date()).getFullYear(),
                 user: username,
-                redirect: redirectTo
+                redirect: redirectTo,
+                childList: children,
+                info: doc
             });
         }
         else{

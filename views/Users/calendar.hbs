@@ -130,6 +130,7 @@
                                 <div class="event-time">
                                     {{this.date}}
                                 </div>
+                        </a>
 
                                 <!--Code for popup box-->
                                 <div id="popup-box" class="popup-position">
@@ -137,36 +138,38 @@
 
                                         <div id="popup-container">
 
+                                            <!--Shows event info-->
                                             <h3>Choose a child to register!</h3>
                                             {{this.title}}
                                             <br>
                                             {{this.info}}
                                             <br>
 
+                                            <!--Form with select dropdown of children to register certain child-->
                                             <form method="post" id="eventregister" name="eventregister" action="/users/registerevent">
 
                                                 <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
 
                                                 <select name="selectChild">
-                                                    <option stlye="text-color" value="disabled selected">Choose a child</option>
+                                                    <option stlye="text-color" value="">Choose a child</option>
                                                     {{# each childList }}
                                                         <option style="color: black;" value = {{this._id}} > {{ this.firstname }} {{this.lastname}} </option>
                                                     {{/each}}
                                                 </select>
 
                                                 <button class="login btn btn-primary"type="submit" id="register">register for event</button>
-
                                             </form>
 
                                             <br><br><br>
 
-                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box')"><button >Close Pop-Up</button ></a> </p>
+                                            <button ><a href="javascript:void(0)" onclick="toggle_visibility('popup-box')">Close Pop-Up</a></button >
+
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
-                        </a>
+
                     {{/each}}
                 {{/if}}
             </li>
@@ -176,6 +179,12 @@
         </ul>
 
 
+        <select>
+            <option stlye="text-color" value="">Choose a child</option>
+            {{# each childList }}
+                <option style="color: black;" value = {{this._id}} > {{ this.firstname }} {{this.lastname}} </option>
+            {{/each}}
+        </select>
 
         <script type="text/javascript">
             function eventviewer(eventid){

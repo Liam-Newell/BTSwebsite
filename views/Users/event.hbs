@@ -46,13 +46,16 @@
 <br>
 
 <form method="post" id="eventregister" name="eventregister" action="/users/registerevent">
+
     <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
+
     <select name="selectChild">
         <option stlye="text-colo" value="" disabled selected>Choose a child</option>
         {{# each childList }}
               <option style="color: black;" value = {{this._id}} > {{ this.firstname }} {{this.lastname}} </option>
         {{/each}}
     </select>
+
     <button class="login btn btn-primary"type="submit" id="register">register for event</button>
 </form>
 
