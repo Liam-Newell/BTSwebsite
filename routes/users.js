@@ -1,309 +1,146 @@
+//ADD-ONS SECTION
 var express = require('express');
+var asserts = require('asserts');
+var assert = require('assert');
 var router = express.Router();
-var mongoose = require('mongoose');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
 
-//var popupS = require('popups');
+//For mongoDB
+var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
 
-//user schema
-var myModule = require('./index');
-var userDataSchema = myModule.userDataSchema;
-var User = mongoose.model("User", userDataSchema);
-var childDataSchema = myModule.childDataSchema;
-var Child = mongoose.model("Child", childDataSchema);
+//Models
+var User = require('../models/user');
 
+//ROUTER SECTION
 
-var eventdataschema = new Schema({
-    title: {type: String, required: true},
-    date: {type: Date, required: true},
-    info: {type: String, required: true},
-    registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
-}, {collection: 'events'});
-
-//instantiate schema as models "User" and "Child"
-var EventData = mongoose.model('EventData', eventdataschema);
-
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-    res.render('Users/createevent');
+/** Register **/
+//Get: register page (register.hbs)
+router.get('/register', function (req, res, next) {
+    res.render('register', {title: 'Church Centre'});
 });
 
-router.get('/calendar/:id', function(req,res, next){
-    var string = encodeURIComponent(id);
-    res.redirect('/calendar?id=' + string);
-});
+//Post: register page (register.hbs)
+router.post('/register', function (req, res, next) {
 
-router.post('/viewevent', function (req, res, next) {
-    var event = req.body.eventid;
-    var userDat = req.session;
-    var childQuery = [];
-    var children = [];
-
-    if(userDat.logged) {
-        for (l in req.session.userDat.children) {
-            var o = req.session.userDat.children[l];
-            childQuery.push(new mongoose.Types.ObjectId(o));
-        }
-        Child.find({
-            '_id': {$in: childQuery}
-        }, function (err, docs) {
-            console.log(docs);
-
-            for (i in docs) {
-                children.push(docs[i]._doc);
-            }
-        });
-
-        }
-
-    EventData.findOne({_id: event}).then(function (doc) {
-        res.render('Users/event', {childList: children, info: doc});
-    });
-});
-
-router.get('/viewevent/:id', function(req, res, next){
-        EventData.findOne({_id: id}).then(function (doc) {
-            var user = req.session.userDat;
-            var children = user.children;
-           res.render('Users/event' , {info: doc, children: children});
-        });
-
-});
-
-router.post('/registerevent', function (req, res, next) {
-
-    var item = req.session.userDat;
-    item.events.push(req.body.id);
-
-    //Query and update User events array with event id
-    User.findByIdAndUpdate(item._id,
-        {"$push": {"events": req.body.id}},
-        {"new": true, "upsert": true},
-        function (err, managerevent) {
-            if (err) throw err;
-                console.log(managerevent);
-        });
-
-    //var data = new User(item);
-    //data.save();
-
-    //Query and update Child events array with event id
-    var childId = req.body.selectChild; //gets selected child id from event form
-    var eventId = req.body.id; //gets selected child id from event form
-
-    Child.findByIdAndUpdate(childId,
-        {"$push": {"events": eventId}},
-        {"new": true, "upsert": true},
-        function (err, managerevent) {
-            if (err) throw err;
-            console.log(managerevent);
-        }
-    );
-
-    //var data = new Child(item);
-    //data.save();
-    EventData.findByIdAndUpdate(eventId,
-        {"$push": {"registered": childId}},
-        {"new": true, "upsert": true},
-        function (err, managerevent) {
-            if (err) throw err;
-            console.log(managerevent);
-        }
-    );
-
-    //var data = new EventData(item);
-   //data.save();
-
-    req.session.userDat.events.push(req.body.id);
-    res.redirect('./calendar');
-});
-
-router.post('/deleteevent', function (req, res, next) {
-    EventData.findByIdAndRemove(req.body.id,
-        function (err, managerevent) {
-            if (err) throw err;
-            console.log(managerevent);
-        }
-    );
-    res.redirect('./calendar');
-
-});
-
-router.get('/calendar', function (req, res, next) {
-    var event = {
-        title: req.body.title,
-        date: req.body.eventdate,
-        info: req.body.info
+    var item = {
+        username: req.body.username,
+        password: req.body.password,
+        cPassword: req.body.cPassword,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        streetaddress: req.body.streetaddress,
+        email: req.body.email,
+        phonenumber: req.body.phonenumber,
+        isAdmin: req.body.isAdmin || false,
+        children: []
     };
-    var userDat = req.session;
-    var monthpassed = req.query.id;
-    if(userDat.logged)
-    {
-        var redirectTo = "homepage2";
-        var username = userDat.userDat.username;
-    }
-    else
-    {
-        var redirectTo = "";
-        var username = "Guest";
-    }
-    EventData.find().sort('-date').then(function (doc)
-    {
 
-        if(!monthpassed){
-            //  var d = new Date();
-            // var n = d.getMonth();
-            //  n++;
-            //  monthpassed = n;
-            monthpassed = "january"
-        }
-        var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
-        if(doc.length > 0)
-        {
-            var events = [];
-            event = doc[0]._doc;
-            for (var i = 1; i <= 31; i++) {
-                    var e = {
-                        title: '',
-                        date: i,
-                        info: []
+    //Validation of form fields
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('firstname', 'Firstname is required').notEmpty();
+    req.checkBody('lastname', 'Lastname is required').notEmpty();
+    req.checkBody('email', 'email is required').isEmail();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('password', 'Password is required').notEmpty();
+    req.checkBody('cPassword', 'Passwords do not match').equals(req.body.password);
 
-                    };
-                    events.push(e);
+    var errors = req.validationErrors();
 
-                }
-            for (var i = 0; i <= 30; i++) {
-                var index = 0;
-            for(var j = 0; j < doc.length; j++) {
-                    if (doc[j]._doc.date.getDate() == i && doc[j]._doc.date.getMonth() == month) {
-                        events[(i - 1)].info[index] = doc[j]._doc;
-                        index++
-                    }
-                }
-            }
-
-            res.render('Users/calendar', {
-                eventlist: events,
-                size: doc.length,
-                month: monthpassed,
-                year: (new Date()).getFullYear(),
-                user: username,
-                redirect: redirectTo
-            });
-        }
-        else{
-            res.render('Users/calendar', {title : 'cucked'});
-        }
-    });
-
-});
-
-router.post('/createevent', function (req, res, next) {
-        var event = {
-            title: req.body.title,
-            date: req.body.eventdate,
-            info: req.body.info
-        };
-        var time = event.date + " " + req.body.time.toString();
-        event.date = time;
-        var data = new EventData(event);
-        data.save();
-        res.redirect('calendar');
-});
-
-router.get('/database', function (req, res, next) {
-    EventData.find().sort('-date').then(function (doc) {
-        res.render('Users/eventDB', {eventlist: doc});
-    })
-});
-
-//MINAS ADDED CODE.
-router.get('/eventlist', function (req, res, next) {
-
-    var monthpassed = req.query.id;
-    var eventQuery = [];
-    var events = [];
-    var userDat = req.session;
-
-    //LIST OF EVENTS CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(userDat.logged)
-    {
-        for (l in req.session.userDat.events) {
-            var o = req.session.userDat.events[l];
-            eventQuery.push(new mongoose.Types.ObjectId(o));
-        }
-
-        EventData.find({
-            '_id': {$in: eventQuery}
-        }, function (err, docs) {
-            console.log(docs);
-
-            if (!monthpassed) {
-                monthpassed = "january";
-            }
-
-            for (i in docs) {
-                events.push(docs[i]._doc);
-            }
+    if (errors) {
+        res.render('register', {
+            errors: errors
         });
-        res.render('Users/eventlist', {eventlist: events, output:monthpassed, user: userDat.userDat.username});
     }
-    else
-    {
-        res.redirect('/');
-    }
-});
-
-router.get('/removeChildEvent/:id', function(req, res, next){
-    var eventId = encodeURIComponent(req.params.id);
-    var userData = req.session.userDat;
-    var test = req.body.id;
-    EventData.findById(eventId, function (err, docs) {
-        if (err) throw err;
-        var search = [];
-        for (let i = 0; i < req.session.userDat.children.length; i++) {
-            search.push(new mongoose.Types.ObjectId(req.session.userDat.children[i]));
-        }
-        for (var i = 0; i < search.length; i++) {
-            for(var j = 0; j < docs._doc.registered.length; j++)
-            if (docs._doc.registered[j].toString('hex') === search[i].id.toString('hex')) {
-                docs._doc.registered.splice(j, 1);
-            }
-        }
-        docs.save(function (err, rChild) {
+    else {
+        var newUser = new User(item);
+        User.createUser(newUser, function (err, user) {
             if (err) throw err;
-            console.log("Successfully removed from event "+rChild);
+            console.log(user);
+        })
 
-        });
-    });
-    User.findById(req.session.userDat._id, function (err, user){
-        if (err) throw err;
-        for(let i = 0; i < user._doc.events.length; i++){
-            if(user._doc.events[i]._id === eventId){
-                user._doc.events.splice(i, 1);
-            }
+        //TODO
+        //setup passport strategy to allow the use of flash for messages.
+        //req.flash('success message', 'You are registered and can now login');
+        res.redirect('/users/login');
+    }
+});
 
-        }
-        req.session.userDat.events = user._doc.events;
-        user.save(function (err, doc){
+/** Login & Logout**/
+//passport localstrategy to validate user login against database
+passport.use(new LocalStrategy(
+    function (username, password, done) {
+        User.getUserByUsername(username, function (err, user) {
             if (err) throw err;
-            console.log("Successfully removed from user "+doc);
-        });
-        res.redirect('Users/eventlist');
-    });
-    // EventData.findByIdAndUpdate(eventId,
-    //     {"": {"registered": "test"}},
-    //     function(err, updatedEvent){
-    //         if(err) throw err;
-    //     })
-});
-/*
-router.get('/eventlist/:id', function(req,res, next){
-    var string = encodeURIComponent(id);
-    res.redirect('eventlist?id=' + string);
-});
-*/
+            if (!user) {
+                return done(null, false, "Unknown User");
+            }
+            User.comparePassword(password, user.password, function (err, isMatch) {
+                if (err) throw err;
+                if (isMatch) {
+                    return done(null, user);
+                } else {
+                    console.log('bad password');
+                    return done(null, false, {failureFlash: 'Invalid password'});
+                }
+            })
+        })
+    }
+));
 
+//serializes user's id in the session
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
+
+//deserializes user id
+passport.deserializeUser(function (id, done) {
+    User.getUserById(id, function (err, user) {
+        done(err, user);
+    });
+});
+
+//Get: login page (login.hbs)
+router.get('/login', function (req, res, next) {
+    res.render('login');
+});
+
+//authenticates user credentials
+router.post('/login',
+    passport.authenticate('local', {successRedirect: '/', failureRedirect: '/users/login', failureFlash: true}),
+    function (req, res) {
+        res.redirect('/', {user: req.user.firstname});
+});
+
+/** Logout **/
+//Get: logout page ()
+router.get('/logout', function (req, res) {
+    req.logout(); //destroys the current session
+    req.flash('success_msg', 'You are logged out');
+    res.redirect('/');
+});
+
+/** Account **/
+//Get: account page (account.hbs)
+router.get('/account', function (req, res, next) {
+    if (req.user) {
+        res.render('account', {
+            user: req.user.username,
+            title: 'Church Centre',
+            firstname: req.user.firstname,
+            lastname: req.user.lastname,
+            email: req.user.email,
+            ph1: req.user.phonenumber,
+            ph2: req.user.phonenumber2
+        });
+
+    } else {
+        res.redirect('/')
+    }
+});
 
 module.exports = router;

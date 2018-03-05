@@ -13,6 +13,6 @@ var childDataSchema = new Schema({
 }, {collection: 'children'});
 
 //Instantiation of "Child" schema
-var Child = mongoose.model('Child', childDataSchema);
+var Child = module.exports = mongoose.model('Child', childDataSchema);
 
 //"Child" related functions

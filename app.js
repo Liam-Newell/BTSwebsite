@@ -11,10 +11,10 @@ var flash = require('connect-flash');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
 
-
-var index = require('./routes/index');
+var routes = require('./routes/index');
 var users = require('./routes/users');
-var User = require('./models/user');
+var child = require('./routes/child');
+var events = require('./routes/events');
 
 var app = express();
 
@@ -35,8 +35,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //session storage
 app.use(expressSession({secret: 'max', saveUninitialized: false, resave: false}));
-app.use('/', index);
+
+//Passport initialization
+app.use(passport.initialize());
+app.use(passport.session());
+// Connect Flash
+app.use(flash());
+
+//Routes
+app.use('/', routes);
 app.use('/users', users);
+//app.use('/child', child);
+app.use('/events', events);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -55,13 +65,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-//Passport initialization
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Connect Flash
-app.use(flash());
 
 // Global Vars
 app.use(function (req, res, next) {

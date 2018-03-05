@@ -44,5 +44,10 @@ module.exports.comparePassword = function(inputPassword, hash, callback){
 }
 
 module.exports.getUserById = function(id, callback){
-    User.findById(query, callback);
+    User.findById(id, callback);
+}
+
+module.exports.getOneUserLogin = function(user, pass, callback){
+    var query =  {username : user, password : pass};
+    User.findOne(query, callback);
 }
