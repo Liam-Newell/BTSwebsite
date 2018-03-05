@@ -1,17 +1,21 @@
+//ADD-ONS SECTION
 var express = require('express');
+var asserts = require('asserts');
+var assert = require('assert');
 var router = express.Router();
-var mongoose = require('mongoose');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
 
-//var popupS = require('popups');
+//For mongoDB
+var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
 
-//user schema
-var myModule = require('./users');
-var userDataSchema = myModule.userDataSchema;
-var User = mongoose.model("User", userDataSchema);
-var childDataSchema = myModule.childDataSchema;
-var Child = mongoose.model("Child", childDataSchema);
+//Models
+var User = require('../models/user');
+var Child = require('../models/child');
+var EventData = require('../models/event');
 
 
 
