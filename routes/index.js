@@ -3,7 +3,8 @@ var express = require('express');
 var asserts = require('asserts');
 var assert = require('assert');
 var router = express.Router();
-var bcrypt = require('bcryptjs');
+var passport = require('passport');
+var localStrategy = require('passport-local').Strategy;
 
 //Models
 var User = require('../models/user');
@@ -24,123 +25,18 @@ router.use(expressSession({secret: 'max', saveUninitialized: false, resave: fals
 
 //Get: log-in page (index.hbs)
 router.get('/', function(req, res, next) {
-
     res.render('index', {
         title: 'Church Centre' ,
         success: false,
         errors: req.session.errors
     });
-
     req.session.errors = null;
-
-});
-
-//Get: account page (account.hbs)
-router.get('/account', function (req, res, next) {
-    var sess = req.session;
-    var userData = sess.userDat;
-
-    if(sess.logged) {
-        var bday = new Date (userData.birthday).toUTCString();
-        console.log(bday);
-
-        res.render('account', {
-            user: sess.userDat.username,
-            title: 'Church Centre',
-            firstname: userData.firstname,
-            lastname: userData.lastname,
-            dob: bday,
-            email: userData.email,
-            ph1: userData.phonenumber,
-            ph2: userData.phonenumber2
-        });
-
-    }else{
-        res.redirect('localhost:3000')
-    }
 });
 
 //Get: register page (register.hbs)
 router.get('/register', function (req, res, next) {
     res.render('register', {title: 'Church Centre'});
 });
-
-//Get: registerchild page (registerchild.hbs)
-router.get('/registerchild', function (req, res, next) {
-    var sess = req.session;
-    var userData = sess.userDat;
-
-    if(sess.logged) {
-
-        res.render('registerchild', {
-            user: userData.username
-        });
-
-    }else{
-        res.render('index', {title: 'Church Centre'});
-    }
-});
-
-//Get: homepage (homepage2.hbs)
-router.get('/homepage2', function (req, res, next) {
-
-    var userInfo = req.session;
-
-    if(userInfo.logged){
-
-        res.render('homepage2', {
-            user: userInfo.userDat.username,
-            title: 'Church Centre'
-        });
-
-    }else{
-        res.redirect('/');
-    }
-
-});
-
-//Get: database page (database.hbs)
-router.get('/get-data', function (req, res, next) {
-
-    User.find()
-        .populate('children')
-        .then(function(doc){
-            if(doc.length > 0) {
-
-                res.render('database', {
-                    items: doc
-                });
-
-            }else{
-                res.render('index', {title: "database empty!!"});
-            }
-        });
-
-});
-
-//Get: sign-out sequence
-router.get('/sign-out', function(req, res, next) {
-
-    var sess = req.session;
-    var userData = sess.userDat;
-
-    if(sess.logged){
-        req.session.destroy(function (err) {
-
-            if (err) {
-                console.log(err);
-            } else {
-                res.redirect('/');
-            }
-
-        });
-
-    }else{
-        res.redirect('/')
-    }
-});
-
-//POSTS
 
 //Post: register page (register.hbs)
 router.post('/register', function (req, res, next){
@@ -190,28 +86,154 @@ router.post('/register', function (req, res, next){
         res.redirect('/');
     }
 
-       /* //Session
-        var sessData = req.session;
-        if (sessData.logged)
-            req.session.destroy(function (err) {
-                if (err)
-                    console.log(err);
-            });
-        sessData.logged = true;
-        sessData.userDat = doc._doc;
-        res.redirect('/homepage2');
+    /* //Session
+     var sessData = req.session;
+     if (sessData.logged)
+         req.session.destroy(function (err) {
+             if (err)
+                 console.log(err);
+         });
+     sessData.logged = true;
+     sessData.userDat = doc._doc;
+     res.redirect('/homepage2');
 
 
-    //Logging in new user - temp fix  || S.N
-    else {
-        res.render('register', {
-            title: errors,
-            success: false,
-            errors: req.session.errors
-        });
-    }*/
+ //Logging in new user - temp fix  || S.N
+ else {
+     res.render('register', {
+         title: errors,
+         success: false,
+         errors: req.session.errors
+     });
+ }*/
 });
 
+//Get: login page (login.hbs)
+router.get('/login', function (req, res, next) {
+    res.render('login');
+});
+
+passport.use(new localStrategy(
+    function(username, password, done) {
+        User.getUserByUsername(username, function(err, user){
+            if(err) throw err;
+            if(!user){
+                return done(null, false, {message: "Unknown User"});
+            }
+            User.comparePassword(password, user.password, function(err, isMatch){
+                if(err) throw err;
+                if(isMatch) {
+                    return done(null, user);
+                }else{
+                    return done(null, false, {message: 'Invalid password'});
+                }
+            })
+        })
+    }
+));
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    User.getUserById(id, function(err, user) {
+        done(err, user);
+    });
+});
+
+router.post('/login',
+    passport.authenticate('local', {successRedirect: '/homepage2', failureRedirect: '/index',failureFlash: true}),
+    function(req, res) {
+        res.redirect('homepage2');
+    });
+
+
+//Get: account page (account.hbs)
+router.get('/account', function (req, res, next) {
+    var sess = req.session;
+    var userData = sess.userDat;
+
+    if(sess.logged) {
+        var bday = new Date (userData.birthday).toUTCString();
+        console.log(bday);
+
+        res.render('account', {
+            user: sess.userDat.username,
+            title: 'Church Centre',
+            firstname: userData.firstname,
+            lastname: userData.lastname,
+            dob: bday,
+            email: userData.email,
+            ph1: userData.phonenumber,
+            ph2: userData.phonenumber2
+        });
+
+    }else{
+        res.redirect('localhost:3000')
+    }
+});
+
+//Get: registerchild page (registerchild.hbs)
+router.get('/registerchild', function (req, res, next) {
+    var sess = req.session;
+    var userData = sess.userDat;
+
+    if(sess.logged) {
+
+        res.render('registerchild', {
+            user: userData.username
+        });
+
+    }else{
+        res.render('index', {title: 'Church Centre'});
+    }
+});
+
+//Get: homepage (homepage2.hbs)
+router.get('/homepage2', function (req, res, next) {
+
+    var userInfo = req.session;
+
+    if(userInfo.logged){
+
+        res.render('homepage2', {
+            user: userInfo.userDat.username,
+            title: 'Church Centre'
+        });
+
+    }else{
+        res.redirect('/');
+    }
+
+});
+
+//Get: sign-out sequence
+router.get('/sign-out', function(req, res, next) {
+
+    var sess = req.session;
+    var userData = sess.userDat;
+
+    if(sess.logged){
+        req.session.destroy(function (err) {
+
+            if (err) {
+                console.log(err);
+            } else {
+                res.redirect('/');
+            }
+
+        });
+
+    }else{
+        res.redirect('/')
+    }
+});
+
+//POSTS
+
+
+/*
 //Post: login sequence (index.html)
 router.post('/login', function(req, res, next) {
     //form validation etc
@@ -246,6 +268,7 @@ router.post('/login', function(req, res, next) {
         }
     });
 });
+*/
 
 //Get: childList page (childList.hbs)
 router.get('/childList', function (req, res, next) {
@@ -296,6 +319,7 @@ router.get('/childList', function (req, res, next) {
     }
 
 });
+
 //Post: register child (registerchild.hbs).
 router.post('/registerchild', function (req, res, next) {
     var userData = req.session.userDat;
