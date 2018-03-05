@@ -22,7 +22,7 @@ router.use(expressSession({secret: 'max', saveUninitialized: false, resave: fals
 //ROUTER SECTION
 
 //GETTERS
-
+//
 //Get: log-in page (index.hbs)
 router.get('/', function(req, res, next) {
     res.render('index', {
