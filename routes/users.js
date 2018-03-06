@@ -20,7 +20,7 @@ var User = require('../models/user');
 /** Register **/
 //Get: register page (register.hbs)
 router.get('/register', function (req, res, next) {
-    res.render('register', {title: 'Church Centre'});
+    res.render('register', {isAdmin: req.user.isAdmin});
 });
 
 //Post: register page (register.hbs)

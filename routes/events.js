@@ -176,6 +176,7 @@ router.get('/calendar', function (req, res, next) {
             }
 
             res.render('calendar2', {
+                isAdmin: req.user.isAdmin,
                 eventlist: events,
                 size: doc.length,
                 month: monthpassed,
@@ -185,7 +186,7 @@ router.get('/calendar', function (req, res, next) {
             });
         }
         else{
-            res.render('calendar2', {title : 'cucked'});
+            res.render('calendar2', {isAdmin: req.user.isAdmin});
         }
     });
 
