@@ -17,12 +17,9 @@ var User = require('../models/user');
 var Child = require('../models/child');
 var EventData = require('../models/event');
 
-
-
-
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-    res.render('Users/createevent');
+router.get('/createevent', function(req, res, next) {
+    res.render('createevent');
 });
 
 router.get('/calendar/:id', function(req,res, next){
@@ -54,7 +51,7 @@ router.post('/viewevent', function (req, res, next) {
         }
 
     EventData.findOne({_id: event}).then(function (doc) {
-        res.render('Users/event', {childList: children, info: doc});
+        res.render('event', {childList: children, info: doc});
     });
 });
 
@@ -62,7 +59,7 @@ router.get('/viewevent/:id', function(req, res, next){
         EventData.findOne({_id: id}).then(function (doc) {
             var user = req.session.userDat;
             var children = user.children;
-           res.render('Users/event' , {info: doc, children: children});
+           res.render('event' , {info: doc, children: children});
         });
 
 });
@@ -112,7 +109,7 @@ router.post('/registerevent', function (req, res, next) {
    //data.save();
 
     req.session.userDat.events.push(req.body.id);
-    res.redirect('./calendar');
+    res.redirect('calendar');
 });
 
 router.post('/deleteevent', function (req, res, next) {
@@ -122,7 +119,7 @@ router.post('/deleteevent', function (req, res, next) {
             console.log(managerevent);
         }
     );
-    res.redirect('./calendar');
+    res.redirect('calendar');
 
 });
 
@@ -132,7 +129,7 @@ router.get('/calendar', function (req, res, next) {
         date: req.body.eventdate,
         info: req.body.info
     };
-    var userDat = req.session;
+    var userDat = req.user;
     var monthpassed = req.query.id;
     if(userDat.logged)
     {
@@ -179,7 +176,7 @@ router.get('/calendar', function (req, res, next) {
                 }
             }
 
-            res.render('Users/calendar', {
+            res.render('calendar', {
                 eventlist: events,
                 size: doc.length,
                 month: monthpassed,
@@ -189,7 +186,7 @@ router.get('/calendar', function (req, res, next) {
             });
         }
         else{
-            res.render('Users/calendar', {title : 'cucked'});
+            res.render('calendar', {title : 'cucked'});
         }
     });
 
@@ -208,25 +205,18 @@ router.post('/createevent', function (req, res, next) {
         res.redirect('calendar');
 });
 
-router.get('/database', function (req, res, next) {
-    EventData.find().sort('-date').then(function (doc) {
-        res.render('Users/eventDB', {eventlist: doc});
-    })
-});
-
 //MINAS ADDED CODE.
 router.get('/eventlist', function (req, res, next) {
 
     var monthpassed = req.query.id;
     var eventQuery = [];
     var events = [];
-    var userDat = req.session;
 
     //LIST OF EVENTS CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(userDat.logged)
+    if(req.user)
     {
-        for (l in req.session.userDat.events) {
-            var o = req.session.userDat.events[l];
+        for (l in req.user.events) {
+            var o = req.user.events[l];
             eventQuery.push(new mongoose.Types.ObjectId(o));
         }
 
@@ -243,7 +233,7 @@ router.get('/eventlist', function (req, res, next) {
                 events.push(docs[i]._doc);
             }
         });
-        res.render('Users/eventlist', {eventlist: events, output:monthpassed, user: userDat.userDat.username});
+        res.render('eventlist', {eventlist: events, output:monthpassed, user: req.user.username});
     }
     else
     {
@@ -286,7 +276,7 @@ router.get('/removeChildEvent/:id', function(req, res, next){
             if (err) throw err;
             console.log("Successfully removed from user "+doc);
         });
-        res.redirect('Users/eventlist');
+        res.redirect('eventlist');
     });
     // EventData.findByIdAndUpdate(eventId,
     //     {"": {"registered": "test"}},

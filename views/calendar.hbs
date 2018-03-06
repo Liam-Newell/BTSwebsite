@@ -25,7 +25,7 @@
         }
 
         function monthfunction(month){
-            window.location.href = "/users/calendar?id="+ month;
+            window.location.href = "calendar?id="+ month;
         }
     </script>
 </head>
@@ -41,14 +41,14 @@
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="/account">View Account</a></li>
-                    <li><a href="/childList">View Registered Children</a></li>
-                    <li><a href="/registerchild">Register a child</a></li>
+                    <li><a href="../users/account">View Account</a></li>
+                    <li><a href="../child/childList">View Registered Children</a></li>
+                    <li><a href="../child/registerchild">Register a child</a></li>
                 </ul>
             </li>
-            <li><a href="#">Calendar</a></li>
-            <li><a href="/Users/eventlist">Schedule</a></li>
-            <li><a href="/Users">Add Event</a></li>
+            <li><a href="calendar">Calendar</a></li>
+            <li><a href="eventlist">Schedule</a></li>
+            <li><a href="createevent">Add Event</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
@@ -101,7 +101,7 @@
         </ul>
 
         <!-- Days from previous month -->
-        <form method="post" role="form" action="/users/viewevent" id="eventform" name="eventform"
+        <form method="post" role="form" action="viewevent" id="eventform" name="eventform"
               class="login-form form-horizontal">
             <div class="form-group">
                 <div class="col-sm-8">
@@ -143,7 +143,7 @@
                                             {{this.info}}
                                             <br>
 
-                                            <form method="post" id="eventregister" name="eventregister" action="/users/registerevent">
+                                            <form method="post" id="eventregister" name="eventregister" action="registerevent">
 
                                                 <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
 
