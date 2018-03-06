@@ -3,7 +3,7 @@ var router = express.Router();
 
 // Get Homepage
 router.get('/', ensureAuthenticated, function(req, res){
-    res.render('index', {user : req.user.firstname});
+    res.render('index', {user : req.user.firstname, isAdmin: req.user.isAdmin});
 });
 
 //checks if an existing session is in place, if not takes user to login page. If so they may access the site.

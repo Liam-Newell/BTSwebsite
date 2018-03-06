@@ -17,6 +17,13 @@ var User = require('../models/user');
 
 //ROUTER SECTION
 
+/** Register Admin **/
+//Get: register page (register.hbs)
+router.get('/adminregister', function(req, res, next){
+    if(req.user){res.render('register', {isAdmin: req.user.isAdmin});}
+    else{res.render('register');}
+});
+
 /** Register **/
 //Get: register page (register.hbs)
 router.get('/register', function (req, res, next) {
@@ -113,7 +120,7 @@ router.get('/login', function (req, res, next) {
 router.post('/login',
     passport.authenticate('local', {successRedirect: '/', failureRedirect: '/users/login', failureFlash: true}),
     function (req, res) {
-        res.redirect('/', {user: req.user.firstname});
+        res.redirect('/', {user: req.user.firstname, isAdmin: req.user.isAdmin});
 });
 
 /** Logout **/

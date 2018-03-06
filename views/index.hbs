@@ -83,7 +83,9 @@
                         <li><a class="page-scroll" href="#account-scroll">Account</a></li>
                         <li><a class="page-scroll" href="#calendar-scroll">Calendar</a></li>
                         <li><a class="page-scroll" href="#schedule-scroll">Schedule</a></li>
-                        &nbsp; &nbsp;
+                        {{#if isAdmin}}
+                        <li><a class="page-scroll" href="users/adminregister">Register Admin</a></li>
+                        {{/if}}
                         <li style="color: white;">Welcome, <span style="text-transform: uppercase;">{{user}}</span> !</li>
                         <li class="cta"><a href="users/logout">Sign Out</a></li>
                     </ul>
