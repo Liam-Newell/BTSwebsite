@@ -13,6 +13,7 @@ var Schema = mongoose.Schema;
 
 var Child = require('../models/child');
 var User = require('../models/user');
+var Event = require('../models/event');
 
 //Get: registerchild page (registerchild.hbs)
 router.get('/registerchild', function (req, res, next) {
@@ -119,7 +120,8 @@ router.get('/childList', function (req, res, next) {
     }
 });
 
-router.get('deletechild/:id', function (req, res, next) {
+//Remove Child from the account
+router.get('/deletechild/:id', function (req, res, next) {
     var childID = encodeURIComponent(req.params.id);
     var search = new mongoose.Types.ObjectId(childID);
     var found = false;
@@ -158,7 +160,7 @@ router.get('deletechild/:id', function (req, res, next) {
     {
         res.redirect('/');
     }
-    res.redirect('/childList');
+    res.end('childList');
 });
 
 module.exports = router;

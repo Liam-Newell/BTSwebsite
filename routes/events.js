@@ -122,6 +122,10 @@ router.post('/deleteevent', function (req, res, next) {
 
 });
 
+router.get('/calendar2', function(req, res){
+    res.render('/calendar2');
+});
+
 router.get('/calendar', function (req, res, next) {
     var event = {
         title: req.body.title,
@@ -132,7 +136,7 @@ router.get('/calendar', function (req, res, next) {
     var monthpassed = req.query.id;
     if(req.user)
     {
-        var redirectTo = "homepage2";
+        var redirectTo = "/";
         var username = userDat.username;
     }
     else
@@ -175,7 +179,7 @@ router.get('/calendar', function (req, res, next) {
                 }
             }
 
-            res.render('calendar2', {
+            res.render('calendar', {
                 isAdmin: req.user.isAdmin,
                 eventlist: events,
                 size: doc.length,
@@ -186,7 +190,7 @@ router.get('/calendar', function (req, res, next) {
             });
         }
         else{
-            res.render('calendar2', {isAdmin: req.user.isAdmin});
+            res.render('calendar', {isAdmin: req.user.isAdmin});
         }
     });
 
