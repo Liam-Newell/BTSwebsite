@@ -10,7 +10,6 @@ var flash = require('connect-flash');
 //For mongoDB
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
-var Schema = mongoose.Schema;
 
 //Models
 var User = require('../models/user');
@@ -108,7 +107,7 @@ router.post('/registerevent', function (req, res, next) {
     //var data = new EventData(item);
    //data.save();
 
-    req.session.userDat.events.push(req.body.id);
+    req.user.events.push(req.body.id);
     res.redirect('calendar');
 });
 
@@ -131,10 +130,10 @@ router.get('/calendar', function (req, res, next) {
     };
     var userDat = req.user;
     var monthpassed = req.query.id;
-    if(userDat.logged)
+    if(req.user)
     {
         var redirectTo = "homepage2";
-        var username = userDat.userDat.username;
+        var username = userDat.username;
     }
     else
     {
@@ -193,16 +192,17 @@ router.get('/calendar', function (req, res, next) {
 });
 
 router.post('/createevent', function (req, res, next) {
-        var event = {
-            title: req.body.title,
-            date: req.body.eventdate,
-            info: req.body.info
-        };
-        var time = event.date + " " + req.body.time.toString();
-        event.date = time;
-        var data = new EventData(event);
-        data.save();
-        res.redirect('calendar');
+
+    var event = {
+        title: req.body.title,
+        date: req.body.eventdate,
+        info: req.body.info
+    };
+    var time = event.date + " " + req.body.time.toString();
+    event.date = time;
+    var data = new EventData(event);
+    data.save();
+    res.redirect('calendar');
 });
 
 //MINAS ADDED CODE.

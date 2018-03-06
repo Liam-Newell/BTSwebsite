@@ -4,6 +4,8 @@ var bcrypt = require('bcryptjs');
 
 mongoose.connect('localhost:27017/test');
 
+var Child = require('../models/child');
+
 //User schema
 var userDataSchema = new Schema({
     username:       {type: String, required: true},
@@ -20,7 +22,7 @@ var userDataSchema = new Schema({
 //Instantiation of "User" schema
 var User = module.exports = mongoose.model('User', userDataSchema);
 
-//"User" related functions
+/**"User" related functions**/
 
 module.exports.createUser = function(newUser, callback){
     bcrypt.genSalt(10, function(err, salt){

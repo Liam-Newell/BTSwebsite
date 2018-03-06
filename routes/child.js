@@ -16,15 +16,11 @@ var User = require('../models/user');
 
 //Get: registerchild page (registerchild.hbs)
 router.get('/registerchild', function (req, res, next) {
-    var sess = req.session;
-    var userData = sess.userDat;
-
-    if(sess.logged) {
-
+    var userData = req.user;
+    if(req.user) {
         res.render('registerchild', {
             user: userData.username
         });
-
     }else{
         res.render('index', {title: 'Church Centre'});
     }
@@ -32,9 +28,7 @@ router.get('/registerchild', function (req, res, next) {
 
 //Post: register child (registerchild.hbs).
 router.post('/registerchild', function (req, res, next) {
-    var userData = req.user();
-    var sess = req.user();
-
+    var user = req.user;
     var item = {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
@@ -42,35 +36,32 @@ router.post('/registerchild', function (req, res, next) {
         grade: req.body.grade
     };
 
-    if(sess.logged){
+    if(req.user){
 
         req.check('lastname', 'Invalid last name').isLength({min: 2});
         req.check('firstname', 'Invalid first name').isLength({min: 4});
 
         var errors = req.validationErrors();
-        if(req.session.childrenCache){
-            req.session.childrenCache = null;
+        if(user.childrenCache){
+            user.childrenCache = null;
         }
         if (!errors) {
             var data = new Child(item);
             var cid = data._id;
             data.save();
-            var userItem = req.session.userDat;
+            var userItem = user;
             User.findByIdAndUpdate(userItem._id,
                 {$push: {children: cid}},
                 {new : true}, function (err, childreg){
                     if (err) throw err;
                     console.log(childreg);
                     //data.save();
-                    req.session.userDat.children.push(data._id.toString('hex'));
-                    res.redirect('/childList');
+                    req.user.children.push(data._id.toString('hex'));
+                    res.redirect('childList');
                 }
-
             );
-
         }
         else {
-
             res.render('registerchild'),{
                 title: 'Incorrect Values',
                 cuck: 'Ya messed up',
@@ -91,31 +82,31 @@ router.get('/childList', function (req, res, next) {
     var userDat = req.user;
 
     //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(userDat.logged)
+    if(req.user)
     {
-        if(req.session.userDat.children.length > 0 ) {
-            if (!req.session.childrenCache) {
-                for (var i = 0; i < req.session.userDat.children.length; i++) {
-                    var o = req.session.userDat.children[i];
+        if(userDat.children.length > 0 ) {
+            if (!req.user.childrenCache) {
+                for (var i = 0; i < userDat.children.length; i++) {
+                    var o = userDat.children[i];
                     childQuery.push(new mongoose.Types.ObjectId(o));
                 }
                 Child.find({
                     '_id': {$in: childQuery}
                 }, function (err, docs) {
                     console.log(docs);
-                    req.session.childrenCache = null;
-                    req.session.childrenCache = [];
+                    userDat.childrenCache = null;
+                    userDat.childrenCache = [];
                     for (i in docs) {
-                        req.session.childrenCache.push(docs[i]._doc);
+                        userDat.childrenCache.push(docs[i]._doc);
                     }
                     res.render('childList', {
-                        childList: req.session.childrenCache,
-                        user: userDat.userDat.username,
+                        childList: userDat.childrenCache,
+                        user: userDat.username,
                         title: "Registered Children | Church Centre"
                     });
                 });
             }else {
-                res.render('childList', {childList: req.session.childrenCache, user: userDat.username, title: "Registered Children | Church Centre"});
+                res.render('childList', {childList: userDat.childrenCache, user: userDat.username, title: "Registered Children | Church Centre"});
             }
         }
         else{
@@ -128,12 +119,11 @@ router.get('/childList', function (req, res, next) {
     }
 });
 
-//Remove Child from the account
 router.get('/deletechild/:id', function (req, res, next) {
     var childID = encodeURIComponent(req.params.id);
     var search = new mongoose.Types.ObjectId(childID);
     var found = false;
-    var userData = req.session.userDat;
+    var userData = req.user;
     var sess = req.session;
     //get Child ID
     if(sess.logged)
@@ -170,3 +160,5 @@ router.get('/deletechild/:id', function (req, res, next) {
     }
     res.redirect('/childList');
 });
+
+module.exports = router;

@@ -11,5 +11,7 @@ var eventdataschema = new Schema({
     registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
 }, {collection: 'events'});
 
-//instantiate schema as models "User" and "Child"
+//instantiate schema as model event
 var EventData = module.exports = mongoose.model('EventData', eventdataschema);
+
+/** "Event" related functions **/
