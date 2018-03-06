@@ -22,7 +22,7 @@ var userDataSchema = new Schema({
 //Instantiation of "User" schema
 var User = module.exports = mongoose.model('User', userDataSchema);
 
-/**"User" related functions**/
+/** "User" related functions **/
 
 module.exports.createUser = function(newUser, callback){
     bcrypt.genSalt(10, function(err, salt){

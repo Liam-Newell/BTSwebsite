@@ -20,7 +20,9 @@ var User = require('../models/user');
 /** Register **/
 //Get: register page (register.hbs)
 router.get('/register', function (req, res, next) {
-    res.render('register', {isAdmin: req.user.isAdmin});
+    if(req.user.isAdmin){var admin = true;}
+    else{var admin = false;}
+    res.render('register', {isAdmin: admin});
 });
 
 //Post: register page (register.hbs)
