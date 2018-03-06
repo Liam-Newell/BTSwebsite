@@ -175,7 +175,7 @@ router.get('/calendar', function (req, res, next) {
                 }
             }
 
-            res.render('calendar', {
+            res.render('calendar2', {
                 eventlist: events,
                 size: doc.length,
                 month: monthpassed,
@@ -185,7 +185,7 @@ router.get('/calendar', function (req, res, next) {
             });
         }
         else{
-            res.render('calendar', {title : 'cucked'});
+            res.render('calendar2', {title : 'cucked'});
         }
     });
 
