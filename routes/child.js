@@ -119,7 +119,7 @@ router.get('/childList', function (req, res, next) {
     }
 });
 
-router.get('/deletechild/:id', function (req, res, next) {
+router.get('deletechild/:id', function (req, res, next) {
     var childID = encodeURIComponent(req.params.id);
     var search = new mongoose.Types.ObjectId(childID);
     var found = false;
