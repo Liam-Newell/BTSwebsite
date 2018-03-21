@@ -128,10 +128,10 @@ router.get('/deletechild/:id', function (req, res, next) {
     var userData = req.user;
     var sess = req.session;
     //get Child ID
-    if(sess.logged)
+    if(req.user)
     {
-        if(req.session.childrenCache){
-            req.session.childrenCache = null;
+        if(req.user.childrenCache){
+            req.user.childrenCache = null;
         }
         //Remove Link to User Account as well
         Child.findByIdAndRemove(childID, (err, child) => {
@@ -160,7 +160,8 @@ router.get('/deletechild/:id', function (req, res, next) {
     {
         res.redirect('/');
     }
-    res.end('childList');
+
+    res.render('childList');
 });
 
 module.exports = router;
