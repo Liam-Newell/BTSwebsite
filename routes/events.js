@@ -132,6 +132,7 @@ router.get('/calendar', function (req, res, next) {
         date: req.body.eventdate,
         info: req.body.info
     };
+
     var userDat = req.user;
     var monthpassed = req.query.id;
     if(req.user)
@@ -146,37 +147,65 @@ router.get('/calendar', function (req, res, next) {
     }
     EventData.find().sort('-date').then(function (doc)
     {
-
+        var d = new Date();
+        var n = d.getMonth();
         if(!monthpassed){
             //  var d = new Date();
             // var n = d.getMonth();
             //  n++;
             //  monthpassed = n;
-            monthpassed = "january"
+
+            const MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            monthpassed = MONTH_NAMES[n].toLowerCase();
+
         }
-        var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
+        var month = new Date(Date.parse(monthpassed + " " + d.getDate() + ", " + d.getFullYear())).getMonth();
         if(doc.length > 0)
         {
             var events = [];
             event = doc[0]._doc;
             for (var i = 1; i <= 31; i++) {
-                    var e = {
-                        title: '',
-                        date: i,
-                        info: []
+                var e = {
+                    title: '',
+                    date: i,
+                    info: []
 
-                    };
-                    events.push(e);
+                };
+                events.push(e);
 
-                }
+            }
             for (var i = 0; i <= 30; i++) {
                 var index = 0;
-            for(var j = 0; j < doc.length; j++) {
+                for (var j = 0; j < doc.length; j++) {
                     if (doc[j]._doc.date.getDate() == i && doc[j]._doc.date.getMonth() == month) {
                         events[(i - 1)].info[index] = doc[j]._doc;
                         index++
                     }
                 }
+            }
+
+            var event = req.body.eventid;
+            var userDat = req.session;
+            var childQuery = [];
+            var children = [];
+
+            if (userDat.logged) {
+                for (l in req.session.userDat.children) {
+                    var o = req.session.userDat.children[l];
+                    childQuery.push(new mongoose.Types.ObjectId(o));
+                }
+                Child.find({
+                    '_id': {$in: childQuery}
+                }, function (err, docs) {
+                    console.log(docs);
+
+                    for (i in docs) {
+                        children.push(docs[i]._doc);
+                    }
+                });
+
             }
 
             res.render('calendar', {
