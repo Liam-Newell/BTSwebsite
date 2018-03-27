@@ -40,7 +40,7 @@ router.post('/registerchild', function (req, res, next) {
     if(req.user){
 
         req.check('lastname', 'Invalid last name').isLength({min: 2});
-        req.check('firstname', 'Invalid first name').isLength({min: 4});
+        req.check('firstname', 'Invalid first name').isLength({min: 2});
 
         var errors = req.validationErrors();
         if(user.childrenCache){
@@ -76,10 +76,6 @@ router.post('/registerchild', function (req, res, next) {
 
 //Get: childList page (childList.hbs)
 router.get('/childList', function (req, res, next) {
-
-    //var monthpassed = req.query.id;
-    var childQuery = [];
-    var children = [];
     var userDat = req.session.req.user._doc;
     Child.listChildren(req.session.req.user._doc, function(err, list){
         if(err) throw err;
@@ -140,7 +136,7 @@ router.get('/deletechild/:id', function (req, res, next) {
         res.redirect('/');
     }
 
-    res.render('childList');
+    res.redirect('/child/childlist');
 });
 
 module.exports = router;

@@ -191,33 +191,41 @@ router.get('/calendar', function (req, res, next) {
             var childQuery = [];
             var children = [];
 
-            if (userDat.logged) {
-                for (l in req.session.userDat.children) {
-                    var o = req.session.userDat.children[l];
-                    childQuery.push(new mongoose.Types.ObjectId(o));
+            Child.listChildren(req.session.req.user._doc,function(err, list){
+                if (err) throw err;
+                if (!list) children.push('none');
+                else{
+                    children = list;
                 }
-                Child.find({
-                    '_id': {$in: childQuery}
-                }, function (err, docs) {
-                    console.log(docs);
-
-                    for (i in docs) {
-                        children.push(docs[i]._doc);
-                    }
+                res.render('calendar', {
+                    isAdmin: req.user.isAdmin,
+                    eventlist: events,
+                    size: doc.length,
+                    month: monthpassed,
+                    year: (new Date()).getFullYear(),
+                    user: username,
+                    redirect: redirectTo,
+                    childList: children
                 });
-
-            }
-            var g = req.session.req.user._doc.children;
-            res.render('calendar', {
-                isAdmin: req.user.isAdmin,
-                eventlist: events,
-                size: doc.length,
-                month: monthpassed,
-                year: (new Date()).getFullYear(),
-                user: username,
-                redirect: redirectTo,
-                childList: req.session.req.user._doc.children
             });
+            // if (userDat.logged) {
+            //     for (l in req.session.userDat.children) {
+            //         var o = req.session.userDat.children[l];
+            //         childQuery.push(new mongoose.Types.ObjectId(o));
+            //     }
+            //     Child.find({
+            //         '_id': {$in: childQuery}
+            //     }, function (err, docs) {
+            //         console.log(docs);
+            //
+            //         for (i in docs) {
+            //             children.push(docs[i]._doc);
+            //         }
+            //     });
+            //
+            // }
+            // var g = req.session.req.user._doc.children;
+
         }
         else{
             res.render('calendar', {isAdmin: req.user.isAdmin});

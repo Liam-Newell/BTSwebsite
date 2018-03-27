@@ -18,7 +18,8 @@ var Child = module.exports = mongoose.model('Child', childDataSchema);
 //"Child" related functions
 /**
  * Pass in req.user
- * @param {object} userDat
+ * @param {req.session.req.user._doc} userDat should be req.session.req.user._doc
+ * @callback function you want returned so async actually works (use this variable as a mean to an end so it returns)
  * should probably be req.session.req.user._doc (just saying)
 **/
 module.exports.listChildren = function(userDat, callback){

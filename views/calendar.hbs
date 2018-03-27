@@ -155,21 +155,19 @@
                                             <form method="post" id="eventregister" name="eventregister" action="registerevent">
 
                                                 <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
-
-                                                <select name="selectChild">
-                                                    Choose a child
-                                                    {{# each childList }}
-                                                        <option style="color: black;" value="{{this._id}}">{{this.firstname}}</option>
-                                                    {{/each}}
-                                                </select>
-
+                                                    <select name="selectChild">
+                                                        Choose a child
+                                                        {{# each ../../childList }}
+                                                            <option style="color: black;" value="{{this._id}}">{{this.firstname}} {{this.lastname}}</option>
+                                                        {{/each}}
+                                                    </select>
                                                 <button class="login btn btn-primary"type="submit" id="register">register for event</button>
 
                                             </form>
 
                                             <br><br><br>
 
-                                            <<p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a> </p>
+                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a> </p>
                                         </div>
                                     </div>
                                 </div>
