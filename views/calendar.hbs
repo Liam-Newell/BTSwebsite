@@ -15,9 +15,9 @@
     <!--Month Year Scripts -->
     <script type="text/javascript">
         //Function for toggling pop up
-        function toggle_visibility(id){
+        function toggle_visibility(id, num){
             var e = document.getElementById(id);
-            if(e.style.display == 'block') {
+            if(e.style.display == 'block' && num === 0) {
                 e.style.display = 'none';
             }else{
                 e.style.display = 'block';
@@ -129,8 +129,8 @@
                 {{#if this.info}}
                     {{# each info}}
 
-                        <a href="javascript:void(0)" onclick="toggle_visibility('popup-box');">
-                            <div class="event">
+
+                    <a href="javascript:void(0)" onclick="toggle_visibility('popup-box',1);"><div class="event">
                                 <div class="event-desc">
                                     {{this.title}}
                                     <br>
@@ -157,9 +157,9 @@
                                                 <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
 
                                                 <select name="selectChild">
-                                                    <option stlye="text-color" value="disabled selected">Choose a child</option>
+                                                    Choose a child
                                                     {{# each childList }}
-                                                        <option style="color: black;" value = {{this._id}} > {{ this.firstname }} {{this.lastname}} </option>
+                                                        <option style="color: black;" value="{{this._id}}">{{this.firstname}}</option>
                                                     {{/each}}
                                                 </select>
 
@@ -169,13 +169,12 @@
 
                                             <br><br><br>
 
-                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box')"><button >Close Pop-Up</button ></a> </p>
+                                            <<p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a> </p>
                                         </div>
                                     </div>
                                 </div>
 
-                            </div>
-                        </a>
+                            </div></a>
                     {{/each}}
                 {{/if}}
             </li>

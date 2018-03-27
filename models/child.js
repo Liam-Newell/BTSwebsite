@@ -16,3 +16,44 @@ var childDataSchema = new Schema({
 var Child = module.exports = mongoose.model('Child', childDataSchema);
 
 //"Child" related functions
+/**
+ * Pass in req.user
+ * @param {object} userDat
+ * should probably be req.session.req.user._doc (just saying)
+**/
+module.exports.listChildren = function(userDat, callback){
+    var childQuery = [];
+    if(userDat)
+    {
+        if(userDat.children.length > 0 ) {
+            if (!userDat.childrenCache) {
+                for (var i = 0; i < userDat.children.length; i++) {
+                    var o = userDat.children[i];
+                    childQuery.push(new mongoose.Types.ObjectId(o));
+                }
+                Child.find({
+                    '_id': {$in: childQuery}
+                }, function (err, docs) {
+                    console.log(docs);
+                    userDat.childrenCache = null;
+                    userDat.childrenCache = [];
+                    for (i in docs) {
+                        userDat.childrenCache.push(docs[i]._doc);
+                    }
+                    callback(null,userDat.childrenCache);
+                });
+            }
+            else{
+                callback(null,userDat.childrenCache);
+            }
+        }
+        else{
+            callback(null,null);
+        }
+
+    }
+    else{
+        callback('No user was found',null);
+    }
+
+};

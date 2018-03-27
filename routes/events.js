@@ -207,7 +207,7 @@ router.get('/calendar', function (req, res, next) {
                 });
 
             }
-
+            var g = req.session.req.user._doc.children;
             res.render('calendar', {
                 isAdmin: req.user.isAdmin,
                 eventlist: events,
@@ -215,7 +215,8 @@ router.get('/calendar', function (req, res, next) {
                 month: monthpassed,
                 year: (new Date()).getFullYear(),
                 user: username,
-                redirect: redirectTo
+                redirect: redirectTo,
+                childList: req.session.req.user._doc.children
             });
         }
         else{

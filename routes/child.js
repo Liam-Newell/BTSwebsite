@@ -80,44 +80,23 @@ router.get('/childList', function (req, res, next) {
     //var monthpassed = req.query.id;
     var childQuery = [];
     var children = [];
-    var userDat = req.user;
-
-    //LIST OF CHILDREN CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(req.user)
-    {
-        if(userDat.children.length > 0 ) {
-            if (!req.user.childrenCache) {
-                for (var i = 0; i < userDat.children.length; i++) {
-                    var o = userDat.children[i];
-                    childQuery.push(new mongoose.Types.ObjectId(o));
-                }
-                Child.find({
-                    '_id': {$in: childQuery}
-                }, function (err, docs) {
-                    console.log(docs);
-                    userDat.childrenCache = null;
-                    userDat.childrenCache = [];
-                    for (i in docs) {
-                        userDat.childrenCache.push(docs[i]._doc);
-                    }
-                    res.render('childList', {
-                        childList: userDat.childrenCache,
-                        user: userDat.username,
-                        title: "Registered Children | Church Centre"
-                    });
-                });
-            }else {
-                res.render('childList', {childList: userDat.childrenCache, user: userDat.username, title: "Registered Children | Church Centre"});
-            }
+    var userDat = req.session.req.user._doc;
+    Child.listChildren(req.session.req.user._doc, function(err, list){
+        if(err) throw err;
+        if(!list){
+            res.render('childList',{
+                user: userDat.username,
+                title: "Registered Children | Church Centre"}
+            );
         }
         else{
-            res.render('childList', {user: userDat.username, title: "Registered Children | Church Centre"});
+            res.render('childList', {
+                childList: list,
+                user: userDat.username,
+                title: "Registered Children | Church Centre"
+            })
         }
-    }
-    else
-    {
-        res.redirect('/');
-    }
+    });
 });
 
 //Remove Child from the account
