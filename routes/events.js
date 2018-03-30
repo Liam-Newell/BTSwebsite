@@ -65,8 +65,8 @@ router.get('/viewevent/:id', function(req, res, next){
 
 router.post('/registerevent', function (req, res, next) {
 
-    var item = req.session.userDat;
-    item.events.push(req.body.id);
+    var item = req.user; //SN: req.sessions.userDat was undefined, so this is a fix.
+    item.events.push(req.body.id); //SN: Causes error
 
     //Query and update User events array with event id
     User.findByIdAndUpdate(item._id,
@@ -137,7 +137,10 @@ router.get('/calendar', function (req, res, next) {
     var monthpassed = req.query.id;
     if(req.user)
     {
-        var redirectTo = "/";
+        /*SN: bug fixed regarding the redirection to homepage.
+        The logo link that redirects to the homepage was not working.
+        HBS file for this method has been modified for this fix*/
+        var redirectTo = "/.";
         var username = userDat.username;
     }
     else
@@ -187,7 +190,7 @@ router.get('/calendar', function (req, res, next) {
             }
 
             var event = req.body.eventid;
-            var userDat = req.session;
+            var f = req.session;
             var childQuery = [];
             var children = [];
 
