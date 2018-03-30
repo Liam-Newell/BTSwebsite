@@ -27,7 +27,7 @@
     "mongodb": "^2.2.35",
     "mongoose": "^4.13.11",
     "morgan": "~1.9.0",
-    "passport": "*",
+    "passport": "^0.4.0",
     "passport-http": "^0.3.0",
     "passport-local": "*",
     "popups": "^1.1.3",
