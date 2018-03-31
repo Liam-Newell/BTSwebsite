@@ -65,49 +65,33 @@ router.get('/viewevent/:id', function(req, res, next){
 
 router.post('/registerevent', function (req, res, next) {
 
-    var item = req.user; //SN: req.sessions.userDat was undefined, so this is a fix.
-    item.events.push(req.body.id); //SN: Causes error
+    var item = req.session.req.user._doc; //gets user information
+    var eventId = req.body.id; //gets event id id from event form
+    var childId = req.body.selectChild; //gets selected child id from event form
 
     //Query and update User events array with event id
     User.findByIdAndUpdate(item._id,
-        {"$push": {"events": req.body.id}},
-        {"new": true, "upsert": true},
+        {$push: {"events": eventId}},
         function (err, managerevent) {
             if (err) throw err;
                 console.log(managerevent);
         });
 
-    //var data = new User(item);
-    //data.save();
-
-    //Query and update Child events array with event id
-    var childId = req.body.selectChild; //gets selected child id from event form
-    var eventId = req.body.id; //gets selected child id from event form
-
     Child.findByIdAndUpdate(childId,
-        {"$push": {"events": eventId}},
-        {"new": true, "upsert": true},
+        {$push: {"events": eventId}},
         function (err, managerevent) {
             if (err) throw err;
             console.log(managerevent);
         }
     );
 
-    //var data = new Child(item);
-    //data.save();
     EventData.findByIdAndUpdate(eventId,
-        {"$push": {"registered": childId}},
-        {"new": true, "upsert": true},
+        {$push: {"registered": childId}},
         function (err, managerevent) {
             if (err) throw err;
             console.log(managerevent);
         }
     );
-
-    //var data = new EventData(item);
-   //data.save();
-
-    req.user.events.push(req.body.id);
     res.redirect('calendar');
 });
 
