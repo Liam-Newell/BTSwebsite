@@ -243,15 +243,31 @@ router.get('/eventlist', function (req, res, next) {
     var monthpassed = req.query.id;
     var eventQuery = [];
     var events = [];
+    var childrenInfo = [];
+    var childQuery = [];
 
     //LIST OF EVENTS CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
     if(req.user)
     {
+        //loop events
         for (l in req.user.events) {
             var o = req.user.events[l];
             eventQuery.push(new mongoose.Types.ObjectId(o));
         }
 
+        //Child Getter
+        Child.find({
+            '_id': {$in: req.user.children}
+        }, function (err, docs) {
+            console.log(docs);
+            for (i in docs) {
+                childrenInfo.push(docs[i]._doc);
+            }
+        });
+        console.log(childrenInfo);
+        //Get Event from Each Child
+
+        //Event Getter
         EventData.find({
             '_id': {$in: eventQuery}
         }, function (err, docs) {
