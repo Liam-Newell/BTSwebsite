@@ -7,6 +7,8 @@ mongoose.connect('localhost:27017/test');
 var eventdataschema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
+    grade: {type: Number, required: true},
+    limit: {type: Number, required: false},
     info: {type: String, required: true},
     registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
 }, {collection: 'events'});

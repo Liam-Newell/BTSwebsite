@@ -242,6 +242,8 @@ router.post('/createevent', function (req, res, next) {
     var event = {
         title: req.body.title,
         date: req.body.eventdate,
+        grade: req.body.grade,
+        limit: req.body.limit,
         info: req.body.info
     };
     var time = event.date + " " + req.body.time.toString();
