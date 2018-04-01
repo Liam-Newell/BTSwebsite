@@ -171,7 +171,6 @@ router.get('/calendar', function (req, res, next) {
                     title: '',
                     date: i,
                     info: []
-
                 };
                 events.push(e);
 
@@ -197,6 +196,8 @@ router.get('/calendar', function (req, res, next) {
                 else{
                     children = list;
                 }
+
+
                 res.render('calendar', {
                     isAdmin: req.user.isAdmin,
                     eventlist: events,

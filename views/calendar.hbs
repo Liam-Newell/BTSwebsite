@@ -34,7 +34,7 @@
 <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/{{redirect}}">Church Centre</a>
+            <a class="navbar-brand" href="/">Church Centre</a>
         </div>
         <ul class="nav navbar-nav">
             <li class="dropdown">
@@ -119,13 +119,13 @@
                 </div>
             </div>
         </form>
+
+        <!--Biginning of calendar -->
         <ul class="days">
+
         {{# each eventlist}}
-
             <li class="day">
-
                 <div class="date">{{this.date}}</div>
-
                 {{#if this.info}}
                     {{# each info}}
 
@@ -148,6 +148,7 @@
 
                                             <h3>Choose a child to register!</h3>
                                             {{this.title}}
+
                                             <br>
                                             {{this.info}}
                                             <br>
@@ -167,19 +168,25 @@
 
                                             <br><br><br>
 
-                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a> </p>
+                                            <a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a>
+
+
+
+
                                         </div>
                                     </div>
                                 </div>
-
+                                <!-- End of Pop-Up box div-->
                             </div></a>
                     {{/each}}
                 {{/if}}
             </li>
-
-
         {{/each}}
         </ul>
+        <!--End of calendar -->
+        {{#if this.isAdmin}}
+            <a href="" onclick=""><button >Delete Event</button ></a>
+        {{/if}}
 
 
 
