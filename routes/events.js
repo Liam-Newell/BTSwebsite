@@ -222,6 +222,7 @@ router.get('/calendar', function (req, res, next) {
 
 });
 
+//Creating an event
 router.post('/createevent', function (req, res, next) {
 
     var event = {

@@ -166,7 +166,11 @@
                                             </form>
                                             <br><br><br>
 
-                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a> </p>
+                                            <a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close</button ></a>
+
+                                            {{# if ../../isAdmin}}
+                                                <a href="" onclick=""><button >Delete Event</button ></a>
+                                            {{/if}}
                                         </div>
                                     </div>
                                 </div>

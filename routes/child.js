@@ -102,6 +102,7 @@ router.get('/deletechild/:id', function (req, res, next) {
     var found = false;
     var userData = req.user;
     var sess = req.session;
+
     //get Child ID
     if(req.user)
     {
