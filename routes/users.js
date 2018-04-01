@@ -17,11 +17,35 @@ var User = require('../models/user');
 
 //ROUTER SECTION
 
-/** Register Admin **/
+/** Register Account (Admin) **/
 //Get: register page (register.hbs)
+//checks if the user is a registered admin if so passes isAdmin=true to the form
 router.get('/adminregister', function(req, res, next){
     if(req.user){res.render('register', {isAdmin: req.user.isAdmin});}
     else{res.render('register');}
+});
+
+/** View All Users (Admin) **/
+//Get: childList page (childList.hbs)
+router.get('/userList', function (req, res, next) {
+    User.find({}, function(err, users){
+        if(err) throw err;
+        else {
+            res.render('userList',{ userList: users});
+        }
+    })
+});
+
+/** Deactivate Account (Admin) **/
+ router.delete('/admindelete/:id', function(req, res, next){
+    User.find(req.params.id), function(err, user){
+        if(err) throw err;
+        user.remove(function(err){
+            if(err) throw err;
+        })
+        console.log('user deleted');
+    }
+     res.redirect('userList');
 });
 
 /** Register **/

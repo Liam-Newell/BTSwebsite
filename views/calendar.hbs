@@ -34,7 +34,7 @@
 <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/">Church Centre</a>
+            <a class="navbar-brand" href="{{redirect}}">Church Centre</a>
         </div>
         <ul class="nav navbar-nav">
             <li class="dropdown">
@@ -54,7 +54,8 @@
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="createevent">Add Event</a></li>
-                        <li><a href="../users/adminregister">Add Admin</a></li>
+                        <li><a href="../users/adminregister">Add User</a></li>
+                        <li><a href="../users/userList">Deactivate User</a></li>
                     </ul>
                 </li>
             {{/if}}
@@ -119,13 +120,13 @@
                 </div>
             </div>
         </form>
-
-        <!--Biginning of calendar -->
         <ul class="days">
-
         {{# each eventlist}}
+
             <li class="day">
+
                 <div class="date">{{this.date}}</div>
+
                 {{#if this.info}}
                     {{# each info}}
 
@@ -148,45 +149,34 @@
 
                                             <h3>Choose a child to register!</h3>
                                             {{this.title}}
-
                                             <br>
                                             {{this.info}}
                                             <br>
 
                                             <form method="post" id="eventregister" name="eventregister" action="registerevent">
 
-                                                <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
+                                                <input type="hidden" type="text" id="id" name="id" value="{{this._id}}">
                                                     <select name="selectChild">
                                                         Choose a child
                                                         {{# each ../../childList }}
                                                             <option style="color: black;" value="{{this._id}}">{{this.firstname}} {{this.lastname}}</option>
                                                         {{/each}}
                                                     </select>
-                                                <button class="login btn btn-primary"type="submit" id="register">register for event</button>
-
+                                                <button class="login btn btn-primary"type="submit" id="{{this._id}}">register for event</button>
                                             </form>
-
                                             <br><br><br>
 
-                                            <a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a>
-
-
-
-
+                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a> </p>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- End of Pop-Up box div-->
+
                             </div></a>
                     {{/each}}
                 {{/if}}
             </li>
         {{/each}}
         </ul>
-        <!--End of calendar -->
-        {{#if this.isAdmin}}
-            <a href="" onclick=""><button >Delete Event</button ></a>
-        {{/if}}
 
 
 

@@ -65,49 +65,33 @@ router.get('/viewevent/:id', function(req, res, next){
 
 router.post('/registerevent', function (req, res, next) {
 
-    var item = req.session.userDat;
-    item.events.push(req.body.id);
+    var item = req.session.req.user._doc; //gets user information
+    var eventId = req.body.id; //gets event id id from event form
+    var childId = req.body.selectChild; //gets selected child id from event form
 
     //Query and update User events array with event id
     User.findByIdAndUpdate(item._id,
-        {"$push": {"events": req.body.id}},
-        {"new": true, "upsert": true},
+        {$push: {"events": eventId}},
         function (err, managerevent) {
             if (err) throw err;
                 console.log(managerevent);
         });
 
-    //var data = new User(item);
-    //data.save();
-
-    //Query and update Child events array with event id
-    var childId = req.body.selectChild; //gets selected child id from event form
-    var eventId = req.body.id; //gets selected child id from event form
-
     Child.findByIdAndUpdate(childId,
-        {"$push": {"events": eventId}},
-        {"new": true, "upsert": true},
+        {$push: {"events": eventId}},
         function (err, managerevent) {
             if (err) throw err;
             console.log(managerevent);
         }
     );
 
-    //var data = new Child(item);
-    //data.save();
     EventData.findByIdAndUpdate(eventId,
-        {"$push": {"registered": childId}},
-        {"new": true, "upsert": true},
+        {$push: {"registered": childId}},
         function (err, managerevent) {
             if (err) throw err;
             console.log(managerevent);
         }
     );
-
-    //var data = new EventData(item);
-   //data.save();
-
-    req.user.events.push(req.body.id);
     res.redirect('calendar');
 });
 
@@ -137,7 +121,10 @@ router.get('/calendar', function (req, res, next) {
     var monthpassed = req.query.id;
     if(req.user)
     {
-        var redirectTo = "/";
+        /*SN: bug fixed regarding the redirection to homepage.
+        The logo link that redirects to the homepage was not working.
+        HBS file for this method has been modified for this fix*/
+        var redirectTo = "/.";
         var username = userDat.username;
     }
     else
@@ -186,7 +173,7 @@ router.get('/calendar', function (req, res, next) {
             }
 
             var event = req.body.eventid;
-            var userDat = req.session;
+            var f = req.session;
             var childQuery = [];
             var children = [];
 
@@ -240,6 +227,8 @@ router.post('/createevent', function (req, res, next) {
     var event = {
         title: req.body.title,
         date: req.body.eventdate,
+        grade: req.body.grade,
+        limit: req.body.limit,
         info: req.body.info
     };
     var time = event.date + " " + req.body.time.toString();
@@ -255,15 +244,31 @@ router.get('/eventlist', function (req, res, next) {
     var monthpassed = req.query.id;
     var eventQuery = [];
     var events = [];
+    var childrenInfo = [];
+    var childQuery = [];
 
     //LIST OF EVENTS CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
     if(req.user)
     {
+        //loop events
         for (l in req.user.events) {
             var o = req.user.events[l];
             eventQuery.push(new mongoose.Types.ObjectId(o));
         }
 
+        //Child Getter
+        Child.find({
+            '_id': {$in: req.user.children}
+        }, function (err, docs) {
+            console.log(docs);
+            for (i in docs) {
+                childrenInfo.push(docs[i]._doc);
+            }
+        });
+        console.log(childrenInfo);
+        //Get Event from Each Child
+
+        //Event Getter
         EventData.find({
             '_id': {$in: eventQuery}
         }, function (err, docs) {
