@@ -95,17 +95,6 @@ router.post('/registerevent', function (req, res, next) {
     res.redirect('calendar');
 });
 
-router.post('/deleteevent', function (req, res, next) {
-    EventData.findByIdAndRemove(req.body.id,
-        function (err, managerevent) {
-            if (err) throw err;
-            console.log(managerevent);
-        }
-    );
-    res.redirect('calendar');
-
-});
-
 router.get('/calendar2', function(req, res){
     res.render('/calendar2');
 });
@@ -237,6 +226,20 @@ router.post('/createevent', function (req, res, next) {
     var data = new EventData(event);
     data.save();
     res.redirect('calendar');
+});
+
+router.post('/deleteevent', function (req, res, next) {
+
+    var eventId = req.body.id; //gets event id id from event form
+
+    EventData.findByIdAndRemove(eventId,
+        function (err, managerevent) {
+            if (err) throw err;
+            console.log(managerevent);
+        }
+    );
+    res.redirect('calendar');
+
 });
 
 //MINAS ADDED CODE.

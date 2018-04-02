@@ -154,7 +154,6 @@
                                             <br>
 
                                             <form method="post" id="eventregister" name="eventregister" action="registerevent">
-
                                                 <input type="hidden" type="text" id="id" name="id" value="{{this._id}}">
                                                     <select name="selectChild">
                                                         Choose a child
@@ -168,9 +167,14 @@
 
                                             <a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close</button ></a>
 
-                                            {{# if ../../isAdmin}}
-                                                <a href="" onclick=""><button >Delete Event</button ></a>
-                                            {{/if}}
+
+                                            <!-- BUTTON FOR DELETING EVENT ONLY SHOWS WITH ADMIN ACCOUNT-->
+                                            <form method="post" id="deleteevent" name="deleteevent" action="deleteevent">
+                                                {{# if ../../isAdmin}}
+                                                    <button type="submit" id="{{this._id}}">Delete Event</button >
+                                                {{/if}}
+                                            </form>
+
                                         </div>
                                     </div>
                                 </div>
