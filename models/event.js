@@ -14,7 +14,7 @@ var eventdataschema = new Schema({
 }, {collection: 'events'});
 
 //instantiate schema as model event
-var EventData = module.exports = mongoose.model('EventData', eventdataschema);
+var EventData = module.exports = mongoose.model('EventData', eventdataschema, 'EventData');
 
 /** "Event" related functions **/
 
@@ -45,28 +45,14 @@ module.exports.UpdateEvent = function (req,callback) {
         limit: req.body.limit,
     };
 
-    //Validation of form fields
-    req.checkBody('title', 'title is required').isAlphanumeric();
-    req.checkBody('date', 'date is required').isAlphanumeric();
-    req.checkBody('info', 'info is required').isAlphanumeric();
-    req.checkBody('grade', 'grade is required').isNumber();
-    req.checkBody('limit', 'Limit is required').isNumber();
-
-    var errors = req.validationErrors();
-
-    if (errors) {
-        res.render('updateEvent', {
-            errors: errors
-        });
-    }
-    else {
-        var time = event.date + " " + req.body.time.toString();
-        event.date = time;
-        var data = new EventData(event);
-        data.save(err = > {
-            if(err) callback(err,null);
-        callback(null, 'Event Was Added : \n' + event)
-        };
-    }
+    var time = event.date + " " + req.body.time.toString();
+    event.date = time;
+    var data = new EventData(event);
+    var eventId = req.body._id
+    EventData.findByIdAndUpdate({_id: eventId},
+        function(err,event) {
+        if (err) callback(err, null);
+        callback(null, 'Event Was Added : \n' + event);
+    });
 };
 

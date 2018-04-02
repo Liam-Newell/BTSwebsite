@@ -54,7 +54,6 @@
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="createevent">Add Event</a></li>
-                        <li><a href="updateEvent">Update Event</a></li>
                         <li><a href="../users/adminregister">Add Admin</a></li>
                         <li><a href="../users/userList">Deactivate User</a></li>
                     </ul>
@@ -170,6 +169,12 @@
                                             <br><br><br>
                                             <!-- BUTTON FOR DELETING EVENT ONLY SHOWS WITH ADMIN ACCOUNT-->
                                             {{# if ../../isAdmin}}
+                                            <form method="get" id="updateEvent" name="updateEvent" action="/events/updateEvent/{{this._id}}">
+                                                <button type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Update Event</button >
+                                            </form>
+
+                                            <br>
+
                                             <form method="post" id="deleteevent" name="deleteevent" action="deleteevent">
                                                     <button type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Delete Event</button >
                                                 </form>

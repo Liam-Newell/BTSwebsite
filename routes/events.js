@@ -22,8 +22,13 @@ router.get('/createevent', function(req, res, next) {
     res.render('createevent');
 });
 
-router.get('/updateEvent', function(req, res, next) {
-    res.render('updateEvent');
+router.get('/updateEvent/:id', function(req, res, next) {
+    var title = EventData.findById({id_: req.params.id}).populate('title').exec(function(err, title){ if(err) throw err;});
+    var date = EventData.findById({id_: req.params.id}).populate('date');
+    var info = EventData.findById({id_: req.params.id}).populate('info');
+    var grade = EventData.findById({id_: req.params.id}).populate('grade');
+    var limit = EventData.findById({id_: req.params.id}).populate('limit');
+    res.render('updateEvent', {eventId: req.params.id, t: title, d: date, i: info, g: grade, l: limit});
 });
 
 
@@ -95,8 +100,6 @@ router.post('/deleteevent', function (req, res, next) {
     );
 
 });
-
-
 
 router.get('/calendar2', function(req, res){
     res.render('/calendar2');
@@ -200,12 +203,39 @@ router.post('/createevent', function (req, res, next) {
     })
 });
 
-router.post('/updateEvent', function (req, res, next) {
-    EventData.CreateEvent(req,function (err, result) {
-        if(err) throw err;
-        console.log(result);
-        res.redirect('calendar');
+router.post('/updateEvent/:id', function (req, res, next) {
+//    EventData.UpdateEvent(req,function (err, result) {
+//        if(err) throw err;
+//        console.log(result);
+
+    var eventId = req.params.id;
+        var event = {
+            title: req.body.title,
+            date: req.body.eventdate,
+            info: req.body.info,
+            grade: req.body.grade,
+            limit: req.body.limit,
+        };
+    EventData.findById({_id: eventId},
+        function(err, event){
+    if(err) throw err;
+    });
+
+        var time = event.date + " " + req.body.time.toString();
+        event.date = time;
+        var data = new EventData(event);
+        EventData.findByIdAndUpdate({_id: eventId},
+        {$set: {
+            title: req.body.title,
+            date: req.body.eventdate,
+            info: req.body.info,
+            grade: req.body.grade,
+            limit: req.body.limit,
+            }
+        },function(err,event) {
+                if (err) throw err;
     })
+    res.redirect('/events/calendar');
 });
 
 
