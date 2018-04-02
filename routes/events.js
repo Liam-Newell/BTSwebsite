@@ -22,6 +22,11 @@ router.get('/createevent', function(req, res, next) {
     res.render('createevent');
 });
 
+router.get('/updateEvent', function(req, res, next) {
+    res.render('updateEvent');
+});
+
+
 router.get('/calendar/:id', function(req,res, next){
     var string = encodeURIComponent(id);
     res.redirect('/calendar?id=' + string);
@@ -76,42 +81,6 @@ router.post('/registerevent', function (req, res, next) {
         if(err) throw err;
         console.log(results);
     });
-    // //Query and update User events array with event id
-    // User.findByIdAndUpdate(item._id,
-    //     {"$push": {"events": req.body.id}},
-    //     {"new": true, "upsert": true},
-    //     function (err, managerevent) {
-    //         if (err) throw err;
-    //             console.log(managerevent);
-    //     });
-    //
-    // //var data = new User(item);
-    // //data.save();
-    //
-    //
-    // Child.findByIdAndUpdate(childId,
-    //     {"$push": {"events": eventId}},
-    //     {"new": true, "upsert": true},
-    //     function (err, managerevent) {
-    //         if (err) throw err;
-    //         console.log(managerevent);
-    //     }
-    // );
-    //
-    // //var data = new Child(item);
-    // //data.save();
-    // EventData.findByIdAndUpdate(eventId,
-    //     {"$push": {"registered": childId}},
-    //     {"new": true, "upsert": true},
-    //     function (err, managerevent) {
-    //         if (err) throw err;
-    //         console.log(managerevent);
-    //     }
-    // );
-
-    //var data = new EventData(item);
-   //data.save();
-
 
     res.redirect('calendar');
 });
@@ -126,6 +95,8 @@ router.post('/deleteevent', function (req, res, next) {
     );
 
 });
+
+
 
 router.get('/calendar2', function(req, res){
     res.render('/calendar2');
@@ -213,24 +184,6 @@ router.get('/calendar', function (req, res, next) {
                     childList: children
                 });
             });
-            // if (userDat.logged) {
-            //     for (l in req.session.userDat.children) {
-            //         var o = req.session.userDat.children[l];
-            //         childQuery.push(new mongoose.Types.ObjectId(o));
-            //     }
-            //     Child.find({
-            //         '_id': {$in: childQuery}
-            //     }, function (err, docs) {
-            //         console.log(docs);
-            //
-            //         for (i in docs) {
-            //             children.push(docs[i]._doc);
-            //         }
-            //     });
-            //
-            // }
-            // var g = req.session.req.user._doc.children;
-
         }
         else{
             res.render('calendar', {isAdmin: req.user.isAdmin});
@@ -246,6 +199,15 @@ router.post('/createevent', function (req, res, next) {
         res.redirect('calendar');
     })
 });
+
+router.post('/updateEvent', function (req, res, next) {
+    EventData.CreateEvent(req,function (err, result) {
+        if(err) throw err;
+        console.log(result);
+        res.redirect('calendar');
+    })
+});
+
 
 //MINAS ADDED CODE.
 router.get('/eventlist', function (req, res, next) {
