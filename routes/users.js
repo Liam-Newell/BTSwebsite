@@ -37,15 +37,13 @@ router.get('/userList', function (req, res, next) {
 });
 
 /** Deactivate Account (Admin) **/
- router.delete('/admindelete/:id', function(req, res, next){
-    User.find(req.params.id), function(err, user){
+ router.get('/adminDelete/:id', function(req, res, next){
+    var userId = encodeURIComponent(req.params.id);
+    User.findByIdAndRemove({_id: userId},
+        function(err, user){
         if(err) throw err;
-        user.remove(function(err){
-            if(err) throw err;
-        })
-        console.log('user deleted');
-    }
-     res.redirect('userList');
+        else res.redirect('/users/userList');
+        });
 });
 
 /** Register **/
