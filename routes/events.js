@@ -15,6 +15,7 @@ mongoose.connect('localhost:27017/test');
 var User = require('../models/user');
 var Child = require('../models/child');
 var EventData = require('../models/event');
+var Controller = require('../models/controller');
 
 /* GET users listing. */
 router.get('/createevent', function(req, res, next) {
@@ -66,48 +67,52 @@ router.get('/viewevent/:id', function(req, res, next){
 router.post('/registerevent', function (req, res, next) {
 
     var item = req.session.userDat;
-    item.events.push(req.body.id);
-
-    //Query and update User events array with event id
-    User.findByIdAndUpdate(item._id,
-        {"$push": {"events": req.body.id}},
-        {"new": true, "upsert": true},
-        function (err, managerevent) {
-            if (err) throw err;
-                console.log(managerevent);
-        });
-
-    //var data = new User(item);
-    //data.save();
-
+    //item.events.push(req.body.id);
     //Query and update Child events array with event id
     var childId = req.body.selectChild; //gets selected child id from event form
     var eventId = req.body.id; //gets selected child id from event form
 
-    Child.findByIdAndUpdate(childId,
-        {"$push": {"events": eventId}},
-        {"new": true, "upsert": true},
-        function (err, managerevent) {
-            if (err) throw err;
-            console.log(managerevent);
-        }
-    );
-
-    //var data = new Child(item);
-    //data.save();
-    EventData.findByIdAndUpdate(eventId,
-        {"$push": {"registered": childId}},
-        {"new": true, "upsert": true},
-        function (err, managerevent) {
-            if (err) throw err;
-            console.log(managerevent);
-        }
-    );
+    Controller.registerChildForEvent(req, function (err,results) {
+        if(err) throw err;
+        console.log(results);
+    });
+    // //Query and update User events array with event id
+    // User.findByIdAndUpdate(item._id,
+    //     {"$push": {"events": req.body.id}},
+    //     {"new": true, "upsert": true},
+    //     function (err, managerevent) {
+    //         if (err) throw err;
+    //             console.log(managerevent);
+    //     });
+    //
+    // //var data = new User(item);
+    // //data.save();
+    //
+    //
+    // Child.findByIdAndUpdate(childId,
+    //     {"$push": {"events": eventId}},
+    //     {"new": true, "upsert": true},
+    //     function (err, managerevent) {
+    //         if (err) throw err;
+    //         console.log(managerevent);
+    //     }
+    // );
+    //
+    // //var data = new Child(item);
+    // //data.save();
+    // EventData.findByIdAndUpdate(eventId,
+    //     {"$push": {"registered": childId}},
+    //     {"new": true, "upsert": true},
+    //     function (err, managerevent) {
+    //         if (err) throw err;
+    //         console.log(managerevent);
+    //     }
+    // );
 
     //var data = new EventData(item);
    //data.save();
 
-    req.user.events.push(req.body.id);
+
     res.redirect('calendar');
 });
 
@@ -235,17 +240,11 @@ router.get('/calendar', function (req, res, next) {
 });
 
 router.post('/createevent', function (req, res, next) {
-
-    var event = {
-        title: req.body.title,
-        date: req.body.eventdate,
-        info: req.body.info
-    };
-    var time = event.date + " " + req.body.time.toString();
-    event.date = time;
-    var data = new EventData(event);
-    data.save();
-    res.redirect('calendar');
+    EventData.CreateEvent(req,function (err, result) {
+        if(err) throw err;
+        console.log(result);
+        res.redirect('calendar');
+    })
 });
 
 //MINAS ADDED CODE.
