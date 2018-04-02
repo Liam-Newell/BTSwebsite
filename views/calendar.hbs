@@ -106,7 +106,7 @@
             <li>Wednesday</li>
             <li>Thursday</li>
             <li>Friday</li>
-            <li>Saturday{{'say my name'}}</li>
+            <li>Saturday</li>
         </ul>
 
         <!-- Days from previous month -->
@@ -154,7 +154,7 @@
 
                                             <form method="post" id="eventregister" name="eventregister" action="registerevent">
 
-                                                <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
+                                                <input type="hidden" type="text" id="id" name="id" value="{{this._id}}">
                                                     <select name="selectChild">
                                                         Choose a child
                                                         {{# each ../../childList }}
@@ -171,8 +171,9 @@
                                             <form method="post" id="deleteevent" name="deleteevent" action="deleteevent">
                                                     <button type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Delete Event</button >
                                                 </form>
-                                            {{/if}}
+
                                             <br>
+                                            {{/if}}
                                             <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a> </p>
 
                                         </div>
