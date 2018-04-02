@@ -54,7 +54,7 @@ module.exports.listChildren = function(userDat, callback){
 
     }
     else{
-        callback('No user was found',null);
+        callback('No user was found, refer to documentation in models/child.js',null);
     }
 
 };

@@ -34,7 +34,7 @@
 <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="{{redirect}}">Church Centre</a>
+            <a class="navbar-brand" href="/{{redirect}}">Church Centre</a>
         </div>
         <ul class="nav navbar-nav">
             <li class="dropdown">
@@ -54,8 +54,7 @@
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="createevent">Add Event</a></li>
-                        <li><a href="../users/adminregister">Add User</a></li>
-                        <li><a href="../users/userList">Deactivate User</a></li>
+                        <li><a href="../users/adminregister">Add Admin</a></li>
                     </ul>
                 </li>
             {{/if}}
@@ -154,26 +153,27 @@
                                             <br>
 
                                             <form method="post" id="eventregister" name="eventregister" action="registerevent">
-                                                <input type="hidden" type="text" id="id" name="id" value="{{this._id}}">
+
+                                                <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
                                                     <select name="selectChild">
                                                         Choose a child
                                                         {{# each ../../childList }}
                                                             <option style="color: black;" value="{{this._id}}">{{this.firstname}} {{this.lastname}}</option>
                                                         {{/each}}
                                                     </select>
-                                                <button class="login btn btn-primary"type="submit" id="{{this._id}}">register for event</button>
+                                                <button class="login btn btn-primary"type="submit" id="register">register for event</button>
+
                                             </form>
+
                                             <br><br><br>
-
-                                            <a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close</button ></a>
-
-
                                             <!-- BUTTON FOR DELETING EVENT ONLY SHOWS WITH ADMIN ACCOUNT-->
+                                            {{# if ../../isAdmin}}
                                             <form method="post" id="deleteevent" name="deleteevent" action="deleteevent">
-                                                {{# if ../../isAdmin}}
-                                                    <button type="submit" id="{{this._id}}">Delete Event</button >
-                                                {{/if}}
-                                            </form>
+                                                    <button type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Delete Event</button >
+                                                </form>
+                                            {{/if}}
+                                            <br>
+                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a> </p>
 
                                         </div>
                                     </div>
@@ -183,6 +183,8 @@
                     {{/each}}
                 {{/if}}
             </li>
+
+
         {{/each}}
         </ul>
 

@@ -53,3 +53,8 @@ module.exports.getOneUserLogin = function(user, pass, callback){
     var query =  {username : user, password : pass};
     User.findOne(query, callback);
 }
+/**
+ * @param [callback] contains users
+ @callback basic return containing user data
+ **/
+
