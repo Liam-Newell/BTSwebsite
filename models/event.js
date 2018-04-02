@@ -63,10 +63,10 @@ module.exports.UpdateEvent = function (req,callback) {
         var time = event.date + " " + req.body.time.toString();
         event.date = time;
         var data = new EventData(event);
-        data.save(err = > {
+        data.save(err => {
             if(err) callback(err,null);
         callback(null, 'Event Was Added : \n' + event)
-        };
+        });
     }
 };
 
