@@ -31,34 +31,31 @@ router.get('/sendEmailPage', function(req, res, next){
    res.render ('sendEmail');
 });
 
+//Router to actually send the email than redirect back to calender
 router.post('/sendEmail', function (req, res, next) {
+
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            xoauth2: xoauth2.createXOAuth2Generator({
-                user: 'bts630churchcentre@gmail.com', //email account being used to send the email
-                clientId: '486906374841-afj6rt79vk13qn0d136omn719vqaq8t4.apps.googleusercontent.com', //Generated from Google Mail API
-                clientSecret: '9GEkXHi55r_fW42DoZMQtPwM', //Generated from Google Mail API
-                refreshToken: '1/Fdu5sVJiWLun7RMWdXMdD6x9MnCC-ebjIG1IFd5gnKs' //Genereated from Google OAuth 2.0 Playground
-            })
+            user: 'bts630churchcentre@gmail.com',
+            pass: 'churchcentre'
         }
-    })
+    });
 
-    var mailOptions = {
-        from: 'BTS630 <bts630churchcentre@gmail.com>', //email account being used to send the email
-        to: 'mnashed333@hotmail.com', //email account that is getting the sent email
-        subject: 'Test Email Sending', //Subject of sent email
-        text: 'test text to be sent' //Text in the email
-    }
+    const mailOptions = {
+        from: 'bts630churchcentre@gmail.com', // sender address
+        to: 'mnashed333@hotmail.com', // list of receivers
+        subject: 'Subject of your email', // Subject line
+        html: '<p>Your html here</p>'// plain text body
+    };
 
     //Function to actually send the email
-    transporter.sendMail(mailOptions, function (err, res) {
-        if(err){
-            console.log('Error');
-        }else{
-            console.log('Email Sent');
-        }
-    })
+    transporter.sendMail(mailOptions, function (err, info) {
+        if(err)
+            console.log(err)
+        else
+            console.log(info);
+    });
 
     res.redirect('calendar');
 });
