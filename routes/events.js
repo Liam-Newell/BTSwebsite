@@ -38,7 +38,6 @@ router.post('/viewevent', function (req, res, next) {
     var childQuery = [];
     var children = [];
 
-    if(userDat.logged) {
         for (l in req.session.userDat.children) {
             var o = req.session.userDat.children[l];
             childQuery.push(new mongoose.Types.ObjectId(o));
@@ -53,7 +52,6 @@ router.post('/viewevent', function (req, res, next) {
             }
         });
 
-        }
 
     EventData.findOne({_id: event}).then(function (doc) {
         res.render('event', {childList: children, info: doc});
