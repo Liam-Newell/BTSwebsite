@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcryptjs');
+var async = require("async");
 
 mongoose.connect('localhost:27017/test');
 
@@ -68,5 +69,38 @@ module.exports.UpdateEvent = function (req,callback) {
         callback(null, 'Event Was Added : \n' + event)
         });
     }
+};
+module.exports.getChildEvents = async function (child) {
+    var childEvents = [];
+    var promises = [];
+    for (x in child) {
+        promises.push(await new Promise(  function (resolve, reject) {
+            //get child event array
+            var query = [];
+            for (var i = 0; i < child[x].events.length; i++) {
+                query.push(new mongoose.Types.ObjectId(child[x].events[i].id));
+            }
+            //Find on database
+            EventData.find({
+                '_id': {$in: query}
+            }, function (err, docs) {
+                if (err) reject();
+                //console.log(docs);
+                var events = [];
+                for (i in docs) {
+                    events.push(docs[i]._doc);
+                }
+                childEvents.push(events);
+                resolve('child : ' + x + ' loop\npushed: ' + events);
+            });
+
+        }));
+    }
+    Promise.all(promises)
+        .then(function (value) {
+            //console.log(value);
+            return childEvents;
+        });
+
 };
 

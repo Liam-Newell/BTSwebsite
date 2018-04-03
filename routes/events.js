@@ -6,6 +6,7 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
+var async = require("async");
 
 //For mongoDB
 var mongoose = require('mongoose');
@@ -76,7 +77,7 @@ router.post('/registerevent', function (req, res, next) {
     var eventId = req.body.id; //gets selected child id from event form
 
     Controller.registerChildForEvent(req, function (err,results) {
-        if(err) throw err;
+        if(err) alert(err);
         console.log(results);
     });
 
@@ -210,6 +211,68 @@ router.post('/updateEvent', function (req, res, next) {
 //MINAS ADDED CODE.
 router.get('/eventlist', function (req, res, next) {
 
+
+    //LIST OF EVENTS CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
+    // if(req.user)
+    // {
+    //     for (l in req.user.events) {
+    //         var o = req.user.events[l].toString();
+    //         eventQuery.push(new mongoose.Types.ObjectId(o));
+    //     }/*
+    //     for (l in req.user.children) {
+    //         var o = req.user.children[l].toString();
+    //         console.log(o);
+    //         childQuery.push(new mongoose.Types.ObjectId(o));
+    //     }
+    //     console.log(childQuery);*/
+    //     //Child Getter
+    //     Child.find({
+    //         '_id': {$in: children}
+    //     }, function (err, docs) {
+    //         console.log(docs);
+    //         for (i in docs) {
+    //             childrenInfo.push(docs[i]._doc);
+    //         }
+    //         //Getting event from child
+    //         childEvents = new Array(childrenInfo.length);
+    //         for (var y = 0; y < childEvents; y++)
+    //         {
+    //             childEvents[y] = new Array;
+    //         }
+    //         for (x in childrenInfo)
+    //         {
+    //             //get child event array
+    //             var c = childrenInfo[x].events;
+    //             //Find on database
+    //             EventData.find({
+    //                 '_id': {$in: c}
+    //             }, function (err, docs) {
+    //                 console.log(docs);
+    //                 if (!monthpassed) {
+    //                     monthpassed = "january";
+    //                 }
+    //                 for (i in docs) {
+    //                     events.push(docs[i]._doc);
+    //                 }
+    //                 childEvents[x] = events;
+    //             });
+    //         }
+    //     });
+    //
+    //     /*EventData.find({
+    //         '_id': {$in: eventQuery}
+    //     }, function (err, docs) {
+    //         console.log(docs);
+    //
+    //         if (!monthpassed) {
+    //             monthpassed = "january";
+    //         }
+    //
+    //         for (i in docs) {
+    //             events.push(docs[i]._doc);
+    //         }
+    //     });*/
+
     var monthpassed = req.query.id;
     var eventQuery = [];
     var events = [];
@@ -219,72 +282,33 @@ router.get('/eventlist', function (req, res, next) {
     var childEvents = [];
     children = req.user.children;
     console.log("CHILDREN " + children + " --END");
-    //LIST OF EVENTS CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(req.user)
-    {
-        for (l in req.user.events) {
-            var o = req.user.events[l].toString();
-            eventQuery.push(new mongoose.Types.ObjectId(o));
-        }/*
-        for (l in req.user.children) {
-            var o = req.user.children[l].toString();
-            console.log(o);
-            childQuery.push(new mongoose.Types.ObjectId(o));
-        }
-        console.log(childQuery);*/
-        //Child Getter
-        Child.find({
-            '_id': {$in: children}
-        }, function (err, docs) {
-            console.log(docs);
-            for (i in docs) {
-                childrenInfo.push(docs[i]._doc);
-            }
-            //Getting event from child
-            childEvents = new Array(childrenInfo.length);
-            for (var y = 0; y < childEvents; y++)
-            {
-                childEvents[y] = new Array;
-            }
-            for (x in childrenInfo)
-            {
-                //get child event array
-                var c = childrenInfo[x].events;
-                //Find on database
-                EventData.find({
-                    '_id': {$in: c}
-                }, function (err, docs) {
-                    console.log(docs);
-                    if (!monthpassed) {
-                        monthpassed = "january";
-                    }
-                    for (i in docs) {
-                        events.push(docs[i]._doc);
-                    }
-                    childEvents[x] = events;
-                });
-            }
+    var promise1 = new Promise(function(resolve,reject) {
+        Child.listChildren(req.user._doc, function (err, list) {
+            if (err) throw err;
+            childQuery = list;
+            resolve()
         });
+    });
+    promise1.then(async function() {
+        var eventList = await EventData.getChildEvents(childQuery);
+        console.log(docs);
+        var events = [];
+        for (i in docs) {
+            events.push(docs[i]._doc);
+        }
+        childEvents.push(events);
+        //resolve('child : ' + x + ' loop\npushed: ' + events);
+        if(eventList)
+            res.render('eventlist', {eventlist: childEvents, output:monthpassed, user: req.user.username});
 
-        /*EventData.find({
-            '_id': {$in: eventQuery}
-        }, function (err, docs) {
-            console.log(docs);
+    });
 
-            if (!monthpassed) {
-                monthpassed = "january";
-            }
 
-            for (i in docs) {
-                events.push(docs[i]._doc);
-            }
-        });*/
-        res.render('eventlist', {eventlist: childEvents, output:monthpassed, user: req.user.username});
-    }
-    else
-    {
-        res.redirect('/');
-    }
+    // }
+    // else
+    // {
+    //     res.redirect('/');
+    // }
 });
 
 router.get('/removeChildEvent/:id', function(req, res, next){
