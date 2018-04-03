@@ -131,7 +131,7 @@
                     {{# each info}}
 
 
-                    <a href="javascript:void(0)" onclick="toggle_visibility('popup-box',1);"><div class="event">
+                    <a href="javascript:void(0)" onclick="toggle_visibility('{{this._id}}',1);"><div class="event">
                                 <div class="event-desc">
                                     {{this.title}}
                                     <br>
@@ -142,7 +142,7 @@
                                 </div>
 
                                 <!--Code for popup box-->
-                                <div id="popup-box" class="popup-position">
+                                <div id="{{this._id}}" class="popup-position">
                                     <div id="popup-wrapper">
 
                                         <div id="popup-container">
@@ -187,7 +187,7 @@
 
                                             <br>
                                             {{/if}}
-                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('popup-box',0)"><button >Close Pop-Up</button ></a> </p>
+                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('{{this._id}}',0)"><button >Close Pop-Up</button ></a> </p>
 
                                         </div>
                                     </div>

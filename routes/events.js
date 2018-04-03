@@ -112,6 +112,7 @@ router.post('/sendEmail/:id', function (req, res, next) {
 
     var subject  = req.body.subject;
     var text = req.body.text;
+
     //PLACEHOLDER
     emails.push('mnashed333@hotmail.com');
 
