@@ -30,7 +30,7 @@
         <p>Write what you want to be sent to people that are enrolled in this event!</p>
     </div>
 
-    <form method="post" role="form" action="sendEmail" id="sendEmail" class="login-form form-horizontal">
+    <form method="post" role="form" action="/events/sendEmail/{{eventId}}" id="sendEmail" class="login-form form-horizontal">
         <div class="form-group">
             <label class="col-sm-4">Subject</label>
             <div class="col-sm-8">
@@ -48,7 +48,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-8">
-                <button type="submit" id="sendEmail" class="login btn btn-primary">Send</button>
+                <button type="submit" id="sendEmail}" class="login btn btn-primary">Send</button>
             </div>
         </div>
     </form>

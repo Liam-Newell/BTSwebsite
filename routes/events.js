@@ -27,15 +27,24 @@ router.get('/createevent', function(req, res, next) {
 });
 
 //Router for the sendEmail.hbs page
-router.get('/sendEmailPage', function(req, res, next){
-
-
-    res.render ('sendEmail');
+router.get('/sendEmailPage/:id', function(req, res, next){
+    res.render ('sendEmail', {eventId: req.params.id});
 });
 
 //Router to actually send the email than redirect back to calender
-router.post('/sendEmail', function (req, res, next) {
+router.post('/sendEmail/:id', function (req, res, next) {
 
+    //takes eventId
+    var eventId = encodeURIComponent(req.params.id);
+    var event;
+    EventData.findOne({_id: eventId}).then(function (err, doc) {
+        if (err) throw err;
+        else {
+            event = doc;
+            console.log("EVENT: " + event);
+        }
+    });
+    console.log("EVENT: " + event);
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -47,11 +56,13 @@ router.post('/sendEmail', function (req, res, next) {
     var subject  = req.body.subject;
     var text = req.body.text;
 
+    //gather recepients for registered children
+    //add variable of type
 
 
     const mailOptions = {
         from: 'bts630churchcentre@gmail.com', // sender address
-        to: 'mnashed333@hotmail.com', // list of receivers
+        to: 'mnashed333@hotmail.com', // list of receivers. Only sends to mina
         subject: subject, // Subject line
         html: text// plain text body
     };
@@ -64,7 +75,7 @@ router.post('/sendEmail', function (req, res, next) {
             console.log(info);
     });
 
-    res.redirect('calendar');
+    res.redirect('/events/calendar');
 });
 
 router.get('/calendar/:id', function(req,res, next){
