@@ -30,11 +30,14 @@ router.get('/registerchild', function (req, res, next) {
 //Post: register child (registerchild.hbs).
 router.post('/registerchild', function (req, res, next) {
     var user = req.user;
+
     var item = {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         birthday: req.body.birthday,
-        grade: req.body.grade
+        grade: req.body.grade,
+        //Parent ID
+        parent: req.user._id
     };
 
     if(req.user){

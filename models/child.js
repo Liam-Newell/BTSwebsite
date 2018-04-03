@@ -9,7 +9,8 @@ var childDataSchema = new Schema({
     firstname:      {type: String, required: true},
     lastname:       {type: String, required: true},
     grade:          {type: Number, min: 1, max: 8, required: true},
-    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}] //an array of event ObjectID's referencing Event collection
+    events:         [{type: Schema.Types.ObjectId, ref: 'Event'}], //an array of event ObjectID's referencing Event collection
+    parent:         {type: Schema.Types.ObjectId, ref: 'User', required: true} // a single ObjectsID's referencing a User
 }, {collection: 'children'});
 
 //Instantiation of "Child" schema

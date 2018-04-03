@@ -28,7 +28,9 @@ router.get('/createevent', function(req, res, next) {
 
 //Router for the sendEmail.hbs page
 router.get('/sendEmailPage', function(req, res, next){
-   res.render ('sendEmail');
+
+
+    res.render ('sendEmail');
 });
 
 //Router to actually send the email than redirect back to calender
@@ -44,6 +46,8 @@ router.post('/sendEmail', function (req, res, next) {
 
     var subject  = req.body.subject;
     var text = req.body.text;
+
+
 
     const mailOptions = {
         from: 'bts630churchcentre@gmail.com', // sender address
