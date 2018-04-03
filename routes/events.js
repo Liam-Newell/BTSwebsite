@@ -278,7 +278,7 @@ router.get('/eventlist', function (req, res, next) {
             childEvents = new Array(childrenInfo.length);
             for (var y = 0; y < childEvents; y++)
             {
-                childEvents[y] = new Array;
+                childEvents[y] = new Array();
             }
             for (x in childrenInfo)
             {
@@ -313,7 +313,7 @@ router.get('/eventlist', function (req, res, next) {
                 events.push(docs[i]._doc);
             }
         });*/
-        res.render('eventlist', {eventlist: childEvents, output:monthpassed, user: req.user.username});
+        res.render('eventlist', {children: childrenInfo, eventlist: childEvents, output:monthpassed, user: req.user.username});
     }
     else
     {
