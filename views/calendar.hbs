@@ -34,7 +34,7 @@
 <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/{{redirect}}">Church Centre</a>
+            <a class="navbar-brand" href="/">Church Centre</a>
         </div>
         <ul class="nav navbar-nav">
             <li class="dropdown">
@@ -172,8 +172,10 @@
                                             <!-- BUTTON FOR DELETING EVENT ONLY SHOWS WITH ADMIN ACCOUNT-->
                                             {{# if ../../isAdmin}}
                                             <form method="post" id="deleteevent" name="deleteevent" action="deleteevent">
-                                                    <button type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Delete Event</button >
-                                                </form>
+                                                <button type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Delete Event</button >
+                                            </form>
+
+                                                <button><a href="sendEmailPage">Send Email</a></button>
 
                                             <br>
                                             {{/if}}

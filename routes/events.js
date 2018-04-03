@@ -11,6 +11,10 @@ var flash = require('connect-flash');
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 
+//For nodemailer
+var nodemailer = require('nodemailer');
+var xoauth2 = require('xoauth2');
+
 //Models
 var User = require('../models/user');
 var Child = require('../models/child');
@@ -20,6 +24,43 @@ var Controller = require('../models/controller');
 /* GET users listing. */
 router.get('/createevent', function(req, res, next) {
     res.render('createevent');
+});
+
+//Router for the sendEmail.hbs page
+router.get('/sendEmailPage', function(req, res, next){
+   res.render ('sendEmail');
+});
+
+router.post('/sendEmail', function (req, res, next) {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            xoauth2: xoauth2.createXOAuth2Generator({
+                user: 'bts630churchcentre@gmail.com', //email account being used to send the email
+                clientId: '486906374841-afj6rt79vk13qn0d136omn719vqaq8t4.apps.googleusercontent.com', //Generated from Google Mail API
+                clientSecret: '9GEkXHi55r_fW42DoZMQtPwM', //Generated from Google Mail API
+                refreshToken: '1/Fdu5sVJiWLun7RMWdXMdD6x9MnCC-ebjIG1IFd5gnKs' //Genereated from Google OAuth 2.0 Playground
+            })
+        }
+    })
+
+    var mailOptions = {
+        from: 'BTS630 <bts630churchcentre@gmail.com>', //email account being used to send the email
+        to: 'mnashed333@hotmail.com', //email account that is getting the sent email
+        subject: 'Test Email Sending', //Subject of sent email
+        text: 'test text to be sent' //Text in the email
+    }
+
+    //Function to actually send the email
+    transporter.sendMail(mailOptions, function (err, res) {
+        if(err){
+            console.log('Error');
+        }else{
+            console.log('Email Sent');
+        }
+    })
+
+    res.redirect('calendar');
 });
 
 router.get('/calendar/:id', function(req,res, next){
@@ -377,5 +418,7 @@ router.get('/eventlist/:id', function(req,res, next){
 });
 */
 
+
+//Router for the sendEmail.hbs page
 
 module.exports = router;

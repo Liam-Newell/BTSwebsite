@@ -11,6 +11,11 @@ var flash = require('connect-flash');
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
 
+//For nodemailer
+var nodemailer = require('nodemailer');
+var xoauth2 = require('xoauth2');
+
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var child = require('./routes/child');

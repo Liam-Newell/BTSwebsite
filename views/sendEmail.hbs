@@ -1,0 +1,50 @@
+<html>
+<head>
+    <title></title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/stylesheets/button.css"/>
+    <link rel="stylesheet" href="/stylesheets/clicktoshow.css"/>
+
+</head>
+<body>
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Church Center</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="calendar">Calendar</a></li>
+        </ul>
+    </div>
+</nav>
+<!--Navigation bar -->
+<br/><br/>
+<p>
+    {{errors}}
+</p>
+<div class="container">
+    <div class="page-header">
+        <h1>Send Email</h1>
+        <p>Write what you want to be sent to people that are enrolled in this event!</p>
+    </div>
+
+    <form method="post" role="form" action="sendEmail" id="sendEmail" class="login-form form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-4">Email Text</label>
+            <div class="col-sm-8">
+                <textarea rows="4" cols="50" name="info" required="required" form="sendEmail"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+                <button type="submit" id="sendEmail" class="login btn btn-primary">Send</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+</body>
+</html>
