@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcryptjs');
 
+
 mongoose.connect('localhost:27017/test');
 
 //Child schema

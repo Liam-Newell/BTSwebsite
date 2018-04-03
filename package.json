@@ -10,6 +10,7 @@
     "asserts": "^4.0.2",
     "bcrpyt": "^2.0.0",
     "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.1",
     "body-parser": "~1.18.2",
     "connect-flash": "*",
     "cookie-parser": "~1.4.3",

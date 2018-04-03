@@ -6,6 +6,7 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
+Promise = require('bluebird');
 
 //For mongoDB
 var mongoose = require('mongoose');
@@ -23,14 +24,16 @@ router.get('/createevent', function(req, res, next) {
 });
 
 router.get('/updateEvent/:id', function(req, res, next) {
-    var title = EventData.findById({id_: req.params.id}).populate('title').exec(function(err, title){ if(err) throw err;});
-    var date = EventData.findById({id_: req.params.id}).populate('date');
-    var info = EventData.findById({id_: req.params.id}).populate('info');
-    var grade = EventData.findById({id_: req.params.id}).populate('grade');
-    var limit = EventData.findById({id_: req.params.id}).populate('limit');
-    res.render('updateEvent', {eventId: req.params.id, t: title, d: date, i: info, g: grade, l: limit});
+    var eventId = encodeURIComponent(req.params.id);
+    var query = EventData.findOne({_id: eventId});
+    query.exec(function(err, data){
+        if(err) throw err;
+        else {
+            var date = data.date.toISOString().substring(0, 10);
+            res.render('updateEvent', {eventId: req.params.id, t: data.title, d: date, i: data.info, g: data.grade, l: data.limit, ti: data.time});
+        }
+    });
 });
-
 
 router.get('/calendar/:id', function(req,res, next){
     var string = encodeURIComponent(id);
@@ -39,6 +42,7 @@ router.get('/calendar/:id', function(req,res, next){
 
 router.post('/viewevent', function (req, res, next) {
     var event = req.body.eventid;
+
     var userDat = req.session;
     var childQuery = [];
     var children = [];
@@ -204,17 +208,14 @@ router.post('/createevent', function (req, res, next) {
 });
 
 router.post('/updateEvent/:id', function (req, res, next) {
-//    EventData.UpdateEvent(req,function (err, result) {
-//        if(err) throw err;
-//        console.log(result);
-
     var eventId = req.params.id;
         var event = {
             title: req.body.title,
             date: req.body.eventdate,
-            info: req.body.info,
-            grade: req.body.grade,
+            time: req.body.ti,
             limit: req.body.limit,
+            grade: req.body.grade,
+            info: req.body.in
         };
     EventData.findById({_id: eventId},
         function(err, event){
@@ -228,9 +229,10 @@ router.post('/updateEvent/:id', function (req, res, next) {
         {$set: {
             title: req.body.title,
             date: req.body.eventdate,
-            info: req.body.info,
-            grade: req.body.grade,
+            time: req.body.ti,
             limit: req.body.limit,
+            grade: req.body.grade,
+            info: req.body.in
             }
         },function(err,event) {
                 if (err) throw err;
