@@ -69,71 +69,76 @@ router.post('/sendEmail/:id', function (req, res, next) {
     console.log("EVENT: " + event);
     console.log ("REGISTERED " + registered);
 
-    //Get registered children
-    Child.find({
-        '_id': {$in: children}
-    }, function(err, docs){
-        console.log(docs);
+    // //Get registered children
+    // Child.find({
+    //     '_id': {$in: children}
+    // }, function(err, docs){
+    //     console.log(docs);
+    //
+    //     for (i in docs) {
+    //         children.push(docs[i]._doc);
+    //     }
+    // });
+    //
+    //
+    // //Get children's parents
+    // for(var x = 0; x < children.length; x++)
+    // {
+    //     parentsId = children[x].parentId;
+    // }
+    // User.find({
+    //     '_id': {$in: parentsId}
+    // }, function(err, docs){
+    //     console.log(docs);
+    //
+    //     for (i in docs) {
+    //         parents.push(docs[i]._doc);
+    //         console.log("PARENTS:" + parents);
+    //     }
+    // });
+    //
+    // //get emails
+    // for(var x = 0; x < parentsId.length; x++)
+    // {
+    //     emails = parents[x].email;
+    // }
+    Controller.massEventEmail(eventId,function(err, emailList){
+        if(emailList){
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'bts630churchcentre@gmail.com',
+                    pass: 'churchcentre'
+                }
+            });
 
-        for (i in docs) {
-            children.push(docs[i]._doc);
+            var subject  = req.body.subject;
+            var text = req.body.text;
+
+            //PLACEHOLDER
+            emailList.push('mnashed333@hotmail.com');
+
+            //gather recepients for registered children
+            //add variable of type
+
+
+            const mailOptions = {
+                from: 'bts630churchcentre@gmail.com', // sender address
+                to: emailList, // list of recepients. takes in an array of emails
+                subject: subject, // Subject line
+                html: text// plain text body
+            };
+
+            //Function to actually send the email
+            transporter.sendMail(mailOptions, function (err, info) {
+                if(err)
+                    console.log(err)
+                else
+                    console.log(info);
+            });
         }
     });
 
-
-    //Get children's parents
-    for(var x = 0; x < children.length; x++)
-    {
-        parentsId = children[x].parentId;
-    }
-    User.find({
-        '_id': {$in: parentsId}
-    }, function(err, docs){
-        console.log(docs);
-
-        for (i in docs) {
-            parents.push(docs[i]._doc);
-            console.log("PARENTS:" + parents);
-        }
-    });
-
-    //get emails
-    for(var x = 0; x < parentsId.length; x++)
-    {
-        emails = parents[x].email;
-    }
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'bts630churchcentre@gmail.com',
-            pass: 'churchcentre'
-        }
-    });
-
-    var subject  = req.body.subject;
-    var text = req.body.text;
-
-    //PLACEHOLDER
-    emails.push('mnashed333@hotmail.com');
-
-    //gather recepients for registered children
-    //add variable of type
-
-
-    const mailOptions = {
-        from: 'bts630churchcentre@gmail.com', // sender address
-        to: emails, // list of recepients. takes in an array of emails
-        subject: subject, // Subject line
-        html: text// plain text body
-    };
-
-    //Function to actually send the email
-    transporter.sendMail(mailOptions, function (err, info) {
-        if(err)
-            console.log(err)
-        else
-            console.log(info);
-    });
 
     res.redirect('/events/calendar');
 });

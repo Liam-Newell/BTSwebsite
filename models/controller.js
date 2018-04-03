@@ -3,6 +3,8 @@ var User = require('../models/user');
 var Child = require('../models/child');
 var EventData = require('../models/event');
 
+//mongoose
+var mongoose = require('mongoose');
 
 module.exports.registerChildForEvent = function (req,callback) {
     var item = req.user._doc;
@@ -49,32 +51,52 @@ module.exports.registerChildForEvent = function (req,callback) {
 module.exports.massEventEmail = function(eventid, callback){
     var childList = [];
     var parentList = [];
+    var emailList = [];
+    var eventquery = new mongoose.Types.ObjectId(eventid)
     var promise1 = new Promise(function(resolve, reject){
-        EventData.findOne(eventid, function (err, currEvent) {
-            if(err) callback('failed in the event query for mass email')
+        EventData.findOne(eventquery, function (err, currEvent) {
+            if(err)
+            {
+                callback('failed in the event query for mass email');
+                reject();
+            }
             childList = currEvent.registered;
+            resolve();
         });
     }).then(function () {
-        var childQuery = [];
-        for (var i = 0; i < childList.length; i++) {
-            var o = childList[i];
-            childQuery.push(new mongoose.Types.ObjectId(o));
-        }
         var promise = new Promise(function (resolve, reject){
             Child.find({
-            '_id': {$in: childQuery}
-        }, function (err, docs) {
+            '_id': {$in: childList}
+            }, function (err, docs) {
             if(err) callback('failed inside of child query for mass email',null);
             console.log(docs);
             for (i in docs) {
                 parentList.push(docs[i]._doc.parent);
             }
+            resolve();
             });
         }).then(function(){
             var promise2 = new Promise(function(resolve, reject){
+                User.find({
+                    '_id': {$in: parentList}
+                }, function (err, docs) {
+                    if(err) {
+                        callback('failed inside of user query for mass email',null);
+                        reject();
+                    }
+                    console.log(docs);
+                    for (var i = 0; i < docs.length;i++) {
+                        emailList.push(docs[i]._doc.email);
+                    }
 
-            })
+                    resolve();
+                    callback(null,emailList);
+                });
+            });
+        }).then(function(){
+
         });
     });
+    callback(null,null)
 
 };
