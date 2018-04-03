@@ -42,11 +42,14 @@ router.post('/sendEmail', function (req, res, next) {
         }
     });
 
+    var subject  = req.body.subject;
+    var text = req.body.text;
+
     const mailOptions = {
         from: 'bts630churchcentre@gmail.com', // sender address
         to: 'mnashed333@hotmail.com', // list of receivers
-        subject: 'Subject of your email', // Subject line
-        html: '<p>Your html here</p>'// plain text body
+        subject: subject, // Subject line
+        html: text// plain text body
     };
 
     //Function to actually send the email
