@@ -29,6 +29,7 @@ router.get('/updateEvent/:id', function(req, res, next) {
     query.exec(function(err, data){
         if(err) throw err;
         else {
+            //comment
             var date = data.date.toISOString().substring(0, 10);
             res.render('updateEvent', {eventId: req.params.id, t: data.title, d: date, i: data.info, g: data.grade, l: data.limit, ti: data.time});
         }
