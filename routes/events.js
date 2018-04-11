@@ -6,11 +6,15 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
-Promise = require('bluebird');
+//Promise = require('bluebird');
 
 //For mongoDB
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
+
+//For nodemailer
+var nodemailer = require('nodemailer');
+//var xoauth2 = require('xoauth2');
 
 //Models
 var User = require('../models/user');
@@ -34,6 +38,109 @@ router.get('/updateEvent/:id', function(req, res, next) {
             res.render('updateEvent', {eventId: req.params.id, t: data.title, d: date, i: data.info, g: data.grade, l: data.limit, ti: data.time});
         }
     });
+});
+
+//Router for the sendEmail.hbs page
+router.get('/sendEmailPage/:id', function(req, res, next){
+    res.render ('sendEmail', {eventId: req.params.id});
+});
+
+//Router to actually send the email than redirect back to calender
+router.post('/sendEmail/:id', function (req, res, next) {
+
+    //takes eventId
+    var eventId = encodeURIComponent(req.params.id);
+    var event;
+    var children = [];
+    var parentsId = [];
+    var emails = [];
+    var parents = [];
+    var registered = [];
+
+    //Get Event
+    EventData.findOne({_id: eventId}).then(function (err, doc) {
+        if (err) throw err;
+        else {
+            event = doc;
+            console.log("EVENT: " + event);
+            registered = event.registered;
+        }
+    });
+    console.log("EVENT: " + event);
+    console.log ("REGISTERED " + registered);
+
+    // //Get registered children
+    // Child.find({
+    //     '_id': {$in: children}
+    // }, function(err, docs){
+    //     console.log(docs);
+    //
+    //     for (i in docs) {
+    //         children.push(docs[i]._doc);
+    //     }
+    // });
+    //
+    //
+    // //Get children's parents
+    // for(var x = 0; x < children.length; x++)
+    // {
+    //     parentsId = children[x].parentId;
+    // }
+    // User.find({
+    //     '_id': {$in: parentsId}
+    // }, function(err, docs){
+    //     console.log(docs);
+    //
+    //     for (i in docs) {
+    //         parents.push(docs[i]._doc);
+    //         console.log("PARENTS:" + parents);
+    //     }
+    // });
+    //
+    // //get emails
+    // for(var x = 0; x < parentsId.length; x++)
+    // {
+    //     emails = parents[x].email;
+    // }
+    Controller.massEventEmail(eventId,function(err, emailList){
+        if(emailList){
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'bts630churchcentre@gmail.com',
+                    pass: 'churchcentre'
+                }
+            });
+
+            var subject  = req.body.subject;
+            var text = req.body.text;
+
+            //PLACEHOLDER
+            emailList.push('mnashed333@hotmail.com');
+
+            //gather recepients for registered children
+            //add variable of type
+
+
+            const mailOptions = {
+                from: 'bts630churchcentre@gmail.com', // sender address
+                to: emailList, // list of recepients. takes in an array of emails
+                subject: subject, // Subject line
+                html: text// plain text body
+            };
+
+            //Function to actually send the email
+            transporter.sendMail(mailOptions, function (err, info) {
+                if(err)
+                    console.log(err)
+                else
+                    console.log(info);
+            });
+        }
+    });
+
+
+    res.redirect('/events/calendar');
 });
 
 router.get('/calendar/:id', function(req,res, next){
@@ -246,82 +353,39 @@ router.post('/updateEvent/:id', function (req, res, next) {
 router.get('/eventlist', function (req, res, next) {
 
     var monthpassed = req.query.id;
-    var eventQuery = [];
-    var events = [];
-    var childrenInfo = [];
     var childQuery = [];
-    var children = [];
-    var childEvents = [];
     children = req.user.children;
     console.log("CHILDREN " + children + " --END");
-    //LIST OF EVENTS CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(req.user)
-    {
-        for (l in req.user.events) {
-            var o = req.user.events[l].toString();
-            eventQuery.push(new mongoose.Types.ObjectId(o));
-        }/*
-        for (l in req.user.children) {
-            var o = req.user.children[l].toString();
-            console.log(o);
-            childQuery.push(new mongoose.Types.ObjectId(o));
-        }
-        console.log(childQuery);*/
-        //Child Getter
-        Child.find({
-            '_id': {$in: children}
-        }, function (err, docs) {
-            console.log(docs);
-            for (i in docs) {
-                childrenInfo.push(docs[i]._doc);
+    var promise1 = new Promise(function(resolve,reject) {
+        Child.listChildren(req.user._doc, function (err, list) {
+            if (err) throw err;
+            childQuery = list;
+            resolve()
+        });
+    });
+    promise1.then(function() {
+        EventData.getChildEvents(childQuery, function (err,eventlist,child) {
+            if(err) alert(err);
+            if(eventlist) {
+                console.log(eventlist);
+                var events = [];
+                for (i in eventlist) {
+                    events.push(i._doc);
+                }
+                for (var i = 0; i < eventlist.length; i++){
+                    child[i].event = eventlist[i];
+                }
+
+                //resolve('child : ' + x + ' loop\npushed: ' + events);
+                res.render('eventlist', {childlist: child, output: monthpassed, user: req.user.username});
             }
-            //Getting event from child
-            childEvents = new Array(childrenInfo.length);
-            for (var y = 0; y < childEvents; y++)
-            {
-                childEvents[y] = new Array();
-            }
-            for (x in childrenInfo)
-            {
-                //get child event array
-                var c = childrenInfo[x].events;
-                //Find on database
-                EventData.find({
-                    '_id': {$in: c}
-                }, function (err, docs) {
-                    console.log(docs);
-                    if (!monthpassed) {
-                        monthpassed = "january";
-                    }
-                    for (i in docs) {
-                        events.push(docs[i]._doc);
-                    }
-                    childEvents[x] = events;
-                });
-            }
+
         });
 
-        /*EventData.find({
-            '_id': {$in: eventQuery}
-        }, function (err, docs) {
-            console.log(docs);
 
-            if (!monthpassed) {
-                monthpassed = "january";
-            }
+    });
 
-            for (i in docs) {
-                events.push(docs[i]._doc);
-            }
-        });*/
-        res.render('eventlist', {children: childrenInfo, eventlist: childEvents, output:monthpassed, user: req.user.username});
-    }
-    else
-    {
-        res.redirect('/');
-    }
 });
-
 router.get('/removeChildEvent/:id', function(req, res, next){
     var eventId = encodeURIComponent(req.params.id);
     var userData = req.session.userDat;

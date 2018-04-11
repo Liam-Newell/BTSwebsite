@@ -34,7 +34,8 @@ router.post('/registerchild', function (req, res, next) {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         birthday: req.body.birthday,
-        grade: req.body.grade
+        grade: req.body.grade,
+        parent: req.user._id
     };
 
     if(req.user){
