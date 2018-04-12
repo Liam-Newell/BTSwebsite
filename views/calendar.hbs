@@ -66,6 +66,12 @@
     </div>
 </nav>
 
+{{#if errors}}
+    {{#each errors}}
+        <div class ="alert alert-danger">{{msg}}</div>
+    {{/each}}
+{{/if}}
+
 <!--Calander -->
 
 <div id="calendar-wrap">
@@ -129,16 +135,11 @@
 
                 {{#if this.info}}
                     {{# each info}}
-
-
                     <a href="javascript:void(0)" onclick="toggle_visibility('{{this._id}}',1);"><div class="event">
                                 <div class="event-desc">
                                     {{this.title}}
-                                    <br>
+                                    <br><br>
                                     {{this.info}}
-                                </div>
-                                <div class="event-time">
-                                    {{this.date}}
                                 </div>
 
                                 <!--Code for popup box-->
@@ -146,23 +147,38 @@
                                     <div id="popup-wrapper">
 
                                         <div id="popup-container">
+                                            <div style="color: black">
+                                            <h3 style="padding-left: 70px;">Register Child for Event</h3>
+                                                <h5>{{this.title}}</h5>
+                                                Details: {{this.info}}
+                                                <br><br>
+                                                This event is for grades: {{this.gradeLow}} - {{this.gradeHigh}}
+                                                <br><br>
+                                                Availability: {{this.registered.length}} / {{this.limit}} spots remaining
+                                                <br><br>
+                                            </div>
 
-                                            <h3>Choose a child to register!</h3>
-                                            {{this.title}}
-                                            <br>
-                                            {{this.info}}
-                                            <br>
 
                                             <form method="post" id="eventregister" name="eventregister" action="registerevent">
 
                                                 <input type="hidden" type="text" id="id" name="id" value="{{this._id}}">
-                                                    <select name="selectChild">
+                                                <input type="hidden" id="registered" name="registered" value="{{this.registered}}">
+                                                <input type="hidden" id="registeredCount" name="registeredCount" value="{{this.registeredCount}}">
+                                                <input type="hidden" id="limit" name="limit" value="{{this.limit}}">
+                                                <input type="hidden" id="gradeLow" name="gradeLow" value="{{this.gradeLow}}">
+                                                <input type="hidden" id="gradeHigh" name="gradeHigh" value="{{this.gradeHigh}}">
+
+                                                <div  style="color: black;">Child:
+                                                    <select style="color: black;" name="selectChild">
                                                         Choose a child
                                                         {{# each ../../childList }}
                                                             <option style="color: black;" value="{{this._id}}">{{this.firstname}} {{this.lastname}}</option>
                                                         {{/each}}
                                                     </select>
-                                                <button class="login btn btn-primary"type="submit" id="register">register for event</button>
+                                                    <button class="login btn btn-primary" type="submit" id="grade" name="grade" value="{{this.grade}}">register</button>
+                                                </div>
+
+
 
                                             </form>
 
@@ -170,24 +186,24 @@
                                             <!-- BUTTON FOR DELETING EVENT ONLY SHOWS WITH ADMIN ACCOUNT-->
                                             {{# if ../../isAdmin}}
                                             <form method="get" id="updateEvent" name="updateEvent" action="/events/updateEvent/{{this._id}}">
-                                                <button type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Update Event</button >
+                                                <button style="color: black;" type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Update Event</button >
                                             </form>
 
                                             <br>
 
                                             <form method="post" id="deleteevent" name="deleteevent" action="deleteevent">
-                                                    <button type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Delete Event</button >
+                                                    <button style="color: black;" type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Delete Event</button >
                                                 </form>
 
                                                 <br>
 
-                                                <button><a href="sendEmailPage/{{this._id}}">Send Email</a></button>
+                                                <button><a style="color: black;" href="sendEmailPage/{{this._id}}">Send Email</a></button>
 
                                                 <br>
 
                                             <br>
                                             {{/if}}
-                                            <p><a href="javascript:void(0)" onclick="toggle_visibility('{{this._id}}',0)"><button >Close Pop-Up</button ></a> </p>
+                                            <p ><a  href="javascript:void(0)" onclick="toggle_visibility('{{this._id}}',0)"><button style="color: black;">Close Pop-Up</button ></a> </p>
 
                                         </div>
                                     </div>

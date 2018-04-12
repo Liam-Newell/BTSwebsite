@@ -102,24 +102,23 @@ router.post('/register', function (req, res, next) {
 /** Login & Logout**/
 //passport localstrategy to validate user login against database
 passport.use(new LocalStrategy(
-    function (username, password, done) {
-        User.getUserByUsername(username, function (err, user) {
-            if (err) throw err;
-            if (!user) {
-                return done(null, false, "Unknown User");
+    function(username, password, done) {
+        User.getUserByUsername(username, function(err, user){
+            if(err) throw err;
+            if(!user){
+                return done(null, false, {message: 'Unknown User'});
             }
-            User.comparePassword(password, user.password, function (err, isMatch) {
-                if (err) throw err;
-                if (isMatch) {
+
+            User.comparePassword(password, user.password, function(err, isMatch){
+                if(err) throw err;
+                if(isMatch){
                     return done(null, user);
                 } else {
-                    console.log('bad password');
-                    return done(null, false, {failureFlash: 'Invalid password'});
+                    return done(null, false, {message: 'Invalid password'});
                 }
-            })
-        })
-    }
-));
+            });
+        });
+    }));
 
 //serializes user's id in the session
 passport.serializeUser(function (user, done) {

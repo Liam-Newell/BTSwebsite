@@ -7,7 +7,8 @@ mongoose.connect('localhost:27017/test');
 var eventdataschema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
-    grade: {type: Number, required: true},
+    gradeLow: {type: Number, required: false},
+    gradeHigh: {type: Number, required: false},
     limit: {type: Number, required: false},
     info: {type: String, required: true},
     registered: [{type: Schema.Types.ObjectId, ref: 'Child'}]
@@ -23,7 +24,8 @@ module.exports.CreateEvent = function (req,callback) {
         title: req.body.title,
         date: req.body.eventdate,
         info: req.body.info,
-        grade: req.body.grade,
+        gradeLow: req.body.gradeLow,
+        gradeHigh: req.body.gradeHigh,
         limit: req.body.limit,
     };
     var time = event.date + " " + req.body.time.toString();
@@ -41,7 +43,8 @@ module.exports.UpdateEvent = function (req,callback) {
         title: req.body.title,
         date: req.body.eventdate,
         info: req.body.info,
-        grade: req.body.grade,
+        gradeLow: req.body.gradeLow,
+        gradeHigh: req.body.gradeHigh,
         limit: req.body.limit,
     };
 
@@ -49,7 +52,8 @@ module.exports.UpdateEvent = function (req,callback) {
     req.checkBody('title', 'title is required').isAlphanumeric();
     req.checkBody('date', 'date is required').isAlphanumeric();
     req.checkBody('info', 'info is required').isAlphanumeric();
-    req.checkBody('grade', 'grade is required').isNumber();
+    req.checkBody('gradeLow', 'grade is required').isNumber();
+    req.checkBody('gradeHigh', 'grade is required').isNumber();
     req.checkBody('limit', 'Limit is required').isNumber();
 
     var errors = req.validationErrors();
