@@ -7,6 +7,7 @@ mongoose.connect('localhost:27017/test');
 var eventdataschema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
+    time: {type: String, required: true},
     gradeLow: {type: Number, required: false},
     gradeHigh: {type: Number, required: false},
     limit: {type: Number, required: false},
@@ -23,6 +24,7 @@ module.exports.CreateEvent = function (req,callback) {
     var event = {
         title: req.body.title,
         date: req.body.eventdate,
+        time: req.body.time,
         info: req.body.info,
         gradeLow: req.body.gradeLow,
         gradeHigh: req.body.gradeHigh,
@@ -35,43 +37,6 @@ module.exports.CreateEvent = function (req,callback) {
         if(err) callback(err,null);
         callback(null,'Event Was Added : \n' + event)
     });
-};
-
-module.exports.UpdateEvent = function (req,callback) {
-    //event object
-    var event = {
-        title: req.body.title,
-        date: req.body.eventdate,
-        info: req.body.info,
-        gradeLow: req.body.gradeLow,
-        gradeHigh: req.body.gradeHigh,
-        limit: req.body.limit,
-    };
-
-    //Validation of form fields
-    req.checkBody('title', 'title is required').isAlphanumeric();
-    req.checkBody('date', 'date is required').isAlphanumeric();
-    req.checkBody('info', 'info is required').isAlphanumeric();
-    req.checkBody('gradeLow', 'grade is required').isNumber();
-    req.checkBody('gradeHigh', 'grade is required').isNumber();
-    req.checkBody('limit', 'Limit is required').isNumber();
-
-    var errors = req.validationErrors();
-
-    if (errors) {
-        res.render('updateEvent', {
-            errors: errors
-        });
-    }
-    else {
-        var time = event.date + " " + req.body.time.toString();
-        event.date = time;
-        var data = new EventData(event);
-        data.save(err => {
-            if(err) callback(err,null);
-        callback(null, 'Event Was Added : \n' + event)
-        });
-    }
 };
 
 module.exports.getChildEvents = function (child,callback) {
