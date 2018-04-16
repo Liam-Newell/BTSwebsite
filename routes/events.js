@@ -136,8 +136,6 @@ router.post('/sendEmail/:id', function (req, res, next) {
             });
         }
     });
-
-
     res.redirect('/events/calendar');
 });
 

@@ -31,7 +31,7 @@ router.get('/userList', function (req, res, next) {
     User.find({}, function(err, users){
         if(err) throw err;
         else {
-            res.render('userList',{ userList: users});
+            res.render('userList',{ userList: users, isAdmin: req.user.isAdmin});
         }
     })
 });
