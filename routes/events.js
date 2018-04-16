@@ -187,25 +187,10 @@ router.get('/viewevent/:id', function(req, res, next){
 });
 
 router.post('/registerevent', function (req, res, next) {
-
-    var item = req.session.userDat;
-    //item.events.push(req.body.id);
-    //Query and update Child events array with event id
-    var childId = req.body.selectChild; //gets selected child id from event form
-    var eventId = req.body.id; //gets selected child id from event form
-    var registeredCount = Math.round(req.body.registered.length / 24)
-
-    if(registeredCount < req.body.limit){
-        //req.body.grade >= req.body.gradeLow && req.body.grade <= req.body.gradeHigh) {
-        Controller.registerChildForEvent(req, function (err, results) {
-            if (err) throw err;
-            console.log(results);
-        });
-    }
-    else{
-        //TODO need to get flash messaging in case that grade level is not met or class limit is full
-        console.log("NOPE!");
-    }
+    Controller.registerChildForEvent(req, function (err, results) {
+        if (err) throw err;
+        console.log(results);
+    });
 
     res.redirect('calendar');
 });
