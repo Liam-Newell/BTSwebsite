@@ -1,201 +1,174 @@
+//ADD-ONS SECTION
 var express = require('express');
+var asserts = require('asserts');
+var assert = require('assert');
 var router = express.Router();
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
+
+//For mongoDB
 var mongoose = require('mongoose');
 mongoose.connect('localhost:27017/test');
 var Schema = mongoose.Schema;
-//user schema
-var myModule = require('./index');
-var userDataSchema = myModule.userDataSchema;
-var User = mongoose.model("User", userDataSchema);
 
+//Models
+var User = require('../models/user');
 
-var eventdataschema = new Schema({
-    title: {type: String, required: true},
-    date: {type: Date, required: true},
-    info: {type: String, required: true}
-}, {collection: 'events'});
-//instantiate schema as models "User" and "Child"
+//ROUTER SECTION
 
-var EventData = mongoose.model('EventData', eventdataschema);
-
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-    res.render('Users/createevent');
+/** Register Account (Admin) **/
+//Get: register page (register.hbs)
+//checks if the user is a registered admin if so passes isAdmin=true to the form
+router.get('/adminregister', function(req, res, next){
+    if(req.user){res.render('register', {isAdmin: req.user.isAdmin});}
+    else{res.render('register');}
 });
-router.get('/calendar/:id', function(req,res, next){
-    var string = encodeURIComponent(id);
-    res.redirect('/calendar?id=' + string);
-});
-router.post('/viewevent', function (req, res, next) {
-    var event = req.body.eventid;
-    EventData.findOne({_id: event}).then(function (doc) {
-        res.render('Users/event', {info: doc});
-    });
-});
-router.get('/viewevent/:id', function(req, res, next){
-    var event = id;
-    EventData.findOne({_id: id}).then(function (doc) {
-        res.render('Users/event' , {info: doc});
-    });
 
-});
-router.post('/registerevent', function (req, res, next) {
-    var item = req.session.userDat;
-    item.events.push(req.body.id);
-    User.findByIdAndUpdate(item._id,
-        {"$push": {"events": req.body.id}},
-        {"new": true, "upsert": true},
-        function (err, managerevent) {
-            if (err) throw err;
-            console.log(managerevent);
+/** View All Users (Admin) **/
+//Get: childList page (childList.hbs)
+router.get('/userList', function (req, res, next) {
+    User.find({}, function(err, users){
+        if(err) throw err;
+        else {
+            res.render('userList',{ userList: users, isAdmin: req.user.isAdmin});
         }
-    );
-    var data = new User(item);
-    data.save();
-    req.session.userDat.events.push(req.body.id);
-    //When registered, user is redirected to calendar
-    res.redirect('/Users/calendar');
-
-});
-router.get('/calendar', function (req, res, next) {
-    var event = {
-        title: req.body.title,
-        date: req.body.eventdate,
-        info: req.body.info
-    };
-    var userDat = req.session;
-    var monthpassed = req.query.id;
-    if(userDat.logged)
-    {
-        var redirectTo = "homepage2";
-        var username = userDat.username;
-    }
-    else
-    {
-        var redirectTo = "";
-        var username = "Guest";
-    }
-    EventData.find().sort('-date').then(function (doc)
-    {
-
-        if(!monthpassed){
-            //  var d = new Date();
-            // var n = d.getMonth();
-            //  n++;
-            //  monthpassed = n;
-            monthpassed = "november"
-        }
-        var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
-        if(doc.length > 0)
-        {
-            var events = [];
-            event = doc[0]._doc;
-            for (var i = 1; i <= 31; i++) {
-                    var e = {
-                        title: '',
-                        date: i,
-                        info: []
-
-                    };
-                    events.push(e);
-
-                }
-            for (var i = 0; i <= 30; i++) {
-                var index = 0;
-            for(var j = 0; j < doc.length; j++) {
-                    if (doc[j]._doc.date.getDate() == i && doc[j]._doc.date.getMonth() == month) {
-                        events[(i - 1)].info[index] = doc[j]._doc;
-                        index++
-                    }
-                }
-            }
-
-            res.render('Users/calendar', {
-                eventlist: events,
-                size: doc.length,
-                month: monthpassed,
-                year: (new Date()).getFullYear(),
-                user: username,
-                redirect: redirectTo
-            });
-        }
-        else{
-            res.render('Users/calendar', {title : 'cucked'});
-        }
-    });
-
-});
-router.post('/createevent', function (req, res, next) {
-
-    var event = {
-        title: req.body.title,
-        date: req.body.eventdate,
-        info: req.body.info
-    };
-    var time = event.date + " " + req.body.time.toString();
-    event.date = time;
-    var data = new EventData(event);
-    data.save();
-    res.redirect('database');
-});
-router.get('/database', function (req, res, next) {
-    EventData.find().sort('-date').then(function (doc) {
-        res.render('Users/eventDB', {eventlist: doc});
     })
 });
 
-
-//MINAS ADDED CODE.
-router.get('/eventlist', function (req, res, next) {
-
-    var monthpassed = req.query.id;
-    var eventQuery = [];
-    var events = [];
-    var userDat = req.session;
-
-    //LIST OF EVENTS CAN ONLY BE ACCESSED IF LOGGED IN - Crashes when this if statement is not in place. S.N.
-    if(userDat.logged)
-    {
-        for (l in req.session.userDat.events) {
-            var o = req.session.userDat.events[l];
-            eventQuery.push(new mongoose.Types.ObjectId(o));
-        }
-        EventData.find({
-            '_id': {$in: eventQuery}
-        }, function (err, docs) {
-            console.log(docs);
-
-            if (!monthpassed) {
-                monthpassed = "january";
-            }
-
-            for (i in docs) {
-                events.push(docs[i]._doc);
-            }
-            // var month = new Date(Date.parse(monthpassed +" 1, 2012")).getMonth()
-            // var userEvents = req.session.userDat.events;
-            // var events = docs._doc;
-            // if(userEvents.length > 0){
-            //     for(var j = 0; j < userEvents.length; j++) {
-            //         if (doc[j]._doc.date.getMonth() == month) {
-            //             events.push(doc[j]._doc);
-            //         }
-            //     }
-            // }
-
+/** Deactivate Account (Admin) **/
+ router.get('/adminDelete/:id', function(req, res, next){
+    var userId = encodeURIComponent(req.params.id);
+    User.findByIdAndRemove({_id: userId},
+        function(err, user){
+        if(err) throw err;
+        else res.redirect('/users/userList');
         });
-        res.render('Users/eventlist', {eventlist: events, output:monthpassed, user: userDat.username});
-    }
-    else
-    {
-        res.redirect('/');
-    }
-
 });
 
-router.get('/eventlist/:id', function(req,res, next){
-    var string = encodeURIComponent(id);
-    res.redirect('eventlist?id=' + string);
+/** Register **/
+//Get: register page (register.hbs)
+router.get('/register', function (req, res, next) {
+    res.render('register');
+});
+
+//Post: register page (register.hbs)
+router.post('/register', function (req, res, next) {
+
+    var item = {
+        username: req.body.username,
+        password: req.body.password,
+        cPassword: req.body.cPassword,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        streetaddress: req.body.streetaddress,
+        email: req.body.email,
+        phonenumber: req.body.phonenumber,
+        isAdmin: req.body.isAdmin || false,
+        children: []
+    };
+
+    //Validation of form fields
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('firstname', 'Firstname is required').notEmpty();
+    req.checkBody('lastname', 'Lastname is required').notEmpty();
+    req.checkBody('email', 'email is required').isEmail();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('password', 'Password is required').notEmpty();
+    req.checkBody('cPassword', 'Passwords do not match').equals(req.body.password);
+
+    var errors = req.validationErrors();
+
+    if (errors) {
+        res.render('register', {
+            errors: errors
+        });
+    }
+    else {
+        var newUser = new User(item);
+        User.createUser(newUser, function (err, user) {
+            if (err) throw err;
+            console.log(user);
+        })
+
+        //TODO
+        //setup passport strategy to allow the use of flash for messages.
+        //req.flash('success message', 'You are registered and can now login');
+        res.redirect('/users/login');
+    }
+});
+
+/** Login & Logout**/
+//passport localstrategy to validate user login against database
+passport.use(new LocalStrategy(
+    function(username, password, done) {
+        User.getUserByUsername(username, function(err, user){
+            if(err) throw err;
+            if(!user){
+                return done(null, false, {message: 'Unknown User'});
+            }
+
+            User.comparePassword(password, user.password, function(err, isMatch){
+                if(err) throw err;
+                if(isMatch){
+                    return done(null, user);
+                } else {
+                    return done(null, false, {message: 'Invalid password'});
+                }
+            });
+        });
+    }));
+
+//serializes user's id in the session
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
+
+//deserializes user id
+passport.deserializeUser(function (id, done) {
+    User.getUserById(id, function (err, user) {
+        done(err, user);
+    });
+});
+
+//Get: login page (login.hbs)
+router.get('/login', function (req, res, next) {
+    res.render('login');
+});
+
+//authenticates user credentials
+router.post('/login',
+    passport.authenticate('local', {successRedirect: '/', failureRedirect: '/users/login', failureFlash: true}),
+    function (req, res) {
+        res.redirect('/', {user: req.user.firstname, isAdmin: req.user.isAdmin});
+});
+
+/** Logout **/
+//Get: logout page ()
+router.get('/logout', function (req, res) {
+    req.logout(); //destroys the current session
+    req.flash('success_msg', 'You are logged out');
+    res.redirect('/');
+});
+
+/** Account **/
+//Get: account page (account.hbs)
+router.get('/account', function (req, res, next) {
+    if (req.user) {
+        res.render('account', {
+            user: req.user.username,
+            title: 'Church Centre',
+            firstname: req.user.firstname,
+            lastname: req.user.lastname,
+            email: req.user.email,
+            ph1: req.user.phonenumber,
+            ph2: req.user.phonenumber2
+        });
+
+    } else {
+        res.redirect('/')
+    }
 });
 
 module.exports = router;

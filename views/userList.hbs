@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/stylesheets/eventDB.css" type="text/css"/>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+
+    <!--Bootstrap JS - Used to make the Account drop down function-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        #myInput {
+            background-image: url('/images/search.png');
+            background-position: 10px 12px;
+            background-repeat: no-repeat;
+            width: 100%;
+            font-size: 16px;
+            padding: 12px 20px 12px 40px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+        }
+
+        #myUL {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #myUL li a {
+            border: 1px solid #ddd;
+            margin-top: -1px; /* Prevent double borders */
+            background-color: #f6f6f6;
+            padding: 12px;
+            text-decoration: none;
+            font-size: 18px;
+            color: black;
+            display: block
+        }
+
+        #myUL li a:hover:not(.header) {
+            background-color: #eee;
+        }
+    </style>
+
+</head>
+<body>
+<!--Navigation bar -->
+    <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                 <div class="navbar-header">
+                      <a class="navbar-brand" href="/">Church Centre</a>
+                 </div>
+                 <ul class="nav navbar-nav">
+                      <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                           <li><a href="../users/account">View Account</a></li>
+                           <li><a href="childList">View Registered Children</a></li>
+                           <li><a href="registerchild">Register a child</a></li>
+                        </ul>
+                      </li>
+                      <li><a href="../events/calendar">Calendar</a></li>
+                      <li><a href="../events/eventlist">Schedule</a></li>
+                     {{#if isAdmin}}
+                         <li class="dropdown">
+                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+                                 <span class="caret"></span></a>
+                             <ul class="dropdown-menu">
+                                 <li><a href="createevent">Add Event</a></li>
+                                 <li><a href="../users/adminregister">Add User</a></li>
+                                 <li><a href="../users/userList">Deactivate User</a></li>
+                             </ul>
+                         </li>
+                     {{/if}}
+                 </ul>
+                 <ul class="nav navbar-nav navbar-right">
+                      <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
+                 </ul>
+            </div>
+    </nav>
+
+    <br><br><br>
+<div style="padding-left: 25px;">
+    <h2>Users</h2>
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+</div>
+    <hr/>
+    <ul id="userList">
+            {{# each userList }}
+                <h3><a href="#" style="color: black; text-decoration: none;">{{ this.firstname }} {{ this.lastname }}</a></h3>
+                <form action="/users/adminDelete/{{this._id}}">
+                <input type="submit" value="delete" name="al" id="al" class="btn btn-primary-delete pull-right">
+                </form>
+                <br>
+                <hr/>
+            {{/each}}
+    </ul>
+
+<script>
+    function myFunction() {
+        var input, filter, ul, h3, form, input, hr, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("userList");
+        h3 = ul.getElementsByTagName("h3");
+        form = ul.getElementsByTagName("form");
+        input = ul.getElementsByTagName("input");
+        hr = ul.getElementsByTagName("hr");
+        for (i = 0; i < h3.length; i++) {
+            a = h3[i].getElementsByTagName("a")[0];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                h3[i].style.display = "";
+                hr[i].style.display = "";
+                form[i].style.display = "";
+                input[i].style.display = "";
+            } else {
+                h3[i].style.display = "none";
+                hr[i].style.display = "none";
+                form[i].style.display = "none";
+                input[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/stylesheets/eventDB.css" type="text/css"/>
+
+    <!--Bootstrap JS - Used to make the Account drop down function-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Church Centre</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="../users/account">View Account</a></li>
+                    <li><a href="../child/childList">View Registered Children</a></li>
+                    <li><a href="../childregisterchild">Register a child</a></li>
+                </ul>
+            </li>
+            <li><a href="calendar">Calendar</a></li>
+            <li><a href="eventlist">Schedule</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
+        </ul>
+    </div>
+</nav>
+
+
+<br><br><br>
+<h2>{{info.title}}</h2>
+<div>{{info.info}}</div>
+<div>{{info.date}}</div>
+<br>
+
+<form method="post" id="eventregister" name="eventregister" action="registerevent">
+    <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
+    <select name="selectChild">
+        <option stlye="text-colo" value="" disabled selected>Choose a child</option>
+        {{# each childList }}
+              <option style="color: black;" value = {{this._id}} > {{ this.firstname }} {{this.lastname}} </option>
+        {{/each}}
+    </select>
+    <button class="login btn btn-primary"type="submit" id="register">register for event</button>
+</form>
+
+<br>
+
+<form method="post" id="eventdelete" name="eventdelete" action="deleteevent">
+    <input type="hidden" type="text" id="id" name="id" value="{{info._id}}">
+    <button class="btn btn-primary-delete" type="submit" id="delete">
+        delete event
+    </button>
+</form>
+</body>
+</html>

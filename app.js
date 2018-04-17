@@ -7,10 +7,14 @@ var bodyParser = require('body-parser');
 var hbs = require('express-handlebars');
 var expressValidator = require('express-validator');
 var expressSession = require('express-session');
+var flash = require('connect-flash');
+var passport = require('passport');
+var localStrategy = require('passport-local').Strategy;
 
-var index = require('./routes/index');
+var routes = require('./routes/index');
 var users = require('./routes/users');
-var User = require('./routes/index');
+var child = require('./routes/child');
+var events = require('./routes/events');
 
 var app = express();
 
@@ -28,10 +32,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 //session storage
 app.use(expressSession({secret: 'max', saveUninitialized: false, resave: false}));
-app.use('/', index);
+
+//Passport initialization
+app.use(passport.initialize());
+app.use(passport.session());
+// Connect Flash
+app.use(flash());
+
+//Routes
+app.use('/', routes);
 app.use('/users', users);
+app.use('/child', child);
+app.use('/events', events);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -50,5 +65,15 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// Global Vars
+app.use(function (req, res, next) {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    res.locals.user = req.user || null;
+    next();
+});
+
 
 module.exports = app;

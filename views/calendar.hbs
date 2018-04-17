@@ -2,50 +2,109 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Calander</title>
+    <title>Calandar</title>
     <link rel="stylesheet" href="/stylesheets/calendar.css" type="text/css"/>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/stylesheets/popupbox.css"/>
 
     <!--Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!--Month Year Scripts -->
+    <script type="text/javascript">
+        //Function for toggling pop up
+        function toggle_visibility(id, num){
+            var e = document.getElementById(id);
+            if(e.style.display == 'block' && num === 0) {
+                e.style.display = 'none';
+            }else{
+                e.style.display = 'block';
+            }
+        }
+
+        function monthfunction(month){
+            window.location.href = "calendar?id="+ month;
+        }
+    </script>
 </head>
 <body>
 <!--Navigation bar -->
 <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
-          <div class="navbar-header">
-              <a class="navbar-brand" href="homepage2">Church Centre</a>
-          </div>
-          <ul class="nav navbar-nav">
-              <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
-                      <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                      <li><a href="/account">View Account</a></li>
-                      <li><a href="#">View Registered Children</a></li>
-                      <li><a href="#">Register a child</a></li>
-                  </ul>
-              </li>
-              <li><a href="#">Calendar</a></li>
-              <li><a href="schedule">Schedule</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-              <li style="padding-top: 10px; padding-right: 15px;">Welcome, {{user}}</li>
-              <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Sign Out</a></li>
-          </ul>
-     </div>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Church Centre</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="../users/account">View Account</a></li>
+                    <li><a href="../child/childList">View Registered Children</a></li>
+                    <li><a href="../child/registerchild">Register a child</a></li>
+                </ul>
+            </li>
+            <li><a href="calendar">Calendar</a></li>
+            <li><a href="eventlist">Schedule</a></li>
+            {{#if isAdmin}}
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="createevent">Add Event</a></li>
+                        <li><a href="../users/adminregister">Add User</a></li>
+                        <li><a href="../users/userList">Deactivate User</a></li>
+                    </ul>
+                </li>
+            {{/if}}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
+        </ul>
+    </div>
 </nav>
 
+{{#if errors}}
+    {{#each errors}}
+        <div class ="alert alert-danger">{{msg}}</div>
+    {{/each}}
+{{/if}}
+
 <!--Calander -->
+
 <div id="calendar-wrap">
     <header>
         <br>
         <br>
         <br/>
-        <h1>August 2014</h1>
+        <h1>
+
+            <div id ="month"></div>
+            <select name="monthSelect" id="monthSelect" onchange="monthfunction(this.value)">
+                <option value="january">January</option>
+                <option value="february">February</option>
+                <option value="march">March</option>
+                <option value="april">April</option>
+                <option value="may">May</option>
+                <option value="june">June</option>
+                <option value="july">July</option>
+                <option value="august">August</option>
+                <option value="september">September</option>
+                <option value="october">October</option>
+                <option value="november">November</option>
+                <option value="december">December</option>
+            </select>
+            <script>
+                    var x = document.getElementById("monthSelect");
+                    x.value = '{{month}}';
+            </script>
+            {{year}}
+            <p>Number Of Event Entries {{size}}</p>
+        </h1>
     </header>
+
     <div id="calendar">
         <ul class="weekdays">
             <li>Sunday</li>
@@ -58,210 +117,114 @@
         </ul>
 
         <!-- Days from previous month -->
-
-        <ul class="days">
-            <li class="day other-month">
-                <div class="date">27</div>
-            </li>
-            <li class="day other-month">
-                <div class="date">28</div>
-                <div class="event">
-                    <div class="event-desc">
-                        HTML 5 lecture with Brad Traversy from Eduonix
-                    </div>
-                    <div class="event-time">
-                        1:00pm to 3:00pm
-                    </div>
-                </div>
-            </li>
-            <li class="day other-month">
-                <div class="date">29</div>
-            </li>
-            <li class="day other-month">
-                <div class="date">30</div>
-            </li>
-            <li class="day other-month">
-                <div class="date">31</div>
-            </li>
-
-            <!-- Days in current month -->
-
-            <li class="day">
-                <div class="date">1</div>
-            </li>
-            <li class="day">
-                <div class="date">2</div>
-                <div class="event">
-                    <div class="event-desc">
-                        Career development @ Community College room #402
-                    </div>
-                    <div class="event-time">
-                        2:00pm to 5:00pm
-                    </div>
-                </div>
-            </li>
-        </ul>
-
-        <!-- Row #2 -->
-
-        <ul class="days">
-            <li class="day">
-                <div class="date">3</div>
-            </li>
-            <li class="day">
-                <div class="date">4</div>
-            </li>
-            <li class="day">
-                <div class="date">5</div>
-            </li>
-            <li class="day">
-                <div class="date">6</div>
-            </li>
-            <li class="day">
-                <div class="date">7</div>
-                <div class="event">
-                    <div class="event-desc">
-                        Group Project meetup
-                    </div>
-                    <div class="event-time">
-                        6:00pm to 8:30pm
-                    </div>
-                </div>
-            </li>
-            <li class="day">
-                <div class="date">8</div>
-            </li>
-            <li class="day">
-                <div class="date">9</div>
-            </li>
-        </ul>
-
-        <!-- Row #3 -->
-
-        <ul class="days">
-            <li class="day">
-                <div class="date">10</div>
-            </li>
-            <li class="day">
-                <div class="date">11</div>
-            </li>
-            <li class="day">
-                <div class="date">12</div>
-            </li>
-            <li class="day">
-                <div class="date">13</div>
-            </li>
-            <li class="day">
-                <div class="date">14</div><div class="event">
-                <div class="event-desc">
-                    Board Meeting
-                </div>
-                <div class="event-time">
-                    1:00pm to 3:00pm
+        <form method="post" role="form" action="viewevent" id="eventform" name="eventform"
+              class="login-form form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-8">
+                    <input type="hidden" placeholder="blank" value="thisisblank" required="required" name="eventid" id="eventid" type="text"
+                           class="form-control"/>
                 </div>
             </div>
-            </li>
-            <li class="day">
-                <div class="date">15</div>
-            </li>
-            <li class="day">
-                <div class="date">16</div>
-            </li>
-        </ul>
-
-        <!-- Row #4 -->
-
+        </form>
         <ul class="days">
+        {{# each eventlist}}
+
             <li class="day">
-                <div class="date">17</div>
+
+                <div class="date">{{this.date}}</div>
+
+                {{#if this.info}}
+                    {{# each info}}
+                    <a href="javascript:void(0)" onclick="toggle_visibility('{{this._id}}',1);"><div class="event">
+                                <div class="event-desc">
+                                    {{this.title}}
+                                    <br><br>
+                                    {{this.info}}
+                                </div>
+
+                                <!--Code for popup box-->
+                                <div id="{{this._id}}" class="popup-position">
+                                    <div id="popup-wrapper">
+
+                                        <div id="popup-container">
+                                            <div style="color: black">
+                                            <h3 style="padding-left: 70px;">Register Child for Event</h3>
+                                                <h5>{{this.title}}</h5>
+                                                Details: {{this.info}}
+                                                <br><br>
+                                                This event is for grades: {{this.gradeLow}} - {{this.gradeHigh}}
+                                                <br><br>
+                                                Availability: {{this.registered.length}} / {{this.limit}} spots remaining
+                                                <br><br>
+                                            </div>
+
+
+                                            <form method="post" id="eventregister" name="eventregister" action="registerevent">
+
+                                                <input type="hidden" type="text" id="id" name="id" value="{{this._id}}">
+                                                <input type="hidden" id="registered" name="registered" value="{{this.registered}}">
+                                                <input type="hidden" id="registeredCount" name="registeredCount" value="{{this.registeredCount}}">
+                                                <input type="hidden" id="limit" name="limit" value="{{this.limit}}">
+                                                <input type="hidden" id="gradeLow" name="gradeLow" value="{{this.gradeLow}}">
+                                                <input type="hidden" id="gradeHigh" name="gradeHigh" value="{{this.gradeHigh}}">
+
+                                                <div  style="color: black;">Child:
+                                                    <select style="color: black;" name="selectChild">
+                                                        Choose a child
+                                                        {{# each ../../childList }}
+                                                            <option style="color: black;" value="{{this._id}}">{{this.firstname}} {{this.lastname}}</option>
+                                                        {{/each}}
+                                                    </select>
+                                                    <button class="login btn btn-primary" type="submit" id="grade" name="grade" value="{{this.grade}}">register</button>
+                                                </div>
+
+                                            </form>
+
+                                            <br><br><br>
+                                            <!-- BUTTON FOR DELETING EVENT ONLY SHOWS WITH ADMIN ACCOUNT-->
+                                            {{# if ../../isAdmin}}
+                                            <form method="get" id="updateEvent" name="updateEvent" action="/events/updateEvent/{{this._id}}">
+                                                <button style="color: black;" type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Update Event</button >
+                                            </form>
+
+                                            <br>
+
+                                            <form method="post" id="deleteevent" name="deleteevent" action="deleteevent">
+                                                    <button style="color: black;" type="submit" name="event_id" id="{{this._id}}" value="{{this._id}}">Delete Event</button >
+                                                </form>
+
+                                                <br>
+
+                                                <button><a style="color: black;" href="sendEmailPage/{{this._id}}">Send Email</a></button>
+
+                                                <br>
+
+                                            <br>
+                                            {{/if}}
+                                            <p ><a  href="javascript:void(0)" onclick="toggle_visibility('{{this._id}}',0)"><button style="color: black;">Close Pop-Up</button ></a> </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div></a>
+                    {{/each}}
+                {{/if}}
             </li>
-            <li class="day">
-                <div class="date">18</div>
-            </li>
-            <li class="day">
-                <div class="date">19</div>
-            </li>
-            <li class="day">
-                <div class="date">20</div>
-            </li>
-            <li class="day">
-                <div class="date">21</div>
-            </li>
-            <li class="day">
-                <div class="date">22</div>
-                <div class="event">
-                    <div class="event-desc">
-                        Conference call
-                    </div>
-                    <div class="event-time">
-                        9:00am to 12:00pm
-                    </div>
-                </div>
-            </li>
-            <li class="day">
-                <div class="date">23</div>
-            </li>
+
+
+        {{/each}}
         </ul>
 
-        <!-- Row #5 -->
 
-        <ul class="days">
-            <li class="day">
-                <div class="date">24</div>
-            </li>
-            <li class="day">
-                <div class="date">25</div>
-                <div class="event">
-                    <div class="event-desc">
-                        Conference Call
-                    </div>
-                    <div class="event-time">
-                        1:00pm to 3:00pm
-                    </div>
-                </div>
-            </li>
-            <li class="day">
-                <div class="date">26</div>
-            </li>
-            <li class="day">
-                <div class="date">27</div>
-            </li>
-            <li class="day">
-                <div class="date">28</div>
-            </li>
-            <li class="day">
-                <div class="date">29</div>
-            </li>
-            <li class="day">
-                <div class="date">30</div>
-            </li>
-        </ul>
 
-        <!-- Row #6 -->
-
-        <ul class="days">
-            <li class="day">
-                <div class="date">31</div>
-            </li>
-            <li class="day other-month">
-                <div class="date">1</div> <!-- Next Month -->
-            </li>
-            <li class="day other-month">
-                <div class="date">2</div>
-            </li>
-            <li class="day other-month">
-                <div class="date">3</div>
-            </li>
-            <li class="day other-month">
-                <div class="date">4</div>
-            </li>
-            <li class="day other-month">
-                <div class="date">5</div>
-            </li>
-            <li class="day other-month">
-                <div class="date">6</div>
-            </li>
-        </ul>
+        <script type="text/javascript">
+            function eventviewer(eventid){
+                var formid = document.getElementById("eventform");
+                document.eventform.eventid.value = eventid;
+                document.getElementById("eventform").submit();
+            }
+        </script>
 
     </div><!-- /. calendar -->
 </div><!-- /. wrap -->

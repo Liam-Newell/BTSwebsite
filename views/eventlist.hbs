@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="/stylesheets/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/stylesheets/eventDB.css" type="text/css"/>
+
+    <!--Bootstrap JS - Used to make the Account drop down function-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!--Navigation bar -->
+    <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                 <div class="navbar-header">
+                      <a class="navbar-brand" href="/">Church Centre</a>
+                 </div>
+                 <ul class="nav navbar-nav">
+                      <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                           <li><a href="../users/account">View Account</a></li>
+                           <li><a href="../child/childList">View Registered Children</a></li>
+                           <li><a href="../child/registerchild">Register a child</a></li>
+                        </ul>
+                      </li>
+                      <li><a href="calendar">Calendar</a></li>
+                      <li><a href="eventlist">Schedule</a></li>
+                 </ul>
+                 <ul class="nav navbar-nav navbar-right">
+                      <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
+                 </ul>
+            </div>
+    </nav>
+
+    <br><br><br>
+    <h2>Registered events</h2>
+    <!--<a class="btn btn-primary" href="eventlist" >Refresh</a>-->
+    <hr/>
+    {{# each childlist}}
+    <h3> {{ this.firstname }} </h3>
+    <div id="eventlist">
+        {{# each event }}
+            <article class="item">
+                <h3> {{ this.firstname }} </h3>
+                <a class="btn btn-primary-delete pull-right" href="/removeChildEvent/{{this._id}}" role="button" style="margin-right: 20em; margin-top: -1em;">Remove</a>
+                <div class="event-title">{{this.title}}</div>
+                <div class="event-date">{{this.date}}</div>
+                <div>Event details : {{ this.info }}</div>
+                {{#if isAdmin}}
+                    <div>Registered children: {{this.registered}}</div>
+                {{/if}}
+                <hr/>
+            </article>
+        {{/each}}
+    </div>
+    {{/each}}
+</body>

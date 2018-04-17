@@ -1,0 +1,92 @@
+<html>
+<head>
+    <title></title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <link rel="stylesheet" href="/stylesheets/button.css"/>
+    <link rel="stylesheet" href="/stylesheets/clicktoshow.css"/>
+
+</head>
+<body>
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Church Center</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="calendar">Calendar</a></li>
+        </ul>
+    </div>
+</nav>
+<!--Navigation bar -->
+<br/><br/>
+<p>
+    {{errors}}
+</p>
+<div class="container">
+    <div class="page-header">
+        <h1>My Event</h1>
+    </div>
+    <form method="post" role="form" action="/events/updateEvent/{{eventId}}" id="event_id" value="{{eventId}}" class="login-form form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-4">Title</label>
+            <div class="col-sm-8">
+                <input value="{{t}}"  name="title" type="text"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Date of Event</label>
+            <div class="col-sm-8">
+                <input placeholder="{{d}} "name="eventdate" type="date" value="{{d}}"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Time</label>
+            <div class="col-sm-8">
+                <input id="time"  name="time" type="time" value="{{ti}}"
+                       class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4">Grade range between</label>
+            <div class="col-sm-2">
+                <input value="{{gl}}" name="gradeLow" required="required" type="number"
+                       class="form-control"/>
+            </div>
+            <div class="col-sm-1">and</div>
+            <div class="col-sm-2">
+                <input value="{{gh}}" name="gradeHigh" required="required" type="number"
+                       class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4">Class limit</label>
+            <div class="col-sm-8">
+                <input value="{{l}}" name="limit"  type="number"
+                       class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4">Info</label>
+            <div class="col-sm-8">
+                <textarea rows="4" cols="50" name="info" form="updateEvent">{{i}}</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+                <button type="submit"  class="login btn btn-primary">Update Event</button>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+</body>
+</html>

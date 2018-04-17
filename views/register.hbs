@@ -17,62 +17,69 @@
         <ul class="nav navbar-nav">
           <li class="inactive"><a href="/">Home</a></li>
         </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li class="active"><a href="register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-          <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-        </ul>
       </div>
     </nav>
     <!--Navigation bar -->
     <br/><br/>
     <p>
-        {{errors}}
+        {{#if errors}}
+            {{#each errors}}
+                <div class ="alert alert-danger">{{msg}}</div>
+            {{/each}}
+        {{/if}}
     </p>
     <div class="container">
         <div class="page-header">
-            <h1>My Profile</h1>
+            <h1>Register</h1>
         </div>
-        <form method="post" role="form" action="/register" class="login-form form-horizontal">
+        <form method="post" role="form" action="/users/register" class="login-form form-horizontal">
             <input name="_csrf" type="hidden"/>
             <div class="form-group">
                 <label class="col-sm-4">User Name</label>
                 <div class="col-sm-8">
-                    <input placeholder="username" required="required" id="username" name="username" type="text"
+                    <input placeholder="username" name="username" type="text"
                            class="form-control"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4">Password</label>
                 <div class="col-sm-8">
-                    <input placeholder="password" required="required" id="password" name="password" type="password"
+                    <input placeholder="password" name="password" type="password"
+                           class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4">Confirm Your Password</label>
+                <div class="col-sm-8">
+                    <input placeholder="password" name="cPassword" type="password"
                            class="form-control"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4">First Name</label>
                 <div class="col-sm-8">
-                    <input placeholder="your first name" required="required" name="firstname" type="text"
+                    <input placeholder="your first name" name="firstname" type="text"
                            class="form-control"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4">Last Name</label>
                 <div class="col-sm-8">
-                    <input placeholder="your last name" required="required" name="lastname" type="text"
+                    <input placeholder="your last name" name="lastname" type="text"
                            class="form-control"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4">Street address</label>
                 <div class="col-sm-8">
-                    <input placeholder="e.g. 123 Sunny Ave" required="required" name="streetaddress" type="text"
+                    <input placeholder="e.g. 123 Sunny Ave" name="streetaddress" type="text"
                            class="form-control"/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4">Email</label>
                 <div class="col-sm-8">
-                    <input placeholder="e.g. email@domain.com" required="required" name="email" type="email"
+                    <input placeholder="e.g. email@domain.com" name="email" type="email"
                            class="form-control"/>
                 </div>
             </div>
@@ -83,20 +90,15 @@
                            class="form-control"/>
                 </div>
             </div>
+
+            {{#if isAdmin}}
             <div class="form-group">
-                <label class="col-sm-4">Phone Number 2</label>
+                <label class="col-sm-4">Administrator?</label>
                 <div class="col-sm-8">
-                    <input placeholder="123-456-7899"  name="phonenumber2" type="string"
-                           class="form-control"/>
+                    <input name="isAdmin" type="checkbox" class="form-control"/>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-4">Date of Birth</label>
-                <div class="col-sm-8">
-                    <input placeholder="" required="required" name="birthday" type="date"
-                           class="form-control"/>
-                </div>
-            </div>
+            {{/if}}
+
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-8">
                     <button type="submit" id="register" class="login btn btn-primary">Register</button>
