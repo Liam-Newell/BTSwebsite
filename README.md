@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/hibyguy/BTSwebsite.svg?branch=master)](https://travis-ci.org/hibyguy/BTSwebsite)
+Travis-CI[![Build Status](https://travis-ci.org/hibyguy/BTSwebsite.svg?branch=master)](https://travis-ci.org/hibyguy/BTSwebsite)
 # Implementation - BTS 630 - Web App
 A website made for church orginizations to manage both registration of children under specific parents but also registering those children to
 specific events
