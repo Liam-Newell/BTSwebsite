@@ -2,7 +2,7 @@ language: node_js
 deploy:
   provider: heroku
   api_key:
-    secure: "c7886928-f118-47f2-a1ed-4513d02e5f76"
+    secure: $HEROKU_API_KEY
 services:
   - mongodb
 install:
