@@ -55,7 +55,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="createevent">Add Event</a></li>
                         <li><a href="../users/adminregister">Add User</a></li>
-                        <li><a href="../users/userList">Deactivate User</a></li>
+                        <li><a href="../users/userList">Delete User</a></li>
                     </ul>
                 </li>
             {{/if}}
@@ -151,6 +151,8 @@
                                             <h3 style="padding-left: 70px;">Register Child for Event</h3>
                                                 <h5>{{this.title}}</h5>
                                                 Details: {{this.info}}
+                                                <br><br>
+                                                Time: <input style="border-width:0px; border:none;" type="time" value="{{this.time}}" readonly>
                                                 <br><br>
                                                 This event is for grades: {{this.gradeLow}} - {{this.gradeHigh}}
                                                 <br><br>

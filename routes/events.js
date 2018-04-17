@@ -306,37 +306,38 @@ router.post('/createevent', function (req, res, next) {
 
 router.post('/updateEvent/:id', function (req, res, next) {
     var eventId = req.params.id;
-        var event = {
-            title: req.body.title,
-            date: req.body.eventdate,
-            time: req.body.ti,
-            limit: req.body.limit,
-            grade: req.body.grade,
-            info: req.body.in
-        };
+ /*   var event = {
+        title: req.body.title,
+        date: req.body.eventdate,
+        time: req.body.ti,
+        limit: req.body.limit,
+        grade: req.body.grade,
+        info: req.body.in
+    };
     EventData.findById({_id: eventId},
         function(err, event){
-    if(err) throw err;
-    });
+            if(err) throw err;
+        });
 
-        var time = event.date + " " + req.body.time.toString();
-        event.date = time;
-        var data = new EventData(event);
-        EventData.findByIdAndUpdate({_id: eventId},
+    var time = event.date + " " + req.body.time.toString();
+    event.date = time;
+    var data = new EventData(event);*/
+    EventData.findByIdAndUpdate({_id: eventId},
         {$set: {
             title: req.body.title,
             date: req.body.eventdate,
-            time: req.body.ti,
+            time: req.body.time,
+            info: req.body.info,
             limit: req.body.limit,
-            grade: req.body.grade,
-            info: req.body.in
-            }
-        },function(err,event) {
-                if (err) throw err;
-    })
+            gradeLow: req.body.gradeLow,
+            gradeHigh: req.body.gradeHigh
+        }
+        }, {multi: true},function(err,event) {
+            if (err) throw err;
+            console.log(event);
+        });
     res.redirect('/events/calendar');
 });
-
 
 //MINAS ADDED CODE.
 router.get('/eventlist', function (req, res, next) {
@@ -375,55 +376,31 @@ router.get('/eventlist', function (req, res, next) {
     });
 
 });
-router.get('/removeChildEvent/:id', function(req, res, next){
-    var eventId = encodeURIComponent(req.params.id);
-    var userData = req.session.userDat;
-    var test = req.body.id;
-    EventData.findById(eventId, function (err, docs) {
-        if (err) throw err;
-        var search = [];
-        for (let i = 0; i < req.session.userDat.children.length; i++) {
-            search.push(new mongoose.Types.ObjectId(req.session.userDat.children[i]));
-        }
-        for (var i = 0; i < search.length; i++) {
-            for(var j = 0; j < docs._doc.registered.length; j++)
-            if (docs._doc.registered[j].toString('hex') === search[i].id.toString('hex')) {
-                docs._doc.registered.splice(j, 1);
-            }
-        }
-        docs.save(function (err, rChild) {
-            if (err) throw err;
-            console.log("Successfully removed from event "+rChild);
 
-        });
-    });
-    User.findById(req.session.userDat._id, function (err, user){
-        if (err) throw err;
-        for(let i = 0; i < user._doc.events.length; i++){
-            if(user._doc.events[i]._id === eventId){
-                user._doc.events.splice(i, 1);
-            }
+router.post('/removeChildEvent', function(req, res, next){
+    var eventId = req.body.eventId;
+    var childId = req.body.childId;
+    var query = EventData.findOne({_id: eventId});
+    var query1 = Child.findOne({_id: childId});
 
-        }
-        req.session.userDat.events = user._doc.events;
-        user.save(function (err, doc){
-            if (err) throw err;
-            console.log("Successfully removed from user "+doc);
-        });
-        res.redirect('eventlist');
+    query.exec(function(err, event) {
+        if(err) throw err;
+        event.registered.pull(childId);
+        console.log(event);
+        event.save();
     });
-    // EventData.findByIdAndUpdate(eventId,
-    //     {"": {"registered": "test"}},
-    //     function(err, updatedEvent){
-    //         if(err) throw err;
-    //     })
+
+    query1.exec(function(err, child){
+        if(err) throw err;
+        child.events.pull(eventId);
+        console.log(child);
+        child.save();
+    });
+
+    res.redirect("eventlist");
 });
-/*
-router.get('/eventlist/:id', function(req,res, next){
-    var string = encodeURIComponent(id);
-    res.redirect('eventlist?id=' + string);
-});
-*/
+
+
 
 
 module.exports = router;

@@ -42,22 +42,26 @@
     <h2>Registered events</h2>
     <!--<a class="btn btn-primary" href="eventlist" >Refresh</a>-->
     <hr/>
+
     {{# each childlist}}
-    <h3> {{ this.firstname }} </h3>
-    <div id="eventlist">
-        {{# each event }}
-            <article class="item">
-                <h3> {{ this.firstname }} </h3>
-                <a class="btn btn-primary-delete pull-right" href="/removeChildEvent/{{this._id}}" role="button" style="margin-right: 20em; margin-top: -1em;">Remove</a>
-                <div class="event-title">{{this.title}}</div>
-                <div class="event-date">{{this.date}}</div>
-                <div>Event details : {{ this.info }}</div>
-                {{#if isAdmin}}
-                    <div>Registered children: {{this.registered}}</div>
-                {{/if}}
-                <hr/>
-            </article>
-        {{/each}}
-    </div>
+
+        <form method="post" id="removeChildEvent" name="removeChildEvent" action="/events/removeChildEvent">
+            <input type="hidden" type="text" name="childId" id="childId" value="{{this._id}}">
+
+            <h3> {{ this.firstname }} </h3>
+            <div id="eventlist">
+                {{# each event }}
+                    <button class="btn btn-primary-delete pull-right" type="submit" name="eventId" value="{{this._id}}" style="margin-right: 20em; margin-top: -1em;">remove</button>
+                    <div class="event-title">{{this.title}}</div>
+                    <div class="event-date">{{this.date}}</div>
+                    <div>Event details : {{ this.info }}</div>
+                    {{#if isAdmin}}
+                        <div>Registered children: {{this.registered}}</div>
+                    {{/if}}
+                    <hr/>
+                {{/each}}
+            </div>
+
     {{/each}}
+</form>
 </body>

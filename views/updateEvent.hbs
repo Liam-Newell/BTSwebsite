@@ -28,7 +28,7 @@
     <div class="page-header">
         <h1>My Event</h1>
     </div>
-    <form method="post" role="form" action="/events/updateEvent/{{eventId}}" id="event_id" value="{{eventId}}" class="login-form form-horizontal">
+    <form method="post" id="updateEvent" role="form" action="/events/updateEvent/{{eventId}}" id="event_id" value="{{eventId}}" class="login-form form-horizontal">
         <div class="form-group">
             <label class="col-sm-4">Title</label>
             <div class="col-sm-8">
@@ -73,15 +73,15 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-4">Info</label>
+            <label class="col-sm-4">Details</label>
             <div class="col-sm-8">
-                <textarea rows="4" cols="50" name="info" form="updateEvent">{{i}}</textarea>
+                <textarea rows="4" cols="50" name="info" required="required" form="updateEvent">{{i}}</textarea>
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-8">
-                <button type="submit"  class="login btn btn-primary">Update Event</button>
+                <button type="submit" id="updateEvent" class="login btn btn-primary">Update Event</button>
             </div>
         </div>
     </form>
