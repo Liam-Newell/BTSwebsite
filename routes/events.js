@@ -306,37 +306,38 @@ router.post('/createevent', function (req, res, next) {
 
 router.post('/updateEvent/:id', function (req, res, next) {
     var eventId = req.params.id;
-        var event = {
-            title: req.body.title,
-            date: req.body.eventdate,
-            time: req.body.ti,
-            limit: req.body.limit,
-            grade: req.body.grade,
-            info: req.body.in
-        };
+ /*   var event = {
+        title: req.body.title,
+        date: req.body.eventdate,
+        time: req.body.ti,
+        limit: req.body.limit,
+        grade: req.body.grade,
+        info: req.body.in
+    };
     EventData.findById({_id: eventId},
         function(err, event){
-    if(err) throw err;
-    });
+            if(err) throw err;
+        });
 
-        var time = event.date + " " + req.body.time.toString();
-        event.date = time;
-        var data = new EventData(event);
-        EventData.findByIdAndUpdate({_id: eventId},
+    var time = event.date + " " + req.body.time.toString();
+    event.date = time;
+    var data = new EventData(event);*/
+    EventData.findByIdAndUpdate({_id: eventId},
         {$set: {
             title: req.body.title,
             date: req.body.eventdate,
-            time: req.body.ti,
+            time: req.body.time,
+            info: req.body.info,
             limit: req.body.limit,
-            grade: req.body.grade,
-            info: req.body.in
-            }
-        },function(err,event) {
-                if (err) throw err;
-    })
+            gradeLow: req.body.gradeLow,
+            gradeHigh: req.body.gradeHigh
+        }
+        }, {multi: true},function(err,event) {
+            if (err) throw err;
+            console.log(event);
+        });
     res.redirect('/events/calendar');
 });
-
 
 //MINAS ADDED CODE.
 router.get('/eventlist', function (req, res, next) {
