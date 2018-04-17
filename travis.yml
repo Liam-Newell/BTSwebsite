@@ -1,0 +1,4 @@
+language: javascript
+
+before-script:
+  - composer install --no-interaction
