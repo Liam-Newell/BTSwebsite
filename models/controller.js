@@ -102,7 +102,7 @@ module.exports.massEventEmail = function(eventid, callback){
     var childList = [];
     var parentList = [];
     var emailList = [];
-    var eventquery = new mongoose.Types.ObjectId(eventid)
+    var eventquery = new mongoose.Types.ObjectId(eventid);
     var promise1 = new Promise(function(resolve, reject){
         EventData.findOne(eventquery, function (err, currEvent) {
             if(err)
