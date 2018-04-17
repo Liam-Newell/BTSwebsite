@@ -1,4 +1,6 @@
-language: javascript
-
+language: node_js
+node_js:
+  - "iojs"
+  - "7"
 before-script:
   - composer install --no-interaction
