@@ -9,7 +9,7 @@ var flash = require('connect-flash');
 
 //For mongoDB
 var mongoose = require('mongoose');
-mongoose.connect('localhost:27017/test');
+mongoose.connect('mongodb://admin:church123@ds141474.mlab.com:41474/heroku_wb4ml0fp?readPreference=primary');
 var Schema = mongoose.Schema;
 
 //Models
