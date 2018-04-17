@@ -3,10 +3,6 @@ deploy:
   provider: heroku
   api_key:
     secure: $HEROKU_API_KEY
-services:
-  - mongodb
-install:
-  - npm install
 cache:
   directories:
     - "node_modules"
