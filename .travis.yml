@@ -2,6 +2,10 @@ language: node_js
 node_js:
   - "iojs"
   - "7"
+deploy:
+  provider: heroku
+  api_key:
+    secure: "c7886928-f118-47f2-a1ed-4513d02e5f76"
 services:
   - mongodb
 install:
