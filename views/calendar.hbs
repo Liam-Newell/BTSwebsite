@@ -154,8 +154,14 @@
                                                 <br><br>
                                                 Time: <input style="border-width:0px; border:none;" type="time" value="{{this.time}}" readonly>
                                                 <br><br>
-                                                This event is for grades: {{this.gradeLow}} - {{this.gradeHigh}}
-                                                <br><br>
+                                                {{#eq this.gradeLow this.gradeHigh}}
+                                                    This event is for grades: {{this.gradeLow}}
+                                                    <br><br>
+                                                {{/eq}}
+                                                {{#isnt this.gradeLow this.gradeHigh}}
+                                                    This event is for grades: {{this.gradeLow}} - {{this.gradeHigh}}
+                                                    <br><br>
+                                                {{/isnt}}
                                                 Availability: {{this.registered.length}} / {{this.limit}} spots remaining
                                                 <br><br>
                                             </div>
