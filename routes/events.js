@@ -27,6 +27,7 @@ router.get('/createevent', function(req, res, next) {
     res.render('createevent');
 });
 
+
 router.get('/updateEvent/:id', function(req, res, next) {
     var eventId = encodeURIComponent(req.params.id);
     var query = EventData.findOne({_id: eventId});
