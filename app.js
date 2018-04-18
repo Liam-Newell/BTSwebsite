@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('express-handlebars');
+
 var expressValidator = require('express-validator');
 var expressSession = require('express-session');
 var flash = require('connect-flash');
@@ -19,7 +20,7 @@ var events = require('./routes/events');
 var app = express();
 
 // view engine setup!!
-app.engine('hbs',hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/'}));
+app.engine('hbs',hbs({extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/', helpers: require('handlebars-helpers')()}));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
@@ -74,6 +75,8 @@ app.use(function (req, res, next) {
     res.locals.user = req.user || null;
     next();
 });
+
+
 
 
 module.exports = app;
