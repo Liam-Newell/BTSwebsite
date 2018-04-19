@@ -4,6 +4,9 @@ var bcrypt = require('bcryptjs');
 
 mongoose.connect('localhost:27017/test');
 
+
+
+
 var eventdataschema = new Schema({
     title: {type: String, required: true},
     date: {type: Date, required: true},
