@@ -117,7 +117,7 @@ router.get('/deletechild/:id', function (req, res, next) {
         if(req.user.childrenCache){
             req.user.childrenCache = null;
         }
-        //Remove Link to User Account as well//
+        //Remove Link to User Account as well////
         Child.findByIdAndRemove(childID, (err, child) => {
             if (err) throw err;
         console.log(child);
