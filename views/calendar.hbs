@@ -139,7 +139,7 @@
                     {{# each info}}
                     <a href="javascript:void(0)" onclick="toggle_visibility('{{this._id}}',1);"><div class="event">
                                 <div class="event-desc">
-                                    {{this.title}}
+                                    {{this.title}} <div style="color: red;">{{#eq this.registered.length this.limit}}&nbsp;(FULL){{/eq}}</div>
                                     <br><br>
                                     {{this.info}}
                                 </div>
