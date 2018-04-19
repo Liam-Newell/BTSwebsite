@@ -52,9 +52,13 @@
             <div id="eventlist">
                 {{# each event }}
                     <button class="btn btn-primary-delete pull-right" type="submit" name="eventId" value="{{this._id}}" style="margin-right: 20em; margin-top: -1em;">remove</button>
-                    <div class="event-title">{{this.title}}</div>
-                    <div class="event-date">{{this.date}}</div>
-                    <div>Event details : {{ this.info }}</div>
+                    {{this.title}}
+                    <br>
+                    Date: <input style="border-width:0px; border:none;" type="text" size="12" max="11" maxlength="11" value="{{this.date}}" readonly>
+                    <br>
+                    Time: <input style="border-width:0px; border:none;" type="time" value="{{this.time}}" readonly>
+                    <br>
+                    Event details : {{ this.info }}
                     {{#if isAdmin}}
                         <div>Registered children: {{this.registered}}</div>
                     {{/if}}
