@@ -139,7 +139,7 @@
                     {{# each info}}
                     <a href="javascript:void(0)" onclick="toggle_visibility('{{this._id}}',1);"><div class="event">
                                 <div class="event-desc">
-                                    {{this.title}} <div style="color: red;">{{#eq this.registered.length this.limit}}(FULL){{/eq}}</div>
+                                    {{this.title}} {{#eq this.registered.length this.limit}}<span style="color: red;">(FULL)</span>{{/eq}}
                                     <br><br>
                                     {{this.info}}
                                 </div>
@@ -164,8 +164,8 @@
                                                     This event is for grades: {{this.gradeLow}} - {{this.gradeHigh}}
                                                     <br><br>
                                                 {{/isnt}}
-                                                <p style="color: red;">{{#eq this.registered.length this.limit}}FULL{{/eq}}</p>
-                                                Availability: {{this.registered.length}} / {{this.limit}} spots remaining
+                                                {{#eq this.registered.length this.limit}}<span style="color: red;">Full: {{this.registered.length}}/{{this.limit}}</span>{{/eq}}
+                                                {{#isnt this.registered.length this.limit}}Availability:{{this.registered.length}}/{{this.limit}} spots remaining{{/isnt}}
                                                 <br><br>
                                             </div>
 
@@ -183,7 +183,7 @@
                                                     <select style="color: black;" name="selectChild">
                                                         Choose a child
                                                         {{# each ../../childList }}
-                                                            <option style="color: black;" value="{{this._id}}">{{this.firstname}} {{this.lastname}}</option>
+                                                            <option style="color: black;" value="{{this._id}}">{{this.firstname}} {{this.lastname}} </option>
                                                         {{/each}}
                                                     </select>
                                                     <button class="login btn btn-primary" type="submit" id="grade" name="grade" value="{{this.grade}}">register</button>
