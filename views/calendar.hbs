@@ -103,7 +103,9 @@
                     x.value = '{{month}}';
             </script>
             {{year}}
-            <p>Number Of Event Entries {{size}}</p>
+            {{#if isAdmin}}
+                <p>Number Of Event Entries {{size}}</p>
+            {{/if}}
         </h1>
     </header>
 
