@@ -27,7 +27,6 @@ router.get('/createevent', function(req, res, next) {
     res.render('createevent',{user: req.user.username, isAdmin: req.user.isAdmin});
 });
 
-
 router.get('/updateEvent/:id', function(req, res, next) {
     var eventId = encodeURIComponent(req.params.id);
     var query = EventData.findOne({_id: eventId});
