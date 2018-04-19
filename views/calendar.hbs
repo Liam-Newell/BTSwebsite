@@ -164,6 +164,7 @@
                                                     This event is for grades: {{this.gradeLow}} - {{this.gradeHigh}}
                                                     <br><br>
                                                 {{/isnt}}
+                                                <p style="color: red;">{{#eq this.registered.length this.limit}}FULL{{/eq}}</p>
                                                 Availability: {{this.registered.length}} / {{this.limit}} spots remaining
                                                 <br><br>
                                             </div>
