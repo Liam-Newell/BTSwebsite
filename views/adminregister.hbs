@@ -10,6 +10,7 @@
 <body>
 <!--Navigation bar -->
 <!--Navigation bar -->
+<!--Navigation bar -->
 <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -17,7 +18,7 @@
         </div>
         <ul class="nav navbar-nav">
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                <a class="dropdown-toggle" data-toggle="dropdown">Account
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="../users/account">View Account</a></li>
@@ -29,7 +30,7 @@
             <li><a href="../events/eventlist">Schedule</a></li>
             {{#if isAdmin}}
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+                    <a class="dropdown-toggle" data-toggle="dropdown">Admin
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="../events/createevent">Add Event</a></li>
@@ -47,70 +48,90 @@
 <!--Navigation bar -->
 <br/><br/>
 <p>
-    {{errors}}
+{{#if errors}}
+    {{#each errors}}
+        <div class ="alert alert-danger">{{msg}}</div>
+    {{/each}}
+{{/if}}
 </p>
 <div class="container">
     <div class="page-header">
-        <h1>Event</h1>
+        <h1>Register</h1>
     </div>
-    <form method="post" role="form" action="createevent" id="createevent" class="login-form form-horizontal">
+    <form method="post" role="form" action="/users/adminregister" class="login-form form-horizontal">
+        <input name="_csrf" type="hidden"/>
         <div class="form-group">
-            <label class="col-sm-4">Title</label>
+            <label class="col-sm-4">User Name</label>
             <div class="col-sm-8">
-                <input placeholder="" required="required" name="title" type="text"
+                <input placeholder="username" name="username" type="text"
                        class="form-control"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-4">Date</label>
+            <label class="col-sm-4">Password</label>
             <div class="col-sm-8">
-                <input placeholder="" required="required" name="eventdate" type="date"
+                <input placeholder="password" name="password" type="password"
                        class="form-control"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-4">Time</label>
+            <label class="col-sm-4">Confirm Your Password</label>
             <div class="col-sm-8">
-                <input placeholder="9:99" required="required" name="time" type="time"
+                <input placeholder="password" name="cPassword" type="password"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">First Name</label>
+            <div class="col-sm-8">
+                <input placeholder="your first name" name="firstname" type="text"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Last Name</label>
+            <div class="col-sm-8">
+                <input placeholder="your last name" name="lastname" type="text"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Street address</label>
+            <div class="col-sm-8">
+                <input placeholder="e.g. 123 Sunny Ave" name="streetaddress" type="text"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Email</label>
+            <div class="col-sm-8">
+                <input placeholder="e.g. email@domain.com" name="email" type="email"
+                       class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-4">Phone Number 1</label>
+            <div class="col-sm-8">
+                <input placeholder="123-456-7899" required="required" name="phonenumber" type="string"
                        class="form-control"/>
             </div>
         </div>
 
+        {{#if isAdmin}}
         <div class="form-group">
-            <label class="col-sm-4">Grade range between</label>
-            <div class="col-sm-2">
-                <input placeholder="" name="gradeLow" required="required" type="number"
-                    class="form-control"/>
-            </div>
-            <div class="col-sm-1">and</div>
-            <div class="col-sm-2">
-            <input placeholder="" name="gradeHigh" required="required" type="number"
-                   class="form-control"/>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-4">Class limit</label>
+            <label class="col-sm-4">Administrator?</label>
             <div class="col-sm-8">
-                <input placeholder="" name="limit" required="required" type="number"
-                       class="form-control"/>
+                <input name="isAdmin" type="checkbox" class="form-control"/>
             </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-4">Details</label>
-            <div class="col-sm-8">
-                <textarea rows="4" cols="50" name="info" required="required" form="createevent"></textarea>
-            </div>
-        </div>
+        {{/if}}
 
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-8">
-                <button type="submit" id="createevent" class="login btn btn-primary">Create Event</button>
+                <button type="submit" id="register" class="login btn btn-primary">Register</button>
             </div>
         </div>
+        <div class="pull-right"><a href="/">Return to home page</a></div>
     </form>
-
 </div>
 </body>
 </html>

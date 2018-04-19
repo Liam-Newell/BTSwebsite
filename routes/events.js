@@ -24,7 +24,7 @@ var Controller = require('../models/controller');
 
 /* GET users listing. */
 router.get('/createevent', function(req, res, next) {
-    res.render('createevent');
+    res.render('createevent',{user: req.user.username, isAdmin: req.user.isAdmin});
 });
 
 
@@ -34,14 +34,14 @@ router.get('/updateEvent/:id', function(req, res, next) {
     query.exec(function(err, data){
         if(err) throw err;
         var date = data.date.toISOString().substring(0, 10);
-        res.render('updateEvent', {eventId: req.params.id, t: data.title, d: date, i: data.info, gl: data.gradeLow, gh: data.gradeHigh, l: data.limit, ti: data.time});
+        res.render('updateEvent', {eventId: req.params.id, t: data.title, d: date, i: data.info, gl: data.gradeLow, gh: data.gradeHigh, l: data.limit, ti: data.time, user: req.user.username, isAdmin: req.user.isAdmin});
     });
 
 });
 
 //Router for the sendEmail.hbs page
 router.get('/sendEmailPage/:id', function(req, res, next){
-    res.render ('sendEmail', {eventId: req.params.id});
+    res.render ('sendEmail', {eventId: req.params.id, user: req.user.username, isAdmin: req.user.isAdmin});
 });
 
 //Router to actually send the email than redirect back to calender
@@ -137,7 +137,7 @@ router.post('/sendEmail/:id', function (req, res, next) {
             });
         }
     });
-    res.redirect('/events/calendar');
+    res.redirect('/events/calendar', {user: req.user.username, isAdmin: req.user.isAdmin});
 });
 
 router.get('/calendar/:id', function(req,res, next){
@@ -170,7 +170,7 @@ router.post('/viewevent', function (req, res, next) {
         }
 
     EventData.findOne({_id: event}).then(function (doc) {
-        res.render('event', {childList: children, info: doc});
+        res.render('event', {childList: children, info: doc, user: req.user.username, isAdmin: req.user.isAdmin});
     });
 });
 
@@ -178,7 +178,7 @@ router.get('/viewevent/:id', function(req, res, next){
         EventData.findOne({_id: id}).then(function (doc) {
             var user = req.session.userDat;
             var children = user.children;
-           res.render('event' , {info: doc, children: children});
+           res.render('event' , {info: doc, children: children ,user: req.user.username, isAdmin: req.user.isAdmin});
         });
 
 });
@@ -189,7 +189,7 @@ router.post('/registerevent', function (req, res, next) {
         console.log(results);
     });
 
-    res.redirect('calendar');
+    res.redirect('calendar', {user: req.user.username, isAdmin: req.user.isAdmin});
 });
 
 router.post('/deleteevent', function (req, res, next) {
@@ -197,7 +197,7 @@ router.post('/deleteevent', function (req, res, next) {
         function (err, managerevent) {
             if (err) throw err;
             console.log(managerevent);
-            res.redirect('calendar');
+            res.redirect('calendar', {user: req.user.username, isAdmin: req.user.isAdmin});
         }
     );
 
@@ -291,7 +291,7 @@ router.get('/calendar', function (req, res, next) {
             });
         }
         else{
-            res.render('calendar', {isAdmin: req.user.isAdmin});
+            res.render('calendar', {user: req.user.username, isAdmin: req.user.isAdmin});
         }
     });
 
@@ -301,7 +301,7 @@ router.post('/createevent', function (req, res, next) {
     EventData.CreateEvent(req,function (err, result) {
         if(err) throw err;
         console.log(result);
-        res.redirect('calendar');
+        res.redirect('calendar', {user: req.user.username, isAdmin: req.user.isAdmin});
     })
 });
 
@@ -337,7 +337,7 @@ router.post('/updateEvent/:id', function (req, res, next) {
             if (err) throw err;
             console.log(event);
         });
-    res.redirect('/events/calendar');
+    res.redirect('/events/calendar', {user: req.user.username, isAdmin: req.user.isAdmin});
 });
 
 //MINAS ADDED CODE.
@@ -367,8 +367,7 @@ router.get('/eventlist', function (req, res, next) {
                     child[i].event = eventlist[i];
                 }
 
-                //resolve('child : ' + x + ' loop\npushed: ' + events);
-                res.render('eventlist', {childlist: child, output: monthpassed, user: req.user.username});
+                res.render('eventlist', {childlist: child, output: monthpassed, user: req.user.username, isAdmin: req.user.isAdmin});
             }
 
         });
@@ -398,7 +397,7 @@ router.post('/removeChildEvent', function(req, res, next){
         child.save();
     });
 
-    res.redirect("eventlist");
+    res.redirect("eventlist", {user: req.user.username, isAdmin: req.user.isAdmin});
 });
 
 

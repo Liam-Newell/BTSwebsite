@@ -21,8 +21,55 @@ var User = require('../models/user');
 //Get: register page (register.hbs)
 //checks if the user is a registered admin if so passes isAdmin=true to the form
 router.get('/adminregister', function(req, res, next){
-    if(req.user){res.render('register', {isAdmin: req.user.isAdmin});}
-    else{res.render('register');}
+    if(req.user){res.render('adminregister', {user: req.user.username, isAdmin: req.user.isAdmin});}
+    else{res.render('adminregister');}
+});
+
+router.post('/adminregister', function (req, res, next) {
+
+    var item = {
+        username: req.body.username,
+        password: req.body.password,
+        cPassword: req.body.cPassword,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        streetaddress: req.body.streetaddress,
+        email: req.body.email,
+        phonenumber: req.body.phonenumber,
+        isAdmin: req.body.isAdmin || false,
+        children: []
+    };
+
+    //Validation of form fields
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('firstname', 'Firstname is required').notEmpty();
+    req.checkBody('lastname', 'Lastname is required').notEmpty();
+    req.checkBody('email', 'email is required').isEmail();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('username', 'Username is required').notEmpty();
+    req.checkBody('password', 'Password is required').notEmpty();
+    req.checkBody('cPassword', 'Passwords do not match').equals(req.body.password);
+
+    var errors = req.validationErrors();
+
+    if (errors) {
+        res.render('adminregister', {
+            errors: errors,
+        });
+    }
+    else {
+        var newUser = new User(item);
+        User.createUser(newUser, function (err, user) {
+            if (err) throw err;
+            console.log(user);
+        });
+
+
+    }
+    if(req.user.isAdmin === true)
+        res.redirect('../events/calendar');
+    else
+        res.redirect('/users/login');
 });
 
 /** View All Users (Admin) **/
@@ -31,7 +78,7 @@ router.get('/userList', function (req, res, next) {
     User.find({}, function(err, users){
         if(err) throw err;
         else {
-            res.render('userList',{ userList: users, isAdmin: req.user.isAdmin});
+            res.render('userList',{ userList: users, isAdmin: req.user.isAdmin, user: req.user.username});
         }
     })
 });
@@ -82,7 +129,7 @@ router.post('/register', function (req, res, next) {
 
     if (errors) {
         res.render('register', {
-            errors: errors
+            errors: errors,
         });
     }
     else {
@@ -90,13 +137,11 @@ router.post('/register', function (req, res, next) {
         User.createUser(newUser, function (err, user) {
             if (err) throw err;
             console.log(user);
-        })
+        });
 
-        //TODO
-        //setup passport strategy to allow the use of flash for messages.
-        //req.flash('success message', 'You are registered and can now login');
-        res.redirect('/users/login');
+
     }
+        res.redirect('/users/login');
 });
 
 /** Login & Logout**/
@@ -163,11 +208,13 @@ router.get('/account', function (req, res, next) {
             lastname: req.user.lastname,
             email: req.user.email,
             ph1: req.user.phonenumber,
-            ph2: req.user.phonenumber2
+            ph2: req.user.phonenumber2,
+            user: req.user.username,
+            isAdmin: req.user.isAdmin
         });
 
     } else {
-        res.redirect('/')
+        res.redirect('/', {user: req.user.username, isAdmin: req.user.isAdmin})
     }
 });
 

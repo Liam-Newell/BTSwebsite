@@ -40,7 +40,7 @@
         </div>
         <ul class="nav navbar-nav">
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                <a class="dropdown-toggle" data-toggle="dropdown">Account
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="../users/account">View Account</a></li>
@@ -48,14 +48,14 @@
                     <li><a href="../child/registerchild">Register a child</a></li>
                 </ul>
             </li>
-            <li><a href="calendar">Calendar</a></li>
-            <li><a href="eventlist">Schedule</a></li>
+            <li><a href="../events/calendar">Calendar</a></li>
+            <li><a href="../events/eventlist">Schedule</a></li>
             {{#if isAdmin}}
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+                    <a class="dropdown-toggle" data-toggle="dropdown">Admin
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="createevent">Add Event</a></li>
+                        <li><a href="../events/createevent">Add Event</a></li>
                         <li><a href="../users/adminregister">Add User</a></li>
                         <li><a href="../users/userList">Delete User</a></li>
                     </ul>
@@ -183,7 +183,7 @@
                                                     <select style="color: black;" name="selectChild">
                                                         Choose a child
                                                         {{# each ../../childList }}
-                                                            <option style="color: black;" value="{{this._id}}">{{this.firstname}} {{this.lastname}} </option>
+                                                                <option style="color: black;" value="{{this._id}}">{{this.firstname}} {{this.lastname}} </option>
                                                         {{/each}}
                                                     </select>
                                                     <button class="login btn btn-primary" type="submit" id="grade" name="grade" value="{{this.grade}}">register</button>

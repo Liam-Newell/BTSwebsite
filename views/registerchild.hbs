@@ -13,27 +13,39 @@
 </head>
 <body>
     <!--Navigation bar -->
+    <!--Navigation bar -->
     <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
-             <div class="navbar-header">
-                  <a class="navbar-brand" href="/">Church Centre</a>
-             </div>
-             <ul class="nav navbar-nav">
-                  <li class="dropdown">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Church Centre</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
-                    <span class="caret"></span></a>
+                        <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                       <li><a href="../users/account">View Account</a></li>
-                       <li><a href="../child/childlist">View Registered Children</a></li>
-                       <li><a href="#">Register a child</a></li>
+                        <li><a href="../users/account">View Account</a></li>
+                        <li><a href="../child/childList">View Registered Children</a></li>
+                        <li><a href="../child/registerchild">Register a child</a></li>
                     </ul>
-                  </li>
-                  <li><a href="../events/calendar">Calendar</a></li>
-                  <li><a href="../events/eventlist">Schedule</a></li>
-             </ul>
-             <ul class="nav navbar-nav navbar-right">
-                  <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
-             </ul>
+                </li>
+                <li><a href="../events/calendar">Calendar</a></li>
+                <li><a href="../events/eventlist">Schedule</a></li>
+                {{#if isAdmin}}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../events/createevent">Add Event</a></li>
+                            <li><a href="../users/adminregister">Add User</a></li>
+                            <li><a href="../users/userList">Delete User</a></li>
+                        </ul>
+                    </li>
+                {{/if}}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
+            </ul>
         </div>
     </nav>
 <br/><br/>

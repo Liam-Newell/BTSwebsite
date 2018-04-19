@@ -20,10 +20,11 @@ router.get('/registerchild', function (req, res, next) {
     var userData = req.user;
     if(req.user) {
         res.render('registerchild', {
-            user: userData.username
+            user: userData.username,
+            isAdmin: req.user.isAdmin
         });
     }else{
-        res.render('index', {title: 'Church Centre'});
+        res.render('index', {title: 'Church Centre',user: req.user.username, isAdmin: req.user.isAdmin});
     }
 });
 
@@ -35,7 +36,9 @@ router.post('/registerchild', function (req, res, next) {
         lastname: req.body.lastname,
         birthday: req.body.birthday,
         grade: req.body.grade,
-        parent: req.user._id
+        parent: req.user._id,
+        user: req.user.username,
+        isAdmin: req.user.isAdmin
     };
 
     if(req.user){
@@ -67,6 +70,8 @@ router.post('/registerchild', function (req, res, next) {
             res.render('registerchild'),{
                 title: 'Incorrect Values',
                 cuck: 'Ya messed up',
+                user: req.user.username,
+                isAdmin: req.user.isAdmin,
                 success: false,
                 errors: req.session.errors
 
@@ -83,6 +88,7 @@ router.get('/childList', function (req, res, next) {
         if(!list){
             res.render('childList',{
                 user: userDat.username,
+                isAdmin: req.user.isAdmin,
                 title: "Registered Children | Church Centre"}
             );
         }
@@ -90,6 +96,7 @@ router.get('/childList', function (req, res, next) {
             res.render('childList', {
                 childList: list,
                 user: userDat.username,
+                isAdmin: req.user.isAdmin,
                 title: "Registered Children | Church Centre"
             })
         }
@@ -138,7 +145,7 @@ router.get('/deletechild/:id', function (req, res, next) {
         res.redirect('/');
     }
 
-    res.redirect('/child/childlist');
+    res.redirect('/child/childlist', {user: req.user.username, isAdmin: req.user.isAdmin});
 });
 
 module.exports = router;

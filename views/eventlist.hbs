@@ -14,32 +14,44 @@
 </head>
 <body>
 <!--Navigation bar -->
-    <nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
-            <div class="container-fluid">
-                 <div class="navbar-header">
-                      <a class="navbar-brand" href="/">Church Centre</a>
-                 </div>
-                 <ul class="nav navbar-nav">
-                      <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+<!--Navigation bar -->
+<nav class="navbar navbar-dark navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Church Centre</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Account
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="../users/account">View Account</a></li>
+                    <li><a href="../child/childList">View Registered Children</a></li>
+                    <li><a href="../child/registerchild">Register a child</a></li>
+                </ul>
+            </li>
+            <li><a href="../events/calendar">Calendar</a></li>
+            <li><a href="../events/eventlist">Schedule</a></li>
+            {{#if isAdmin}}
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
                         <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                           <li><a href="../users/account">View Account</a></li>
-                           <li><a href="../child/childList">View Registered Children</a></li>
-                           <li><a href="../child/registerchild">Register a child</a></li>
-                        </ul>
-                      </li>
-                      <li><a href="calendar">Calendar</a></li>
-                      <li><a href="eventlist">Schedule</a></li>
-                 </ul>
-                 <ul class="nav navbar-nav navbar-right">
-                      <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
-                 </ul>
-            </div>
-    </nav>
+                    <ul class="dropdown-menu">
+                        <li><a href="../events/createevent">Add Event</a></li>
+                        <li><a href="../users/adminregister">Add User</a></li>
+                        <li><a href="../users/userList">Delete User</a></li>
+                    </ul>
+                </li>
+            {{/if}}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top: 10px; padding-right: 15px;"><span style="text-transform: uppercase;">{{user}}</span></li>
+        </ul>
+    </div>
+</nav>
 
     <br><br><br>
-    <h2>Registered events</h2>
+    <h2>Your events</h2>
     <!--<a class="btn btn-primary" href="eventlist" >Refresh</a>-->
     <hr/>
 
@@ -52,9 +64,11 @@
             <div id="eventlist">
                 {{# each event }}
                     <button class="btn btn-primary-delete pull-right" type="submit" name="eventId" value="{{this._id}}" style="margin-right: 20em; margin-top: -1em;">remove</button>
-                    <div class="event-title">{{this.title}}</div>
-                    <div class="event-date">{{this.date}}</div>
-                    <div>Event details : {{ this.info }}</div>
+                    Event: {{this.title}}<br>
+                    Date: <input style="border-width:0px; border:none;" type="text" size="12" value="{{this.date}}" readonly><br>
+
+                    Time: <input style="border-width:0px; border:none;" type="time" value="{{this.time}}" readonly>
+                    <div>Details: {{ this.info }}</div>
                     {{#if isAdmin}}
                         <div>Registered children: {{this.registered}}</div>
                     {{/if}}
